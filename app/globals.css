@@ -2,7 +2,8 @@
 
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-:root {
+:root,
+[data-theme="light"] {
   --tone-50: #fafafa;
   --tone-100: #f2f2f3;
   --tone-200: #e4e4e7;
@@ -219,7 +220,7 @@ body {
       0 1px 2px rgba(11, 11, 12, 0.06),
       0 12px 32px -12px rgba(11, 11, 12, 0.22);
   }
-  [data-theme="dark"] .glass {
+  [data-theme="dark"] .glass:not([data-theme="light"] *) {
     background: rgba(28, 28, 31, 0.62);
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow:
@@ -307,6 +308,30 @@ textarea {
   }
   .sink {
     animation: sink 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+/* Landing scroll story: elements default to their settled state, so the page
+   reads correctly before (or without) the scroll script. */
+[data-scroll] {
+  --e: 1;
+  --p: 0.5;
+  --x: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(3deg);
   }
 }
 

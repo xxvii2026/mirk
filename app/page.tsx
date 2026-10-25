@@ -1,439 +1,317 @@
 import Link from "next/link";
-import type { ComponentType, ReactNode, SVGProps } from "react";
-import { AppPreview, PaymentSteps } from "@/components/brand/landing-demos";
+import type { CSSProperties, ReactNode } from "react";
 import { SiteFooter, SiteHeader, WRAP } from "@/components/brand/site-chrome";
 import { Mark } from "@/components/brand/wordmark";
-import {
-  IconArrowRight,
-  IconArrowUpRight,
-  IconChevronDown,
-  IconEye,
-  IconKey,
-  IconLayers,
-  IconLink,
-  IconLock,
-  IconShield,
-  IconStore,
-  IconSwap,
-} from "@/components/shared/icons";
-import { POOL_ADDRESS, REGISTRY_ADDRESS, addressUrl } from "@/lib/robinhood/network";
+import { AppWindow } from "@/components/landing/app-window";
+import { ScrollFX } from "@/components/landing/scroll-fx";
+import { VisibilitySlider } from "@/components/landing/visibility-slider";
+import { IconArrowRight, IconLink, IconReceive, IconWallet } from "@/components/shared/icons";
+import { HiddenDots } from "@/components/shared/ui";
+import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
-type Icon = ComponentType<SVGProps<SVGSVGElement>>;
+const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
 
-const SECTION = "pt-20 sm:pt-28";
+function short(address: string) {
+  return `${address.slice(0, 6)}…${address.slice(-4)}`;
+}
 
-function SplitHeading({ title, children, dark }: { title: ReactNode; children: ReactNode; dark?: boolean }) {
+/** The mark as the page's character: floating, with a soft shadow on the sky. */
+function Character({ className = "", light = false }: { className?: string; light?: boolean }) {
   return (
-    <div className="grid items-end gap-5 md:grid-cols-[1.15fr_1fr] md:gap-16">
-      <h2 className="display-l max-w-[15ch]">{title}</h2>
-      <p className={`max-w-[34rem] text-[17px] leading-relaxed ${dark ? "text-white/70" : "text-ink-2"}`}>
+    <span aria-hidden className={`float inline-block ${className}`}>
+      <Mark
+        className={`size-full ${
+          light
+            ? "text-white drop-shadow-[0_0_24px_rgba(200,215,255,0.55)]"
+            : "text-[#0b0b0c] drop-shadow-[0_22px_22px_rgba(40,60,110,0.35)]"
+        }`}
+      />
+    </span>
+  );
+}
+
+function Copy({ title, children, light }: { title: ReactNode; children: ReactNode; light?: boolean }) {
+  return (
+    <div>
+      <h2 className="display-l max-w-[13ch]">{title}</h2>
+      <p className={`mt-5 max-w-[30rem] text-[17px] leading-relaxed ${light ? "text-white/70" : "text-ink-2"}`}>
         {children}
       </p>
     </div>
   );
 }
 
-/** A band of ripples, the mark's waterline drawn as a divider. */
-function Waterline({ className = "" }: { className?: string }) {
-  const rows = [
-    [0, 0.9],
-    [1, 0.7],
-    [2, 0.5],
-  ] as const;
-  return (
-    <svg viewBox="0 0 1200 36" preserveAspectRatio="none" aria-hidden className={`block h-9 w-full ${className}`}>
-      {rows.map(([i, o]) => {
-        const y = 6 + i * 11;
-        const d = Array.from({ length: 13 }, (_, k) => `Q ${k * 100 + 50} ${y + (k % 2 ? 4 : -4)} ${k * 100 + 100} ${y}`)
-          .join(" ")
-          .replace(/^/, `M 0 ${y} `);
-        return <path key={i} d={d} fill="none" stroke="currentColor" strokeOpacity={o} strokeWidth={2.5} />;
-      })}
-    </svg>
-  );
-}
+/** Entrance motion for a [data-scroll] block: rises into place. */
+const rise: CSSProperties = {
+  transform: "translateY(calc((1 - var(--e)) * 60px))",
+  opacity: "calc(0.15 + var(--e) * 0.85)",
+};
 
 function Hero() {
+  const chips: [typeof IconWallet, string, string][] = [
+    [IconWallet, "Add money", "/app/add"],
+    [IconReceive, "Get your account number", "/app/receive"],
+    [IconLink, "Claim a link", "/claim"],
+  ];
   return (
-    <section className="relative isolate overflow-hidden">
+    <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-28 sm:pt-20">
+      <div aria-hidden className="absolute inset-0 -z-10 bg-[url(/sky/day.webp)] bg-cover bg-top" />
       <div
         aria-hidden
-        className="absolute inset-x-0 -top-20 -z-10 h-[700px] bg-[radial-gradient(55%_60%_at_50%_0%,var(--tone-100)_0%,transparent_70%)] dark:bg-[radial-gradient(55%_60%_at_50%_0%,rgba(255,255,255,0.06)_0%,transparent_70%)]"
+        className="absolute inset-x-0 bottom-0 -z-10 h-64 bg-gradient-to-b from-transparent to-[#eff4fc]"
       />
-      <div className={`${WRAP} pt-16 text-center sm:pt-24`}>
-        <h1 className="display-xl mx-auto max-w-[17ch]">Keep your balance below the surface.</h1>
-        <p className="text-ink-2 mx-auto mt-6 max-w-[38rem] text-[17px] leading-relaxed sm:text-[18px]">
-          MIRK runs on a public chain, but your balance, who you pay and how much stay off the record. Your keys stay
-          on your device. Nobody, including MIRK, can move your money.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open MIRK
-          </Link>
-          <Link href="#how" className="btn btn-light min-h-12 px-6 text-[16px]">
-            How it works <IconChevronDown className="size-4" />
-          </Link>
-        </div>
-        <p className="text-muted mt-5 text-[13px]">Testnet only. Test assets have no value. Not externally audited.</p>
-      </div>
-    </section>
-  );
-}
 
-function Showcase() {
-  const moments: [Icon, string, string][] = [
-    [IconLock, "Your balance is a set of private notes", "Only keys on this device can open them"],
-    [IconShield, "Each payment is a proof made in your browser", "Checked on chain, without the amount"],
-    [IconKey, "Your keys never leave your device", "MIRK's servers never see them"],
-  ];
-  return (
-    <section className={`${WRAP} mt-12 grid gap-4 lg:grid-cols-[0.8fr_1.2fr]`}>
-      <div className="panel-soft flex flex-col justify-between gap-8 rounded-[28px] p-5 shadow-[var(--highlight)] sm:p-7">
-        <p className="text-ink-2 text-[14px] font-medium">What a private payment does</p>
-        <ol className="border-line-strong relative space-y-2.5 border-l pl-4 sm:ml-1">
-          {moments.map(([Icon, title, sub]) => (
-            <li key={title} className="raised flex items-start gap-3.5 rounded-[18px] p-4">
-              <span className="bg-signal-tint text-signal-text grid size-10 shrink-0 place-items-center rounded-full">
-                <Icon className="size-[18px]" />
-              </span>
-              <span>
-                <span className="block text-[15px] leading-snug font-semibold">{title}</span>
-                <span className="text-ink-2 mt-0.5 block text-[13px]">{sub}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-      </div>
-      <div className="stage relative isolate flex min-h-[500px] items-center justify-center overflow-hidden rounded-[28px] px-4 py-10 sm:px-10">
-        <Mark className="sink absolute -right-16 -bottom-24 -z-10 size-[420px] text-white/30 sm:-right-6" />
-        <AppPreview />
-      </div>
-    </section>
-  );
-}
-
-function BuiltOn() {
-  const assets: [string, string][] = [
-    ["ETH", "Test ether"],
-    ["USDG", "Test dollars"],
-  ];
-  return (
-    <section className={`${WRAP} mt-10`}>
-      <div className="border-line grid items-center gap-5 border-t pt-7 md:grid-cols-2">
-        <p className="text-ink-2 flex items-start gap-2.5 text-[14px] leading-relaxed">
-          <IconLayers className="mt-0.5 size-4 shrink-0" />
-          Built on Robinhood Chain testnet and Gloam&apos;s shielded pool. Hold and send these assets privately today.
-        </p>
-        <ul className="flex flex-wrap items-center gap-x-6 gap-y-3 md:justify-end">
-          {assets.map(([sym, name]) => (
-            <li key={sym} className="flex items-center gap-3">
-              <span className="btn btn-dark size-9 p-0 text-[11px] font-semibold">{sym.slice(0, 1)}</span>
-              <span className="text-[17px] font-medium">{sym}</span>
-              <span className="text-ink-2 text-[14px]">{name}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-function HowItWorks() {
-  return (
-    <section id="how" className="mt-20 sm:mt-28">
-      <div className="night relative isolate overflow-hidden py-20 text-white sm:py-24">
-        <div className={WRAP}>
-          <SplitHeading
-            dark
-            title={
-              <>
-                Use money as usual.
-                <br />
-                The record stays quiet.
-              </>
-            }
-          >
-            Four steps take you from a public wallet to a private balance and back. Pick a step to see what it puts on
-            chain and what sinks out of view.
-          </SplitHeading>
-          <div className="mt-10">
-            <PaymentSteps />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FeatureHead({
-  icon: Icon,
-  title,
-  children,
-  onAccent,
-}: {
-  icon: Icon;
-  title: string;
-  children: ReactNode;
-  onAccent?: boolean;
-}) {
-  return (
-    <div>
-      <span
-        className={`grid size-11 place-items-center rounded-full ${onAccent ? "bg-white text-[#0b0b0c]" : "raised"}`}
+      {/* The light trail: draws itself across the sky as you scroll. */}
+      <svg
+        aria-hidden
+        viewBox="0 0 1440 900"
+        preserveAspectRatio="none"
+        className="pointer-events-none absolute inset-x-0 top-[38%] -z-10 h-[90%] w-full"
       >
-        <Icon className="size-5" />
-      </span>
-      <h3 className="mt-5 text-[21px] font-semibold">{title}</h3>
-      <p className={`mt-2 text-[15px] leading-relaxed ${onAccent ? "text-white/85" : "text-ink-2"}`}>{children}</p>
-    </div>
-  );
-}
+        <path
+          d="M -40 880 C 300 760, 520 260, 900 300 S 1380 620, 1500 140"
+          fill="none"
+          stroke="white"
+          strokeWidth="3"
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray="1"
+          style={{ strokeDashoffset: "max(0, 1 - var(--p) * 2.2)", filter: "drop-shadow(0 0 8px #fff)" }}
+        />
+      </svg>
 
-function Features() {
-  return (
-    <section className={`${WRAP} ${SECTION} text-center`}>
-      <h2 className="display-l mx-auto max-w-[18ch]">On a public chain, every balance is a billboard</h2>
-      <p className="text-ink-2 mx-auto mt-5 max-w-[38rem] text-[17px] leading-relaxed">
-        Public blockchains show every amount and every counterparty to anyone who looks. MIRK keeps your money on a
-        public chain and takes the details off the record.
-      </p>
+      <div className={`${WRAP} pt-10 text-center sm:pt-14`}>
+        <Character className="mx-auto size-[72px]" />
+        <h1
+          className="display-xl mx-auto mt-6 max-w-[15ch]"
+          style={{ opacity: "calc(1 - var(--x) * 2.2)", transform: "translateY(calc(var(--x) * -80px))" }}
+        >
+          Private money for the open economy.
+        </h1>
+        <p className="text-ink-2 mx-auto mt-5 max-w-[36rem] text-[17px] leading-relaxed sm:text-[18px]">
+          Hold, send and receive on a public chain without putting your balance or the amounts you move on the record.
+          Your keys stay on your device.
+        </p>
 
-      <div className="mt-10 grid gap-4 text-left lg:grid-cols-3">
-        <div className="bg-surface-2 flex flex-col gap-6 rounded-[28px] p-5 shadow-[var(--highlight)] sm:p-7">
-          <FeatureHead icon={IconLock} title="A private balance">
-            Your balance is the sum of notes only your device can open. Hide it on screen with one tap.
-          </FeatureHead>
-          <div className="raised mt-auto space-y-2 rounded-[20px] p-4">
-            <p className="px-1 text-[14px] font-semibold">Example notes</p>
-            {(
-              [
-                ["600.00", "USDG"],
-                ["400.00", "USDG"],
-                ["0.25", "ETH"],
-              ] as const
-            ).map(([v, s]) => (
-              <div key={v + s} className="bg-surface-2 flex items-center justify-between rounded-xl px-3.5 py-2.5">
-                <span className="tabular text-[15px] font-semibold">{v}</span>
-                <span className="text-ink-2 text-[13px] font-medium">{s}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="relative isolate flex flex-col gap-6 overflow-hidden rounded-[28px] night p-5 text-white shadow-[var(--shadow-raised)] sm:p-7">
-          <Mark className="absolute -top-20 -right-20 -z-10 size-72 text-white/10" />
-          <FeatureHead icon={IconShield} title="Pay an account number" onAccent>
-            Pay a 12-digit MIRK number. No name, no wallet address and no amount reach the chain.
-          </FeatureHead>
-          <div className="mt-auto rounded-[20px] border border-white/20 bg-white/10 p-2.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]">
-            <div className="bg-surface text-ink rounded-[15px] p-5">
-              <p className="text-ink-2 text-[13px]">Send to</p>
-              <p className="tabular mt-1 font-mono text-[17px]">4829 1630 7714</p>
-              <div className="border-line my-4 border-t" />
-              <p className="text-ink-2 text-[13px]">Amount</p>
-              <p className="tabular mt-1 text-[28px] font-semibold tracking-[-0.03em]">
-                250.00 <span className="text-ink-2 text-[15px] font-medium">USDG</span>
-              </p>
-              <p className="text-ink-2 mt-3 text-[13px] font-medium">Recorded on chain as a private transfer</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-surface-2 flex flex-col gap-6 rounded-[28px] p-5 shadow-[var(--highlight)] sm:p-7">
-          <FeatureHead icon={IconLink} title="Claim links">
-            Pay someone who has no account yet. Whoever opens the link claims the money into a new account.
-          </FeatureHead>
-          <div className="raised mt-auto rounded-[20px] p-5">
-            <p className="text-[15px] font-semibold">A link worth 40.00 USDG</p>
-            <p className="bg-surface-2 text-ink-2 mt-3 truncate rounded-xl px-3.5 py-2.5 font-mono text-[12px]">
-              mirk…/claim#m1.••••••••••••
-            </p>
-            <p className="text-ink-2 mt-3 text-[13px] leading-relaxed">
-              The secret lives after the #, so it never reaches a server.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Surface() {
-  const above = [
-    "Deposits: wallet, asset and amount",
-    "Cash outs: destination, asset and amount",
-    "That a private transfer happened",
-  ];
-  const below = [
-    "Note secrets that can spend your money",
-    "Receive keys for incoming payments",
-    "Claim links you created",
-    "Your balance and private activity",
-  ];
-  return (
-    <section className={`${WRAP} ${SECTION}`}>
-      <SplitHeading
-        title={
-          <>
-            Some of it shows.
-            <br />
-            Most of it sinks.
-          </>
-        }
-      >
-        MIRK never holds your money. It sits in Gloam&apos;s shielded-pool contract, and the keys that can spend it are
-        encrypted in your browser.
-      </SplitHeading>
-
-      <div className="mt-10 overflow-hidden rounded-[28px] shadow-[var(--shadow-raised)]">
-        <div className="bg-surface-2 px-5 pt-7 pb-6 sm:px-9 sm:pt-9">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <p className="flex items-center gap-2 text-[22px] font-semibold tracking-[-0.03em]">
-              <IconEye className="text-ink-2 size-5" /> Above the surface
-            </p>
-            <p className="text-ink-2 text-[14px]">Public on chain, for anyone to read</p>
-          </div>
-          <ul className="mt-6 grid gap-2.5 md:grid-cols-3">
-            {above.map((x) => (
-              <li key={x} className="raised flex items-center gap-3 rounded-[14px] px-4 py-3.5 text-[15px]">
-                <span aria-hidden className="hatch size-4 shrink-0 rounded-[5px]" /> {x}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="night relative text-white">
-          <Waterline className="bg-surface-2 text-[#0b0b0c] dark:text-white/40" />
-          <div className="px-5 pt-6 pb-8 sm:px-9 sm:pb-10">
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="flex items-center gap-2 text-[22px] font-semibold tracking-[-0.03em]">
-                <IconLock className="size-5 text-white/70" /> Below the surface
-              </p>
-              <p className="text-[14px] text-white/65">On your device only, encrypted, never sent</p>
-            </div>
-            <ul className="mt-6 grid gap-2.5 sm:grid-cols-2 md:grid-cols-4">
-              {below.map((x) => (
-                <li
-                  key={x}
-                  className="rounded-[14px] border border-white/12 bg-white/[0.06] px-4 py-3.5 text-[15px] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
-                >
-                  {x}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 max-w-[46rem] text-[14px] leading-relaxed text-white/60">
-              MIRK&apos;s servers see an account number and its public receive tag at registration, and proof data that
-              is already public when relaying. No logs are kept.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Verify() {
-  const rows: [string, string | null, string][] = [
-    ["Gloam shielded pool", POOL_ADDRESS, "Holds every deposit. From @gloamtrade/sdk 0.2.2."],
-    ["MIRK account registry", REGISTRY_ADDRESS, "Maps account numbers to receive tags. Holds no funds."],
-  ];
-  return (
-    <section className={`${WRAP} ${SECTION}`}>
-      <div className="panel-soft grid gap-8 rounded-[28px] p-6 shadow-[var(--highlight)] sm:p-10 lg:grid-cols-2 lg:items-center">
-        <div>
-          <h2 className="display-l max-w-[17ch]">Every contract is public, and anyone can read it.</h2>
-          <p className="text-ink-2 mt-5 max-w-[30rem] text-[17px] leading-relaxed">
-            The registry is non-upgradeable and verified on Sourcify. Registrations are permanent; the owner can only
-            rotate the registrar.
-          </p>
-          <Link href="/contracts" className="btn btn-light mt-7 min-h-12 px-6 text-[16px]">
-            See the contracts <IconArrowRight className="size-4" />
-          </Link>
-        </div>
-        <div className="raised space-y-1 rounded-[22px] p-2.5">
-          {rows.map(([name, address, note]) => (
-            <div key={name} className="hover:bg-surface-2 rounded-[16px] p-4 transition-colors">
-              <p className="text-[15px] font-semibold">{name}</p>
-              {address ? (
-                <a
-                  href={addressUrl(address as `0x${string}`)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-signal-text mt-1 inline-flex items-center gap-1 font-mono text-[12px] break-all hover:underline"
-                >
-                  {address} <IconArrowUpRight className="size-3.5 shrink-0" />
-                </a>
-              ) : (
-                <p className="text-ink-2 mt-1 text-[13px]">Not configured on this deployment</p>
-              )}
-              <p className="text-ink-2 mt-1.5 text-[13px]">{note}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Honest() {
-  const items: [string, string][] = [
-    ["Not a custodian", "Funds sit in Gloam's deployed contract. MIRK cannot freeze, move or recover them."],
-    ["Not on mainnet", "Robinhood Chain testnet only. Test assets have no value. Mainnet comes later."],
-    ["Not audited", "MIRK has not been externally audited. Privacy grows with the number of people using the pool."],
-    ["Not recoverable for you", "Export an encrypted backup from Settings. Nobody can restore lost keys."],
-  ];
-  const soon: [Icon, string][] = [
-    [IconSwap, "Private trading"],
-    [IconStore, "Marketplace"],
-  ];
-  return (
-    <section className={`${WRAP} ${SECTION} grid gap-8 lg:grid-cols-[1fr_1.4fr]`}>
-      <div>
-        <h2 className="display-l">What MIRK is not</h2>
-        <div className="mt-7 flex flex-wrap gap-2">
-          {soon.map(([Icon, label]) => (
-            <span
-              key={label}
-              className="raised text-ink-2 inline-flex min-h-10 items-center gap-2 rounded-full px-4 text-[14px]"
+        <Link
+          href="/app/send"
+          className="glass mx-auto mt-8 flex min-h-14 w-full max-w-[560px] items-center justify-between gap-3 rounded-full py-1.5 pr-1.5 pl-6 text-left transition-transform duration-200 hover:scale-[1.01]"
+        >
+          <span className="text-ink-2 truncate text-[15px]">Pay a 12-digit MIRK account number…</span>
+          <span className="btn btn-accent min-h-11 shrink-0 px-5 text-[14px]">
+            Send privately <IconArrowRight className="size-4" />
+          </span>
+        </Link>
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {chips.map(([Icon, label, href]) => (
+            <Link
+              key={href}
+              href={href}
+              className="glass text-ink-2 hover:text-ink inline-flex min-h-9 items-center gap-2 rounded-full px-3.5 text-[13px] transition-colors"
             >
               <Icon className="size-4" /> {label}
-              <span className="bg-surface-2 rounded-full px-2 py-0.5 text-[11px] font-medium">Coming soon</span>
-            </span>
+            </Link>
           ))}
         </div>
+        <p className="text-ink-2 mt-5 text-[12px]">{DISCLAIMER}</p>
       </div>
-      <ul className="grid gap-x-8 sm:grid-cols-2">
-        {items.map(([t, d]) => (
-          <li key={t} className="border-line border-t py-5">
-            <h3 className="text-[17px] font-semibold">{t}</h3>
-            <p className="text-ink-2 mt-2 text-[15px] leading-relaxed">{d}</p>
-          </li>
-        ))}
-      </ul>
+
+      <div data-scroll className="mx-auto mt-16 max-w-[1040px] px-4 sm:px-6">
+        <div
+          className="origin-top will-change-transform"
+          style={{
+            transform: "perspective(1600px) rotateX(calc((1 - var(--e)) * 26deg)) scale(calc(0.86 + var(--e) * 0.14))",
+            opacity: "calc(0.35 + var(--e) * 0.65)",
+          }}
+        >
+          <AppWindow />
+        </div>
+      </div>
     </section>
   );
 }
 
-function Closing() {
+function PayANumber() {
+  const cards = [
+    { k: "Send to", v: "4829 1630 7714", a: "250.00 USDG", note: "Private transfer" },
+    { k: "Claim link", v: "mirk…/claim#m1.••••••", a: "40.00 USDG", note: "For someone without an account" },
+    { k: "Your account number", v: "7709 8827 9921", a: "", note: "Share it to get paid" },
+  ];
   return (
-    <section className={`${WRAP} ${SECTION} pb-20 sm:pb-28`}>
-      <div className="night relative isolate overflow-hidden rounded-[32px] px-6 pt-16 pb-0 text-center text-white shadow-[var(--shadow-raised)] sm:pt-20">
-        <Mark className="sink mx-auto size-20 text-white" />
-        <h2 className="display-l mx-auto mt-8 max-w-[16ch]">Your private balance is one deposit away.</h2>
-        <p className="mx-auto mt-5 max-w-[34rem] text-[17px] leading-relaxed text-white/70">
-          Connect any EVM wallet, add test funds and get your account number. No sign-up and no email.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open MIRK
-          </Link>
-          <Link
-            href="/docs"
-            className="btn min-h-12 border-white/20 bg-white/10 px-6 text-[16px] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] hover:bg-white/15"
-          >
-            Read how it works
-          </Link>
+    <section className="relative bg-[#eff4fc] pt-12 pb-40 sm:pb-52">
+      <div className={`${WRAP} grid items-center gap-14 lg:grid-cols-[1fr_1.05fr]`}>
+        <div data-scroll style={rise}>
+          <Copy title="Pay a number, not an address.">
+            Every MIRK account has a 12-digit number. It reveals no name, no wallet and no balance. Pay it like a bank
+            account, or send a claim link to someone who has no account yet.
+          </Copy>
+          <Character className="mt-12 hidden size-20 lg:block" />
         </div>
-        <Waterline className="mt-16 text-white/50" />
+        <div data-scroll className="relative mx-auto h-[360px] w-full max-w-[460px]">
+          {cards.map((c, i) => (
+            <div
+              key={c.k}
+              className="glass absolute inset-x-0 rounded-[22px] p-5"
+              style={{
+                top: `${i * 104}px`,
+                zIndex: 3 - i,
+                transform: `translateY(calc((1 - var(--e)) * ${70 + i * 70}px)) rotate(calc((1 - var(--e)) * ${
+                  (i - 1) * 5
+                }deg))`,
+                opacity: "calc(0.2 + var(--e) * 0.8)",
+              }}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <p className="text-ink-2 text-[12px]">{c.k}</p>
+                  <p className="tabular mt-1 truncate font-mono text-[16px]">{c.v}</p>
+                </div>
+                {c.a ? <p className="tabular shrink-0 text-[20px] font-semibold tracking-[-0.03em]">{c.a}</p> : null}
+              </div>
+              <p className="text-ink-2 mt-3 text-[13px]">{c.note}</p>
+            </div>
+          ))}
+          <p className="text-ink-2 absolute -bottom-10 left-1 text-[12px]">Example values</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Night() {
+  const rows: [string, ReactNode][] = [
+    ["Your balance", <HiddenDots key="b" />],
+    ["Your last payment", <HiddenDots key="l" />],
+    ["Who you paid", "Not on chain"],
+  ];
+  return (
+    <section className="relative -mt-28 text-white">
+      <div className="relative isolate overflow-hidden bg-[#0a1430] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
+        <div aria-hidden className="absolute inset-0 -z-10 bg-[url(/sky/night.webp)] bg-cover bg-bottom" />
+
+        <div className={`${WRAP} grid items-center gap-12 pt-44 pb-28 lg:grid-cols-[1fr_1.05fr]`}>
+          <div data-scroll style={rise}>
+            <Copy light title="Your balance keeps quiet.">
+              On a public chain, every balance is a billboard. MIRK keeps your money in Gloam&apos;s shielded pool, so
+              the record shows that something happened and leaves the rest to you.
+            </Copy>
+          </div>
+          <div data-scroll className="relative" style={rise}>
+            <Character light className="absolute -top-20 right-4 size-16 sm:-right-4" />
+            <div className="rounded-[26px] border border-white/15 bg-[#0b1024]/60 p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8">
+              <p className="font-mono text-[11px] tracking-[0.12em] text-white/50">WHAT THE CHAIN SEES</p>
+              <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em]">Nothing about your balance.</p>
+              <ul className="mt-6 divide-y divide-white/10 border-y border-white/10">
+                {rows.map(([k, v]) => (
+                  <li key={k} className="flex items-center justify-between py-3.5 text-[15px]">
+                    <span className="text-white/65">{k}</span>
+                    <span className="font-medium text-white/90">{v}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-4 flex flex-wrap justify-between gap-2 font-mono text-[11px] text-white/45">
+                <span>POOL {short(POOL_ADDRESS)}</span>
+                <span>CHAIN {CHAIN_ID}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className={`${WRAP} grid items-center gap-12 pt-16 pb-72 sm:pb-96 lg:grid-cols-[1fr_1.05fr]`}>
+          <div data-scroll style={rise}>
+            <Copy light title="You see exactly what goes public.">
+              Adding money and cashing out are public. Everything between them is not. Slide through the steps.
+            </Copy>
+          </div>
+          <div data-scroll style={rise}>
+            <VisibilitySlider />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Sunset() {
+  const steps: [string, string][] = [
+    ["Link created", "40.00 USDG leaves your private balance"],
+    ["Opened in another browser", "The secret travels in the link itself"],
+    ["Claimed into a new account", "The money is theirs, privately"],
+  ];
+  return (
+    <section className="relative isolate overflow-hidden">
+      <div aria-hidden className="absolute inset-0 -z-10 bg-[url(/sky/sunset.webp)] bg-cover bg-bottom" />
+      <div aria-hidden className="absolute inset-x-0 top-0 -z-10 h-72 bg-gradient-to-b from-[#717ea7] to-transparent" />
+      <div className={`${WRAP} grid items-center gap-12 pt-36 pb-64 sm:pb-80 lg:grid-cols-[1fr_1.05fr]`}>
+        <div data-scroll style={rise}>
+          <Copy title="Pay someone who isn't here yet.">
+            A claim link carries the money inside it. Send it any way you like; whoever opens it claims the payment into
+            a new account in their own browser.
+          </Copy>
+        </div>
+        <div data-scroll className="relative" style={rise}>
+          <Character className="absolute -right-2 -bottom-16 size-16" />
+          <div className="glass rounded-[26px] p-6 sm:p-7">
+            <p className="text-ink-2 font-mono text-[11px] tracking-[0.12em]">A CLAIM LINK, EXAMPLE</p>
+            <ol className="mt-5 space-y-4">
+              {steps.map(([t, d], i) => (
+                <li key={t} className="flex gap-4">
+                  <span className="flex flex-col items-center">
+                    <span className="bg-ink text-on-ink grid size-7 place-items-center rounded-full font-mono text-[11px]">
+                      {i + 1}
+                    </span>
+                    {i < steps.length - 1 ? <span className="bg-line-strong mt-1 w-px flex-1" /> : null}
+                  </span>
+                  <span className="pb-1">
+                    <span className="block text-[17px] font-semibold tracking-[-0.02em]">{t}</span>
+                    <span className="text-ink-2 block text-[14px]">{d}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Lake() {
+  return (
+    <section data-scroll className="relative isolate overflow-hidden">
+      <div className="bg-gradient-to-b from-[#9a8fc5] to-[#8f99ce] pt-24 pb-6 sm:pt-32">
+        <div className={`${WRAP} text-center`}>
+          <h2 className="display-xl mx-auto max-w-[14ch]">Private money, on your terms.</h2>
+          <p className="mx-auto mt-5 max-w-[34rem] text-[17px] leading-relaxed text-[#2a2550]/75">
+            Connect any EVM wallet, add test funds and get your account number. No sign-up and no email.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
+              Open MIRK
+            </Link>
+            <Link href="/docs" className="glass btn text-ink min-h-12 px-6 text-[16px]">
+              How it works
+            </Link>
+          </div>
+          <p className="mt-5 text-[12px] text-[#2a2550]/70">{DISCLAIMER}</p>
+        </div>
+      </div>
+
+      {/* The scene keeps its own aspect, so the waterline sits at 60% of it. */}
+      <div className="relative aspect-[8/5] min-h-[380px] w-full">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/sky/lake.webp" alt="" className="absolute inset-0 size-full object-cover" />
+        <div aria-hidden className="absolute top-[60%] left-1/2 w-20 -translate-x-1/2 sm:w-28">
+          <div
+            className="absolute inset-x-0 bottom-0"
+            style={{ transform: "translateY(calc((1 - var(--e)) * -40px))" }}
+          >
+            <Mark className="size-full text-[#0b0b0c] drop-shadow-[0_10px_20px_rgba(42,37,80,0.35)]" />
+          </div>
+          <div className="absolute inset-x-0 top-1 opacity-30 blur-[1.5px] [mask-image:linear-gradient(180deg,#000,transparent_75%)]">
+            <Mark className="size-full -scale-y-100 text-[#2a2550]" />
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -443,17 +321,14 @@ export default function Landing() {
   return (
     <div className="bg-canvas min-h-dvh">
       <SiteHeader />
-      <main>
+      <main data-theme="light" className="text-ink -mt-[76px] sm:-mt-20">
         <Hero />
-        <Showcase />
-        <BuiltOn />
-        <HowItWorks />
-        <Features />
-        <Surface />
-        <Verify />
-        <Honest />
-        <Closing />
+        <PayANumber />
+        <Night />
+        <Sunset />
+        <Lake />
       </main>
+      <ScrollFX />
       <SiteFooter />
     </div>
   );
