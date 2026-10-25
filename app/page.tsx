@@ -58,18 +58,10 @@ function Hero() {
     <section className="relative isolate overflow-hidden">
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 -z-10 h-[620px] bg-[radial-gradient(55%_60%_at_50%_0%,var(--ember-100)_0%,transparent_70%)] dark:bg-[radial-gradient(55%_60%_at_50%_0%,rgba(214,31,42,0.18)_0%,transparent_70%)]"
+        className="absolute inset-x-0 -top-20 -z-10 h-[700px] bg-[radial-gradient(55%_60%_at_50%_0%,var(--tone-100)_0%,transparent_70%)] dark:bg-[radial-gradient(55%_60%_at_50%_0%,rgba(255,255,255,0.06)_0%,transparent_70%)]"
       />
-      <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
-        <Link
-          href="/app"
-          className="raised text-ink-2 hover:text-ink inline-flex min-h-10 items-center gap-2.5 rounded-full px-4 text-[13px] transition-colors"
-        >
-          <span aria-hidden className="bg-signal size-2 rounded-full shadow-[0_0_0_3px_var(--signal-tint)]" />
-          Live on Robinhood Chain testnet
-          <IconArrowRight className="size-3.5" />
-        </Link>
-        <h1 className="display-xl mx-auto mt-7 max-w-[17ch]">Keep your balance below the surface.</h1>
+      <div className={`${WRAP} pt-16 text-center sm:pt-24`}>
+        <h1 className="display-xl mx-auto max-w-[17ch]">Keep your balance below the surface.</h1>
         <p className="text-ink-2 mx-auto mt-6 max-w-[38rem] text-[17px] leading-relaxed sm:text-[18px]">
           MIRK runs on a public chain, but your balance, who you pay and how much stay off the record. Your keys stay
           on your device. Nobody, including MIRK, can move your money.
@@ -187,7 +179,7 @@ function FeatureHead({
   return (
     <div>
       <span
-        className={`grid size-11 place-items-center rounded-full ${onAccent ? "text-ember-700 bg-white shadow-[0_6px_14px_-6px_rgba(46,6,9,0.6)]" : "raised"}`}
+        className={`grid size-11 place-items-center rounded-full ${onAccent ? "bg-white text-[#0b0b0c]" : "raised"}`}
       >
         <Icon className="size-5" />
       </span>
@@ -228,7 +220,7 @@ function Features() {
           </div>
         </div>
 
-        <div className="relative isolate flex flex-col gap-6 overflow-hidden rounded-[28px] border border-[var(--ember-800)] bg-[linear-gradient(170deg,var(--ember-500)_0%,var(--ember-600)_45%,var(--ember-800)_100%)] p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_24px_48px_-20px_rgba(179,20,31,0.6)] sm:p-7">
+        <div className="relative isolate flex flex-col gap-6 overflow-hidden rounded-[28px] night p-5 text-white shadow-[var(--shadow-raised)] sm:p-7">
           <Mark className="absolute -top-20 -right-20 -z-10 size-72 text-white/10" />
           <FeatureHead icon={IconShield} title="Pay an account number" onAccent>
             Pay a 12-digit MIRK number. No name, no wallet address and no amount reach the chain.
@@ -242,7 +234,7 @@ function Features() {
               <p className="tabular mt-1 text-[28px] font-semibold tracking-[-0.03em]">
                 250.00 <span className="text-ink-2 text-[15px] font-medium">USDG</span>
               </p>
-              <p className="text-signal-text mt-3 text-[13px] font-medium">Recorded on chain as a private transfer</p>
+              <p className="text-ink-2 mt-3 text-[13px] font-medium">Recorded on chain as a private transfer</p>
             </div>
           </div>
         </div>
@@ -310,11 +302,11 @@ function Surface() {
           </ul>
         </div>
         <div className="night relative text-white">
-          <Waterline className="bg-surface-2 text-[var(--ember-600)]" />
+          <Waterline className="bg-surface-2 text-[#0b0b0c] dark:text-white/40" />
           <div className="px-5 pt-6 pb-8 sm:px-9 sm:pb-10">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="flex items-center gap-2 text-[22px] font-semibold tracking-[-0.03em]">
-                <IconLock className="size-5 text-[var(--ember-300)]" /> Below the surface
+                <IconLock className="size-5 text-white/70" /> Below the surface
               </p>
               <p className="text-[14px] text-white/65">On your device only, encrypted, never sent</p>
             </div>
@@ -441,7 +433,7 @@ function Closing() {
             Read how it works
           </Link>
         </div>
-        <Waterline className="mt-16 text-[var(--ember-500)]" />
+        <Waterline className="mt-16 text-white/50" />
       </div>
     </section>
   );

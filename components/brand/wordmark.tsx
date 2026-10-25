@@ -23,12 +23,12 @@ export function Mark({ className, title }: { className?: string; title?: string 
   );
 }
 
-/** The mark in white on a raised ember tile, for empty states and app icons. */
+/** The mark in reverse on a solid ink tile, for empty states and app icons. */
 export function MarkTile({ className = "size-12" }: { className?: string }) {
   return (
     <span
       aria-hidden
-      className={`grid place-items-center rounded-[28%] border border-[var(--ember-800)] bg-[linear-gradient(180deg,#f04a4a,var(--ember-700))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_10px_22px_-8px_rgba(214,31,42,0.6)] ${className}`}
+      className={`grid place-items-center rounded-[28%] bg-ink text-on-ink ${className}`}
     >
       <Mark className="size-[58%]" />
     </span>

@@ -97,7 +97,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <aside className="sticky top-0 hidden h-dvh w-[262px] shrink-0 flex-col px-4 pt-5 pb-4 md:flex">
         <Link href="/" aria-label="MIRK home" className="mb-6 flex min-h-11 w-fit items-center gap-2.5 px-2">
           <Logo className="size-9" />
-          <span className="bg-signal-tint text-signal-text rounded-full px-2.5 py-0.5 text-[12px] font-medium">
+          <span className="border-line-strong text-ink-2 rounded-full border px-2.5 py-0.5 text-[12px] font-medium">
             Testnet
           </span>
         </Link>
@@ -135,7 +135,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="flex h-16 items-center justify-between gap-3 px-4 md:h-[68px] md:px-8">
             <Link href="/app" aria-label="MIRK home" className="flex min-h-11 items-center gap-2.5 md:hidden">
               <Logo className="size-8" />
-              <span className="bg-signal-tint text-signal-text rounded-full px-2.5 py-0.5 text-[12px] font-medium">
+              <span className="border-line-strong text-ink-2 rounded-full border px-2.5 py-0.5 text-[12px] font-medium">
                 Testnet
               </span>
             </Link>

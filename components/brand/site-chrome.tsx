@@ -1,124 +1,30 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { IconArrowUpRight, IconChevronDown, IconLayers } from "@/components/shared/icons";
-import { CHAIN_ID, POOL_ADDRESS, REGISTRY_ADDRESS, addressUrl } from "@/lib/robinhood/network";
+import { IconArrowUpRight, IconLayers } from "@/components/shared/icons";
 import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./wordmark";
 
 export const WRAP = "mx-auto w-full max-w-[1176px] px-4 sm:px-6 lg:px-9";
 
-const NAV = [
-  ["How it works", "/docs"],
-  ["Contracts", "/contracts"],
-  ["Privacy", "/privacy"],
-  ["Risk", "/risk"],
-] as const;
-
-function short(address: string) {
-  return `${address.slice(0, 6)}…${address.slice(-4)}`;
-}
-
-/** Live facts under the nav: the real contracts MIRK runs on. */
-function FactStrip() {
-  const facts: [string, string | null][] = [
-    ["Gloam pool", POOL_ADDRESS],
-    ["Account registry", REGISTRY_ADDRESS],
-  ];
-  return (
-    <div className="border-line border-b">
-      <div className={`${WRAP} flex min-h-10 items-center justify-between gap-6 overflow-x-auto text-[13px]`}>
-        <div className="flex shrink-0 items-center gap-5">
-          {facts.map(([label, address]) =>
-            address ? (
-              <a
-                key={label}
-                href={addressUrl(address as `0x${string}`)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-2 whitespace-nowrap"
-              >
-                <span className="font-medium">{label}</span>
-                <span className="text-muted group-hover:text-ink font-mono text-[12px] transition-colors">
-                  {short(address)}
-                </span>
-              </a>
-            ) : null,
-          )}
-        </div>
-        <p className="text-muted hidden shrink-0 whitespace-nowrap md:block">
-          Robinhood Chain testnet, chain {CHAIN_ID}. Test assets have no value.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/** `className` sets the display, so callers can hide it per breakpoint. */
-export function NetworkPill({ className = "inline-flex" }: { className?: string }) {
-  return (
-    <span
-      className={`border-line text-ink-2 min-h-10 shrink-0 items-center whitespace-nowrap gap-2 rounded-full border px-3.5 text-[13px] ${className}`}
-    >
-      <IconLayers className="size-4" /> Robinhood Chain testnet
-    </span>
-  );
-}
-
+/** A floating liquid-glass pill: the mark, the theme switch and one action. */
 export function SiteHeader() {
   return (
-    <header className="bg-[var(--chrome)] sticky top-0 z-40 backdrop-blur-md">
-      <div className={`${WRAP} flex h-[68px] items-center justify-between gap-4`}>
-        <div className="flex items-center gap-8">
+    <>
+      <header className="fixed inset-x-0 top-3 z-40 px-4 sm:top-4">
+        <div className="glass mx-auto flex h-14 max-w-[400px] items-center justify-between gap-3 rounded-full pr-2 pl-4">
           <Link href="/" aria-label="MIRK home" className="flex min-h-11 items-center">
-            <Logo className="size-9" />
+            <Logo className="size-8" />
           </Link>
-          <nav aria-label="Site" className="hidden items-center gap-1 lg:flex">
-            {NAV.map(([label, href]) => (
-              <Link
-                key={href}
-                href={href}
-                className="text-ink-2 hover:text-ink hover:bg-surface-2 rounded-full px-3.5 py-2 text-[14px] transition-colors"
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle />
+            <Link href="/app" className="btn btn-accent min-h-10 px-5 text-[14px]">
+              Open MIRK
+            </Link>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <NetworkPill className="hidden xl:inline-flex" />
-          <ThemeToggle />
-          <Link
-            href="/app"
-            className="btn btn-accent min-h-11 px-5 text-[14px]"
-          >
-            Open MIRK
-          </Link>
-          <details className="group relative lg:hidden">
-            <summary
-              aria-label="Menu"
-              className="border-line grid size-11 cursor-pointer list-none place-items-center rounded-full border [&::-webkit-details-marker]:hidden"
-            >
-              <IconChevronDown className="size-4 transition-transform group-open:rotate-180" />
-            </summary>
-            <nav
-              aria-label="Site"
-              className="border-line bg-surface shadow-float absolute top-[calc(100%+8px)] right-0 w-56 rounded-[18px] border p-2"
-            >
-              {NAV.map(([label, href]) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="hover:bg-surface-2 flex min-h-11 items-center rounded-xl px-3 text-[15px]"
-                >
-                  {label}
-                </Link>
-              ))}
-            </nav>
-          </details>
-        </div>
-      </div>
-      <FactStrip />
-    </header>
+      </header>
+      <div aria-hidden className="h-[76px] sm:h-20" />
+    </>
   );
 }
 

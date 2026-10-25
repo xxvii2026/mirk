@@ -137,7 +137,7 @@ export function PaymentSteps() {
                   className={cx(
                     "grid size-11 shrink-0 place-items-center rounded-[12px] font-mono text-[12px] transition-colors",
                     on
-                      ? "border border-[var(--ember-800)] bg-[linear-gradient(180deg,#f04a4a,var(--ember-700))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]"
+                      ? "bg-[#0b0b0c] text-white"
                       : "border border-white/12 bg-white/[0.06] text-white/70",
                   )}
                 >
@@ -172,7 +172,7 @@ export function PaymentSteps() {
         </div>
         <div
           key={`k${active}`}
-          className="fade-in rounded-[18px] border border-white/20 bg-[#2e0609]/70 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md"
+          className="fade-in rounded-[18px] border border-white/20 bg-black/55 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md"
         >
           <p className="text-[13px] text-white/75">Below the surface: stays on your device or off the record</p>
           <ul className="mt-3 flex flex-wrap gap-2">
