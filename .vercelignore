@@ -1,0 +1,8 @@
+.claude
+contracts/out
+contracts/cache
+contracts/broadcast
+test-results
+playwright-report
+deployments
+BUILD (3).md

@@ -1,0 +1,14 @@
+packages:
+  - "."
+allowBuilds:
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+  "@reown/appkit": false
+  blake-hash: false
+minimumReleaseAgeExclude:
+  - "@next/eslint-plugin-next@16.4.3"
+  - eslint-config-next@16.4.3
+  - viem@2.57.11
+overrides:
+  viem: 2.57.11

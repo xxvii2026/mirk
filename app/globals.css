@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --mint-50: #edfcf6;
+  --mint-100: #d8faeb;
+  --mint-200: #b6f7db;
+  --mint-300: #8ff3c9;
+  --mint-500: #008561;
+  --mint-600: #007456;
+  --mint-700: #086149;
+  --mint-800: #0d4e3c;
+  --mint-900: #0c3b2d;
+
+  --ground: #f4f5f7;
+  --canvas: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f4f5f7;
+  --surface-3: #ebedf1;
+  --ink: #0b0b0c;
+  --ink-2: #5b6270;
+  --muted: #6a6f7b;
+  --line: #e7e9ee;
+  --line-strong: #d4d8e0;
+  --signal: var(--mint-600);
+  --signal-tint: var(--mint-100);
+  --signal-text: var(--mint-600);
+  --danger: #ca2b2f;
+  --danger-tint: #fdecec;
+  --on-ink: #ffffff;
+  --chrome: rgba(255, 255, 255, 0.94);
+
+  --shadow-card: 0 1px 2px rgba(11, 11, 12, 0.04), 0 6px 18px rgba(11, 11, 12, 0.05);
+  --shadow-float: 0 12px 40px rgba(11, 11, 12, 0.1);
+
+  --stage:
+    radial-gradient(120% 90% at 18% 12%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 60%),
+    radial-gradient(110% 85% at 96% 100%, rgba(0, 116, 86, 0.95) 0%, rgba(0, 116, 86, 0.55) 30%, rgba(0, 116, 86, 0) 68%),
+    linear-gradient(158deg, var(--mint-100) 0%, var(--mint-200) 42%, var(--mint-300) 100%);
+  --stage-soft: linear-gradient(155deg, var(--mint-50) 0%, var(--mint-100) 45%, var(--mint-300) 100%);
+  --stage-deep:
+    radial-gradient(90% 55% at 20% 0%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 62%),
+    linear-gradient(175deg, var(--mint-200) 0%, var(--mint-300) 26%, var(--mint-500) 60%, var(--mint-800) 100%);
+  --panel-soft: linear-gradient(160deg, #f7f8fa, #edeff3);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ground: #0b0c0d;
+  --canvas: #0b0c0d;
+  --surface: #141517;
+  --surface-2: #18191c;
+  --surface-3: #212327;
+  --ink: #f4f4f5;
+  --ink-2: #b4b9c2;
+  --muted: #959ba6;
+  --line: #24262b;
+  --line-strong: #33363d;
+  --signal: #19b585;
+  --signal-tint: #0f2c23;
+  --signal-text: var(--mint-300);
+  --danger: #ff8a80;
+  --danger-tint: #2a1514;
+  --on-ink: #0b0b0c;
+  --chrome: rgba(11, 12, 13, 0.9);
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 18px rgba(0, 0, 0, 0.25);
+  --shadow-float: 0 12px 40px rgba(0, 0, 0, 0.45);
+
+  --stage:
+    radial-gradient(120% 90% at 18% 12%, rgba(143, 243, 201, 0.16) 0%, rgba(143, 243, 201, 0) 60%),
+    radial-gradient(110% 85% at 96% 100%, rgba(0, 133, 97, 0.85) 0%, rgba(0, 116, 86, 0.35) 34%, rgba(0, 116, 86, 0) 70%),
+    linear-gradient(158deg, #0f2a22 0%, #0c3b2d 50%, #0d4e3c 100%);
+  --stage-soft: linear-gradient(155deg, #0f2a22 0%, #0c3b2d 55%, #0d4e3c 100%);
+  --stage-deep:
+    radial-gradient(90% 55% at 20% 0%, rgba(143, 243, 201, 0.18) 0%, rgba(143, 243, 201, 0) 62%),
+    linear-gradient(175deg, #0d4e3c 0%, #086149 40%, #0c3b2d 100%);
+  --panel-soft: linear-gradient(160deg, #17181b, #121315);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ground: var(--ground);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-signal: var(--signal);
+  --color-signal-tint: var(--signal-tint);
+  --color-signal-text: var(--signal-text);
+  --color-danger: var(--danger);
+  --color-danger-tint: var(--danger-tint);
+  --color-on-ink: var(--on-ink);
+  --color-mint-50: var(--mint-50);
+  --color-mint-100: var(--mint-100);
+  --color-mint-200: var(--mint-200);
+  --color-mint-300: var(--mint-300);
+  --color-mint-600: var(--mint-600);
+  --color-mint-800: var(--mint-800);
+  --color-mint-900: var(--mint-900);
+  --shadow-card: var(--shadow-card);
+  --shadow-float: var(--shadow-float);
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  background: var(--ground);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Display type, after the Sleeve scale: medium weight, tight tracking. */
+.display-xl {
+  font-size: clamp(2.5rem, 1.5rem + 4.4444vw, 4.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+.display-l {
+  font-size: clamp(2rem, 1.4444rem + 2.4691vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.032em;
+  font-weight: 500;
+}
+
+/* Gradient fields for feature panels. */
+.stage {
+  background: var(--stage);
+}
+.stage-soft {
+  background: var(--stage-soft);
+}
+.stage-deep {
+  background: var(--stage-deep);
+}
+.panel-soft {
+  background: var(--panel-soft);
+}
+
+/* Diagonal hatch for values that are on chain but unreadable. */
+.hatch {
+  background: repeating-linear-gradient(135deg, var(--surface-3) 0 4px, var(--line-strong) 4px 6px);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+::selection {
+  background: var(--mint-200);
+  color: #0b0b0c;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+input,
+textarea {
+  caret-color: var(--signal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fade-in 360ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
