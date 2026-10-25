@@ -1,11 +1,11 @@
 /**
- * The MIRK logo: the falling-exclamation mark beside a lowercase "mirk" set in
- * the display face. Both inherit `currentColor`; size the lockup with font-size.
+ * The MIRK mark: a ring sinking below a waterline. It is the whole logo; there
+ * is no wordmark. Inherits `currentColor`; size it with height and width.
  */
 
-import { MARK_SHAPES, MARK_STROKE, MARK_VIEWBOX } from "./wordmark-data";
+import { MARK_PATH, MARK_VIEWBOX } from "./wordmark-data";
 
-export { MARK_SHAPES, MARK_VIEWBOX, markSvg } from "./wordmark-data";
+export { MARK_PATH, MARK_VIEWBOX, markSvg } from "./wordmark-data";
 
 export function Mark({ className, title }: { className?: string; title?: string }) {
   return (
@@ -16,27 +16,26 @@ export function Mark({ className, title }: { className?: string; title?: string 
       aria-label={title}
       aria-hidden={title ? undefined : true}
       fill="currentColor"
-      stroke="currentColor"
-      strokeWidth={MARK_STROKE}
-      strokeLinejoin="round"
     >
       {title ? <title>{title}</title> : null}
-      {MARK_SHAPES.map((points) => (
-        <polygon key={points} points={points} />
-      ))}
+      <path fillRule="evenodd" d={MARK_PATH} />
     </svg>
   );
 }
 
-export function Wordmark({ className, title = "MIRK" }: { className?: string; title?: string }) {
+/** The mark in white on a raised ember tile, for empty states and app icons. */
+export function MarkTile({ className = "size-12" }: { className?: string }) {
   return (
     <span
-      role="img"
-      aria-label={title}
-      className={`inline-flex items-center gap-[0.22em] leading-none font-semibold tracking-[-0.045em] ${className ?? ""}`}
+      aria-hidden
+      className={`grid place-items-center rounded-[28%] border border-[var(--ember-800)] bg-[linear-gradient(180deg,#f04a4a,var(--ember-700))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_10px_22px_-8px_rgba(214,31,42,0.6)] ${className}`}
     >
-      <Mark className="h-[1.08em] w-auto -translate-y-[0.04em]" />
-      <span aria-hidden>mirk</span>
+      <Mark className="size-[58%]" />
     </span>
   );
+}
+
+/** The logo as a labelled image, for headers and footers. */
+export function Logo({ className = "size-8" }: { className?: string }) {
+  return <Mark className={className} title="MIRK" />;
 }

@@ -3,16 +3,16 @@
 import { useAppKit } from "@reown/appkit/react";
 import type { ReactNode } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
-import { Wordmark } from "@/components/brand/wordmark";
-import { Button, Card, Notice, Pill, SignalDot } from "@/components/shared/ui";
+import { MarkTile } from "@/components/brand/wordmark";
+import { Button, Notice, Pill, SignalDot } from "@/components/shared/ui";
 import { REOWN_PROJECT_ID } from "@/lib/reown/config";
 import { CHAIN_ID } from "@/lib/robinhood/network";
 import { useVault } from "./vault-provider";
 
 function Frame({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto flex min-h-[70dvh] w-full max-w-md flex-col justify-center px-4 py-10">
-      <Card className="fade-in space-y-6">{children}</Card>
+    <div className="fade-in border-line-strong rounded-[22px] border border-dashed px-5 py-12 sm:py-16">
+      <div className="mx-auto flex max-w-md flex-col items-center gap-5 text-center">{children}</div>
     </div>
   );
 }
@@ -21,10 +21,10 @@ function ConnectWallet() {
   const { open } = useAppKit();
   return (
     <Frame>
-      <Wordmark className="text-[26px]" />
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Connect a wallet to open MIRK</h1>
-        <p className="text-muted text-[15px]">
+      <MarkTile className="size-14" />
+      <div className="w-full space-y-2">
+        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Connect a wallet to open MIRK</h1>
+        <p className="text-ink-2 text-[15px] leading-relaxed">
           Any EVM wallet works. MIRK never holds your money: it sits in Gloam&apos;s shielded pool, and only keys on
           this device can move it.
         </p>
@@ -42,9 +42,9 @@ function WrongNetwork({ actual }: { actual: number | undefined }) {
   return (
     <Frame>
       <Pill tone="danger">Wrong network</Pill>
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Switch to Robinhood Chain testnet</h1>
-        <p className="text-muted text-[15px]">
+      <div className="w-full space-y-2">
+        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Switch to Robinhood Chain testnet</h1>
+        <p className="text-ink-2 text-[15px] leading-relaxed">
           Your wallet is on network {actual ?? "unknown"}. MIRK only works on Robinhood Chain testnet (chain {CHAIN_ID}
           ).
         </p>
@@ -64,9 +64,9 @@ function Unlock() {
       <Pill tone="signal">
         <SignalDot /> Private store
       </Pill>
-      <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">Unlock your private store</h1>
-        <p className="text-muted text-[15px]">
+      <div className="w-full space-y-2">
+        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Unlock your private store</h1>
+        <p className="text-ink-2 text-[15px] leading-relaxed">
           Your wallet will ask you to sign a message. The signature never leaves this device and does not authorize a
           transaction. It unlocks the encrypted keys that hold your private balance here.
         </p>

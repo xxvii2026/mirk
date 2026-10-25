@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import type { PublicClient } from "viem";
 import { usePublicClient } from "wagmi";
-import { Wordmark } from "@/components/brand/wordmark";
+import { Logo } from "@/components/brand/wordmark";
 import { Amount } from "@/components/money/amount";
 import { FlowErrorNotice, FlowProgress, useFlow, type StepDef } from "@/components/money/flow";
 import { PrivateGate } from "@/components/privacy/gate";
@@ -152,7 +152,7 @@ export function ClaimView() {
       <div className="min-h-dvh">
         <header className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4">
           <Link href="/" aria-label="MIRK home" className="flex min-h-11 items-center">
-            <Wordmark className="text-[22px]" />
+            <Logo className="size-8" />
           </Link>
           <Pill>Testnet</Pill>
         </header>

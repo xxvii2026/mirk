@@ -8,16 +8,16 @@ export function cx(...parts: (string | false | null | undefined)[]) {
   return parts.filter(Boolean).join(" ");
 }
 
-type Variant = "primary" | "ghost" | "quiet" | "danger";
+type Variant = "primary" | "dark" | "ghost" | "quiet" | "danger";
 
-const base =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-medium transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:active:scale-100 select-none";
+const base = "min-h-11 px-5 text-[15px]";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-ink text-on-ink hover:bg-ink/85",
-  ghost: "border border-line-strong bg-surface text-ink hover:bg-surface-2",
-  quiet: "px-3 text-muted hover:text-ink",
-  danger: "border border-danger/40 bg-surface text-danger hover:bg-danger-tint",
+  primary: "btn btn-accent",
+  dark: "btn btn-dark",
+  ghost: "btn btn-light",
+  quiet: "inline-flex items-center justify-center gap-2 rounded-full px-3 font-medium text-ink-2 hover:text-ink",
+  danger: "btn btn-light text-danger!",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }>(
@@ -41,7 +41,7 @@ export function Card({
   ...rest
 }: { className?: string; children: ReactNode; as?: "section" | "div" | "article" } & Record<string, unknown>) {
   return (
-    <As className={cx("border-line bg-surface shadow-card rounded-[24px] border p-5 sm:p-7", className)} {...rest}>
+    <As className={cx("raised rounded-[22px] p-5 sm:p-6", className)} {...rest}>
       {children}
     </As>
   );
@@ -157,7 +157,7 @@ export function Notice({
 }) {
   const tones = {
     neutral: "border-line bg-surface-2",
-    signal: "border-transparent bg-mint-50 dark:bg-signal-tint",
+    signal: "border-transparent bg-signal-tint",
     danger: "border-danger/30 bg-danger-tint",
   };
   return (

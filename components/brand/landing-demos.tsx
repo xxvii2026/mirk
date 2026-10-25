@@ -11,7 +11,7 @@ export function AppPreview() {
   const [view, setView] = useState<View>("you");
   const you = view === "you";
   return (
-    <div className="bg-surface shadow-float w-full max-w-[430px] rounded-[22px] p-5 sm:p-6">
+    <div className="raised relative w-full max-w-[430px] rounded-[22px] p-5 shadow-[var(--highlight),var(--shadow-float)] sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[15px] font-semibold">Your private balance</p>
@@ -64,7 +64,7 @@ export function AppPreview() {
           ] as const
         ).map(([Icon, label]) => (
           <div key={label} className="flex flex-col items-center gap-1.5 py-1">
-            <span className="border-line grid size-10 place-items-center rounded-full border">
+            <span className="btn btn-light size-10 p-0">
               <Icon className="size-[18px]" />
             </span>
             <span className="text-ink-2 text-[11px] font-medium">{label}</span>
@@ -111,12 +111,13 @@ const STEPS = [
   },
 ] as const;
 
+/** Lives on the dark night band, in both themes. */
 export function PaymentSteps() {
   const [active, setActive] = useState(0);
   const step = STEPS[active]!;
   return (
-    <div className="bg-surface-2 grid gap-6 rounded-[28px] p-3 sm:p-4 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
-      <ol className="space-y-1.5 py-2 sm:py-4 lg:pl-3">
+    <div className="grid gap-4 rounded-[28px] border border-white/10 bg-white/[0.03] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] sm:p-4 lg:grid-cols-[1.05fr_1fr] lg:gap-6">
+      <ol className="space-y-1.5 py-1 sm:py-2">
         {STEPS.map((s, i) => {
           const on = i === active;
           return (
@@ -126,21 +127,25 @@ export function PaymentSteps() {
                 onClick={() => setActive(i)}
                 aria-pressed={on}
                 className={cx(
-                  "flex w-full items-start gap-4 rounded-[20px] p-4 text-left transition-colors duration-200 sm:p-5",
-                  on ? "bg-ink text-on-ink" : "hover:bg-surface",
+                  "flex w-full items-start gap-4 rounded-[20px] p-4 text-left transition-[background-color,box-shadow,transform] duration-200 sm:p-5",
+                  on
+                    ? "bg-white text-[#0b0b0c] shadow-[0_18px_40px_-14px_rgba(0,0,0,0.7)]"
+                    : "text-white hover:bg-white/[0.06]",
                 )}
               >
                 <span
                   className={cx(
-                    "grid size-11 shrink-0 place-items-center rounded-[12px] font-mono text-[12px]",
-                    on ? "bg-surface text-ink" : "bg-surface text-ink-2",
+                    "grid size-11 shrink-0 place-items-center rounded-[12px] font-mono text-[12px] transition-colors",
+                    on
+                      ? "border border-[var(--ember-800)] bg-[linear-gradient(180deg,#f04a4a,var(--ember-700))] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]"
+                      : "border border-white/12 bg-white/[0.06] text-white/70",
                   )}
                 >
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="min-w-0">
                   <span className="block text-[19px] font-semibold tracking-[-0.02em]">{s.title}</span>
-                  <span className={cx("mt-1 block text-[14px] leading-relaxed", on ? "text-on-ink/75" : "text-ink-2")}>
+                  <span className={cx("mt-1 block text-[14px] leading-relaxed", on ? "text-[#565d6a]" : "text-white/65")}>
                     {s.text}
                   </span>
                 </span>
@@ -150,10 +155,10 @@ export function PaymentSteps() {
         })}
       </ol>
 
-      <div className="stage-deep relative flex min-h-[420px] flex-col justify-between gap-6 overflow-hidden rounded-[22px] p-5 sm:p-7">
-        <div key={active} className="fade-in bg-surface shadow-float rounded-[18px] p-5">
+      <div className="stage-deep relative isolate flex min-h-[400px] flex-col justify-between gap-6 overflow-hidden rounded-[22px] p-5 sm:p-7">
+        <div key={active} className="fade-in bg-surface text-ink shadow-float rounded-[18px] p-5">
           <p className="text-[15px] font-semibold">{step.title}</p>
-          <p className="text-ink-2 mt-0.5 text-[13px]">What this step puts on the record</p>
+          <p className="text-ink-2 mt-0.5 text-[13px]">Above the surface: what this step puts on the record</p>
           <ul className="mt-4 space-y-2">
             {step.shown.map((x) => (
               <li key={x} className="flex items-center justify-between gap-3 text-[14px]">
@@ -165,11 +170,14 @@ export function PaymentSteps() {
             ))}
           </ul>
         </div>
-        <div key={`k${active}`} className="fade-in rounded-[18px] border border-white/25 bg-[#0c3b2d]/75 p-5 text-white backdrop-blur-md">
-          <p className="text-[13px] text-white/75">Stays on your device or off the record</p>
+        <div
+          key={`k${active}`}
+          className="fade-in rounded-[18px] border border-white/20 bg-[#2e0609]/70 p-5 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-md"
+        >
+          <p className="text-[13px] text-white/75">Below the surface: stays on your device or off the record</p>
           <ul className="mt-3 flex flex-wrap gap-2">
             {step.kept.map((x) => (
-              <li key={x} className="rounded-full bg-white/12 px-3 py-1.5 text-[14px] font-medium">
+              <li key={x} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[14px] font-medium">
                 {x}
               </li>
             ))}

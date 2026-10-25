@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Mark } from "@/components/brand/wordmark";
 import { ActivityList } from "@/components/dashboard/activity-list";
 import {
   AccountNumberText,
@@ -27,9 +28,10 @@ export default function Dashboard() {
   const settling = incomingBalance(notes, asset.address);
 
   return (
-    <div className="fade-in space-y-6">
-      <h1 className="sr-only">Home</h1>
-      <Card className="stage-soft space-y-6 border-transparent">
+    <div className="fade-in space-y-5">
+      <h1 className="text-[30px] font-semibold tracking-[-0.035em]">Home</h1>
+      <Card className="stage relative isolate space-y-6 overflow-hidden">
+        <Mark className="pointer-events-none absolute -right-10 -bottom-16 -z-10 size-72 text-white/25 sm:-right-4 sm:size-80" />
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Pill tone="signal">
@@ -52,7 +54,7 @@ export default function Dashboard() {
               {hidden ? "Show" : "Hide"}
             </button>
           </div>
-          <p className="min-h-[3.5rem] text-[44px] leading-none tracking-[-0.035em] sm:text-[60px]">
+          <p className="min-h-[3.5rem] text-[48px] leading-none tracking-[-0.04em] sm:text-[64px]">
             <Amount value={balance} decimals={asset.decimals} symbol={asset.symbol} hidden={hidden} />
           </p>
           <p className="text-ink-2 text-sm">Only you can see this amount.</p>
@@ -85,7 +87,7 @@ export default function Dashboard() {
         </div>
       </Card>
 
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+      <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <Card>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Recent private activity</h2>
@@ -96,7 +98,7 @@ export default function Dashboard() {
           <ActivityList limit={5} hidden={hidden} />
         </Card>
 
-        <div className="space-y-6">
+        <div className="space-y-5">
           <Card className="space-y-4">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-lg font-semibold">Your MIRK account</h2>

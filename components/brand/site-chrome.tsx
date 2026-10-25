@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { IconArrowUpRight, IconChevronDown, IconLayers } from "@/components/shared/icons";
 import { CHAIN_ID, POOL_ADDRESS, REGISTRY_ADDRESS, addressUrl } from "@/lib/robinhood/network";
 import { ThemeToggle } from "./theme-toggle";
-import { Wordmark } from "./wordmark";
+import { Logo } from "./wordmark";
 
 export const WRAP = "mx-auto w-full max-w-[1176px] px-4 sm:px-6 lg:px-9";
 
@@ -68,9 +68,9 @@ export function SiteHeader() {
   return (
     <header className="bg-[var(--chrome)] sticky top-0 z-40 backdrop-blur-md">
       <div className={`${WRAP} flex h-[68px] items-center justify-between gap-4`}>
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-8">
           <Link href="/" aria-label="MIRK home" className="flex min-h-11 items-center">
-            <Wordmark className="text-[27px]" />
+            <Logo className="size-9" />
           </Link>
           <nav aria-label="Site" className="hidden items-center gap-1 lg:flex">
             {NAV.map(([label, href]) => (
@@ -89,7 +89,7 @@ export function SiteHeader() {
           <ThemeToggle />
           <Link
             href="/app"
-            className="bg-ink text-on-ink hover:bg-ink/85 inline-flex min-h-11 items-center rounded-full px-5 text-[14px] font-medium whitespace-nowrap transition-colors"
+            className="btn btn-accent min-h-11 px-5 text-[14px]"
           >
             Open MIRK
           </Link>
@@ -154,7 +154,7 @@ export function SiteFooter() {
       <div className={`${WRAP} pt-16 pb-8`}>
         <div className="grid gap-12 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
           <div className="space-y-4">
-            <Wordmark className="text-[27px]" />
+            <Logo className="size-10" />
             <p className="text-ink-2 max-w-[17rem] text-[14px] leading-relaxed">
               Private money for the open economy. Your balance stays off the public record.
             </p>

@@ -142,7 +142,7 @@ test.describe("coming soon, navigation, theme", () => {
       await page.goto("/");
       await expect(page.locator("html")).toHaveAttribute("data-theme", scheme);
       const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-      expect(bg).toBe(scheme === "dark" ? "rgb(11, 12, 13)" : "rgb(244, 245, 247)");
+      expect(bg).toBe(scheme === "dark" ? "rgb(10, 10, 11)" : "rgb(242, 243, 245)");
       await ctx.close();
     }
   });
