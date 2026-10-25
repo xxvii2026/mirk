@@ -135,14 +135,14 @@ test.describe("coming soon, navigation, theme", () => {
     }
   });
 
-  test("follows the system theme and supports both modes", async ({ browser }) => {
+  test("is dark whatever the system theme", async ({ browser }) => {
     for (const scheme of ["light", "dark"] as const) {
       const ctx = await browser.newContext({ colorScheme: scheme });
       const page = await ctx.newPage();
       await page.goto("/");
-      await expect(page.locator("html")).toHaveAttribute("data-theme", scheme);
+      await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
       const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-      expect(bg).toBe(scheme === "dark" ? "rgb(10, 10, 11)" : "rgb(242, 243, 245)");
+      expect(bg).toBe("rgb(10, 10, 11)");
       await ctx.close();
     }
   });

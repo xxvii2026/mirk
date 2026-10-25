@@ -16,27 +16,19 @@ function short(address: string) {
 }
 
 /** The mark as the page's character: floating, with a soft shadow beneath. */
-function Character({ className = "", light = false }: { className?: string; light?: boolean }) {
+function Character({ className = "" }: { className?: string }) {
   return (
     <span aria-hidden className={`float inline-block ${className}`}>
-      <Mark
-        className={`size-full ${
-          light
-            ? "text-white drop-shadow-[0_0_24px_rgba(255,255,255,0.25)]"
-            : "text-[#0b0b0c] drop-shadow-[0_18px_18px_rgba(11,11,12,0.22)]"
-        }`}
-      />
+      <Mark className="size-full text-white drop-shadow-[0_18px_28px_rgba(0,0,0,0.65)]" />
     </span>
   );
 }
 
-function Copy({ title, children, light }: { title: ReactNode; children: ReactNode; light?: boolean }) {
+function Copy({ title, children }: { title: ReactNode; children: ReactNode }) {
   return (
     <div>
       <h2 className="display-l max-w-[13ch]">{title}</h2>
-      <p className={`mt-5 max-w-[30rem] text-[17px] leading-relaxed ${light ? "text-white/70" : "text-ink-2"}`}>
-        {children}
-      </p>
+      <p className="text-ink-2 mt-6 max-w-[30rem] text-[17px] leading-relaxed">{children}</p>
     </div>
   );
 }
@@ -49,45 +41,25 @@ const rise: CSSProperties = {
 
 function Hero() {
   return (
-    <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-16 sm:pt-20">
+    <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-24 sm:pt-20">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(70%_55%_at_50%_0%,#eceef2_0%,rgba(236,238,242,0)_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_70%)]"
       />
 
-      {/* The trail: draws itself across the page as you scroll. */}
-      <svg
-        aria-hidden
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="none"
-        className="pointer-events-none absolute inset-x-0 top-[30%] -z-10 h-[90%] w-full"
-      >
-        <path
-          d="M -40 880 C 300 760, 520 260, 900 300 S 1380 620, 1500 140"
-          fill="none"
-          stroke="#0b0b0c"
-          strokeOpacity="0.14"
-          strokeWidth="2"
-          strokeLinecap="round"
-          pathLength={1}
-          strokeDasharray="1"
-          style={{ strokeDashoffset: "max(0, 1 - var(--p) * 2.2)" }}
-        />
-      </svg>
-
-      <div className={`${WRAP} pt-8 text-center sm:pt-10`}>
+      <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
         <Character className="mx-auto size-[72px]" />
         <h1
-          className="display-xl mx-auto mt-6 max-w-[15ch]"
+          className="display-xl mx-auto mt-8 max-w-[15ch]"
           style={{ opacity: "calc(1 - var(--x) * 2.2)", transform: "translateY(calc(var(--x) * -80px))" }}
         >
           Private money for the open economy.
         </h1>
-        <p className="text-ink-2 mx-auto mt-5 max-w-[36rem] text-[17px] leading-relaxed sm:text-[18px]">
+        <p className="text-ink-2 mx-auto mt-6 max-w-[36rem] text-[17px] leading-relaxed sm:text-[18px]">
           Hold, send and receive on a public chain without putting your balance or the amounts you move on the record.
           Your keys stay on your device.
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <div className="mt-10 flex flex-wrap justify-center gap-3">
           <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
             Open MIRK <IconArrowRight className="size-4" />
           </Link>
@@ -98,7 +70,7 @@ function Hero() {
         <p className="text-ink-2 mt-5 text-[12px]">{DISCLAIMER}</p>
       </div>
 
-      <div data-scroll className="mx-auto mt-12 max-w-[1040px] px-4 sm:px-6">
+      <div data-scroll className="mx-auto mt-20 max-w-[1040px] px-4 sm:px-6">
         <div
           className="origin-top will-change-transform"
           style={{
@@ -120,8 +92,8 @@ function PayANumber() {
     { k: "Your account number", v: "7709 8827 9921", a: "", note: "Share it to get paid" },
   ];
   return (
-    <section id="how" className="relative pt-10 pb-36 sm:pb-40">
-      <div className={`${WRAP} grid items-center gap-14 lg:grid-cols-[1fr_1.05fr]`}>
+    <section id="how" className="relative pt-20 pb-44 sm:pb-52">
+      <div className={`${WRAP} grid items-center gap-16 lg:grid-cols-[1fr_1.05fr]`}>
         <div data-scroll style={rise}>
           <Copy title="Pay a number, not an address.">
             Every MIRK account has a 12-digit number. It reveals no name, no wallet and no balance. Pay it like a bank
@@ -129,13 +101,13 @@ function PayANumber() {
           </Copy>
           <Character className="mt-10 hidden size-16 lg:block" />
         </div>
-        <div data-scroll className="relative mx-auto h-[360px] w-full max-w-[460px]">
+        <div data-scroll className="relative mx-auto h-[400px] w-full max-w-[460px]">
           {cards.map((c, i) => (
             <div
               key={c.k}
               className="raised absolute inset-x-0 rounded-[22px] p-5"
               style={{
-                top: `${i * 104}px`,
+                top: `${i * 132}px`,
                 zIndex: 3 - i,
                 transform: `translateY(calc((1 - var(--e)) * ${70 + i * 70}px)) rotate(calc((1 - var(--e)) * ${
                   (i - 1) * 5
@@ -153,7 +125,7 @@ function PayANumber() {
               <p className="text-ink-2 mt-3 text-[13px]">{c.note}</p>
             </div>
           ))}
-          <p className="text-ink-2 absolute -bottom-10 left-1 text-[12px]">Example values</p>
+          <p className="text-ink-2 absolute -bottom-6 left-1 text-[12px]">Example values</p>
         </div>
       </div>
     </section>
@@ -168,21 +140,21 @@ function Night() {
   ];
   return (
     <section id="privacy" className="relative -mt-24 text-white">
-      <div className="relative isolate overflow-hidden bg-[#0b0b0c] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
+      <div className="relative isolate overflow-hidden bg-[#131315] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_40%_at_50%_0%,rgba(255,255,255,0.09)_0%,rgba(255,255,255,0)_70%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_30%_at_50%_0%,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_70%)]"
         />
 
-        <div className={`${WRAP} grid items-center gap-12 pt-32 pb-16 lg:grid-cols-[1fr_1.05fr]`}>
+        <div className={`${WRAP} grid items-center gap-16 pt-40 pb-20 lg:grid-cols-[1fr_1.05fr]`}>
           <div data-scroll style={rise}>
-            <Copy light title="Your balance keeps quiet.">
+            <Copy title="Your balance keeps quiet.">
               On a public chain, every balance is a billboard. MIRK keeps your money in Gloam&apos;s shielded pool, so
               the record shows that something happened and leaves the rest to you.
             </Copy>
           </div>
           <div data-scroll className="relative" style={rise}>
-            <Character light className="absolute -top-16 right-4 size-14 sm:-right-4" />
+            <Character className="absolute -top-16 right-4 size-14 sm:-right-4" />
             <div className="rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8">
               <p className="font-mono text-[11px] tracking-[0.12em] text-white/50">WHAT THE CHAIN SEES</p>
               <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em]">Nothing about your balance.</p>
@@ -202,9 +174,9 @@ function Night() {
           </div>
         </div>
 
-        <div className={`${WRAP} grid items-center gap-12 pt-8 pb-20 lg:grid-cols-[1fr_1.05fr]`}>
+        <div className={`${WRAP} grid items-center gap-16 pt-12 pb-32 lg:grid-cols-[1fr_1.05fr]`}>
           <div data-scroll style={rise}>
-            <Copy light title="You see exactly what goes public.">
+            <Copy title="You see exactly what goes public.">
               Adding money and cashing out are public. Everything between them is not. Slide through the steps.
             </Copy>
           </div>
@@ -224,8 +196,8 @@ function ClaimLinks() {
     ["Claimed into a new account", "The money is theirs, privately"],
   ];
   return (
-    <section id="claim" className="bg-surface-2 relative isolate overflow-hidden">
-      <div className={`${WRAP} grid items-center gap-12 py-20 lg:grid-cols-[1fr_1.05fr]`}>
+    <section id="claim" className="relative isolate overflow-hidden">
+      <div className={`${WRAP} grid items-center gap-16 py-28 lg:grid-cols-[1fr_1.05fr]`}>
         <div data-scroll style={rise}>
           <Copy title="Pay someone who isn't here yet.">
             A claim link carries the money inside it. Send it any way you like; whoever opens it claims the payment into
@@ -261,14 +233,14 @@ function ClaimLinks() {
 
 function Closing() {
   return (
-    <section className="relative isolate overflow-hidden py-20 text-center sm:py-24">
+    <section className="border-line relative isolate overflow-hidden border-t py-28 text-center sm:py-32">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_100%,#eceef2_0%,rgba(236,238,242,0)_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(55%_60%_at_50%_100%,rgba(255,255,255,0.07)_0%,rgba(255,255,255,0)_70%)]"
       />
       <div className={WRAP}>
         <Character className="mx-auto size-16" />
-        <h2 className="display-xl mx-auto mt-6 max-w-[14ch]">Private money, on your terms.</h2>
+        <h2 className="display-xl mx-auto mt-8 max-w-[14ch]">Private money, on your terms.</h2>
         <p className="text-ink-2 mx-auto mt-5 max-w-[34rem] text-[17px] leading-relaxed">
           Connect any EVM wallet, add test funds and get your account number. No sign-up and no email.
         </p>
@@ -288,7 +260,7 @@ function Closing() {
 
 export default function Landing() {
   return (
-    <div data-theme="light" className="bg-canvas text-ink min-h-dvh [zoom:0.8]">
+    <div className="bg-canvas text-ink min-h-dvh [zoom:0.8]">
       <SiteHeader />
       <main className="-mt-[76px] sm:-mt-20">
         <Hero />

@@ -5,8 +5,8 @@ import { useId, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import { useSync } from "@/components/privacy/sync-provider";
 import { useOpenVault, useVault } from "@/components/privacy/vault-provider";
-import { useHideBalance, useTheme, type ThemePref } from "@/components/shared/theme";
-import { Button, Card, ExternalLink, Field, Notice, PageHeader, cx, inputClass } from "@/components/shared/ui";
+import { useHideBalance } from "@/components/shared/theme";
+import { Button, Card, ExternalLink, Field, Notice, PageHeader, inputClass } from "@/components/shared/ui";
 import {
   deleteStore,
   exportBackup,
@@ -162,7 +162,6 @@ function BackupSection() {
 }
 
 export default function SettingsPage() {
-  const { pref, setPref } = useTheme();
   const { hidden, setHidden } = useHideBalance();
   const { lock } = useVault();
   const { address } = useAccount();
@@ -179,27 +178,6 @@ export default function SettingsPage() {
 
       <Card className="space-y-5">
         <h2 className="text-lg font-semibold">Display</h2>
-        <div
-          role="radiogroup"
-          aria-label="Theme"
-          className="border-line bg-surface-2 inline-flex rounded-full border p-1"
-        >
-          {(["light", "dark", "system"] as ThemePref[]).map((t) => (
-            <button
-              key={t}
-              type="button"
-              role="radio"
-              aria-checked={pref === t}
-              onClick={() => setPref(t)}
-              className={cx(
-                "min-h-10 rounded-full px-4 text-sm font-medium capitalize",
-                pref === t ? "bg-surface shadow-[0_0_0_1px_var(--line)]" : "text-muted",
-              )}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
         <label className="flex min-h-11 cursor-pointer items-center justify-between gap-4 text-[15px]">
           Hide balances by default
           <input

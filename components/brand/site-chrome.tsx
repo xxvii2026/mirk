@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { IconArrowUpRight, IconLayers } from "@/components/shared/icons";
-import { ThemeToggle } from "./theme-toggle";
 import { Logo } from "./wordmark";
 
 export const WRAP = "mx-auto w-full max-w-[1176px] px-4 sm:px-6 lg:px-9";
@@ -34,7 +33,6 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-1.5">
-            <ThemeToggle />
             <Link href="/app" className="btn btn-accent min-h-10 px-5 text-[14px]">
               Open MIRK
             </Link>

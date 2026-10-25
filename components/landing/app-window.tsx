@@ -31,8 +31,8 @@ export function AppWindow() {
       ];
 
   return (
-    <div className="glass grid overflow-hidden rounded-[26px] text-left md:grid-cols-[220px_1fr]">
-      <aside className="hidden flex-col gap-1 border-r border-white/60 bg-white/40 p-4 md:flex">
+    <div className="bg-surface grid overflow-hidden rounded-[26px] border border-white/[0.07] text-left shadow-[var(--highlight),var(--shadow-float)] md:grid-cols-[220px_1fr]">
+      <aside className="border-line hidden flex-col gap-1 border-r bg-[#111113] p-4 md:flex">
         <div className="mb-4 flex items-center gap-2 px-2">
           <Mark className="text-ink size-7" />
           <span className="border-line-strong text-ink-2 rounded-full border px-2 py-0.5 text-[11px] font-medium">
@@ -44,18 +44,18 @@ export function AppWindow() {
             key={label}
             className={cx(
               "flex min-h-10 items-center gap-2.5 rounded-xl px-3 text-[14px]",
-              i === 0 ? "text-ink bg-white font-medium shadow-[0_1px_2px_rgba(11,11,12,0.06)]" : "text-ink-2",
+              i === 0 ? "text-ink bg-surface-3 font-medium" : "text-ink-2",
             )}
           >
             <Icon className="size-4" /> {label}
           </span>
         ))}
-        <span className="text-ink-2 mt-auto flex items-center gap-2 rounded-xl bg-white/70 px-3 py-2.5 text-[12px]">
+        <span className="text-ink-2 bg-surface-2 mt-auto flex items-center gap-2 rounded-xl px-3 py-2.5 text-[12px]">
           <IconLayers className="size-4" /> Robinhood Chain
         </span>
       </aside>
 
-      <div className="bg-white/75 p-5 sm:p-7">
+      <div className="p-5 sm:p-7">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <p className="text-ink-2 text-[13px]">Your private balance · example values</p>
@@ -88,7 +88,7 @@ export function AppWindow() {
           </div>
         </div>
 
-        <ul className="border-line mt-6 divide-y divide-[var(--line)] border-t">
+        <ul className="border-line mt-7 divide-y divide-[var(--line)] border-t">
           {rows.map(([title, sub, amount, isPublic], i) => (
             <li key={i} className="flex items-center justify-between gap-4 py-3.5">
               <span className="min-w-0">

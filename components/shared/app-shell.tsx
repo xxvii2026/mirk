@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 import { useAccount } from "wagmi";
-import { ThemeToggle } from "@/components/brand/theme-toggle";
 import { Logo } from "@/components/brand/wordmark";
 import {
   IconClock,
@@ -150,7 +149,6 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {short(address)}
                 </span>
               ) : null}
-              <ThemeToggle />
               {address ? (
                 <Link href="/app/add" className="btn btn-accent min-h-10 px-4 text-[14px]">
                   Add money
