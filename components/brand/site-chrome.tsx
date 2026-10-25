@@ -6,15 +6,33 @@ import { Logo } from "./wordmark";
 
 export const WRAP = "mx-auto w-full max-w-[1176px] px-4 sm:px-6 lg:px-9";
 
-/** A floating liquid-glass pill: the mark, the theme switch and one action. */
+const NAV = [
+  ["How it works", "/#how"],
+  ["Privacy", "/#privacy"],
+  ["Claim links", "/#claim"],
+  ["Docs", "/docs"],
+] as const;
+
+/** A floating liquid-glass pill: the mark, the sections, the theme switch and one action. */
 export function SiteHeader() {
   return (
     <>
       <header className="fixed inset-x-0 top-3 z-40 px-4 sm:top-4">
-        <div className="glass mx-auto flex h-14 max-w-[400px] items-center justify-between gap-3 rounded-full pr-2 pl-4">
+        <div className="glass mx-auto flex h-14 max-w-[820px] items-center justify-between gap-3 rounded-full pr-2 pl-4">
           <Link href="/" aria-label="MIRK home" className="flex min-h-11 items-center">
             <Logo className="size-8" />
           </Link>
+          <nav aria-label="Site" className="hidden items-center gap-0.5 md:flex">
+            {NAV.map(([label, href]) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-ink-2 hover:text-ink rounded-full px-3.5 py-2 text-[14px] transition-colors hover:bg-black/[0.04]"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
             <Link href="/app" className="btn btn-accent min-h-10 px-5 text-[14px]">

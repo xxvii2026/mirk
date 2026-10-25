@@ -32,7 +32,7 @@ export function VisibilitySlider() {
   const stop = STOPS[i]!;
   const pct = (i / (STOPS.length - 1)) * 100;
   return (
-    <div className="rounded-[26px] border border-white/15 bg-[#0b1024]/60 p-6 text-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8">
+    <div className="rounded-[26px] border border-white/15 bg-white/[0.04] p-6 text-white shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8">
       <p className="text-[13px] text-white/60">Pick a step to see what it shows</p>
 
       <div className="relative mt-8 px-2">
@@ -48,7 +48,7 @@ export function VisibilitySlider() {
               aria-hidden
               className={cx(
                 "size-3.5 rounded-full border-2 transition-colors",
-                k <= i ? "border-white bg-white" : "border-white/40 bg-[#0b1024]",
+                k <= i ? "border-white bg-white" : "border-white/40 bg-[#0b0b0c]",
               )}
             />
           ))}
