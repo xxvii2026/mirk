@@ -10,7 +10,7 @@ import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
 import { VoxelTopographyGrid } from "@/components/ui/voxel-topography-grid";
 import { Web3Bento } from "@/components/ui/web3-bento";
-import { CHAIN_ID, EXPLORER_URL, POOL_ADDRESS } from "@/lib/robinhood/network";
+import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
 const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
 
@@ -19,10 +19,10 @@ function short(address: string) {
 }
 
 /** The mark as the page's character: floating, with a soft shadow beneath. */
-function Character({ className = "" }: { className?: string }) {
+function Character({ className = "", tone = "text-ink" }: { className?: string; tone?: string }) {
   return (
     <span aria-hidden className={`float inline-block ${className}`}>
-      <Mark className="size-full text-white drop-shadow-[0_18px_28px_rgba(0,0,0,0.65)]" />
+      <Mark className={`size-full ${tone} drop-shadow-[0_18px_28px_rgba(0,0,0,0.35)]`} />
     </span>
   );
 }
@@ -59,7 +59,7 @@ function Hero() {
           fps={30}
         />
         {/* A pool of dark behind the copy, so the type reads over the field. */}
-        <div className="absolute inset-0 bg-[radial-gradient(42%_38%_at_50%_34%,rgba(11,11,12,0.92)_0%,rgba(11,11,12,0.6)_55%,rgba(11,11,12,0)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(42%_38%_at_50%_34%,color-mix(in_srgb,var(--canvas)_92%,transparent)_0%,color-mix(in_srgb,var(--canvas)_60%,transparent)_55%,transparent_100%)]" />
       </div>
 
       <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
@@ -111,7 +111,7 @@ function Tour() {
             balance in a view nobody else gets. One example account, tile by tile.
           </p>
         </div>
-        <Web3Bento className="mt-12" pool={POOL_ADDRESS} chainId={CHAIN_ID} explorer={EXPLORER_URL} />
+        <Web3Bento className="mt-12" />
       </div>
     </section>
   );
@@ -163,7 +163,7 @@ function Night() {
               the record shows that something happened and leaves the rest to you.
             </Pair>
             <div className="relative flex flex-1 flex-col rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-8">
-              <Character className="absolute -top-7 right-6 size-12" />
+              <Character className="absolute -top-7 right-6 size-12" tone="text-white" />
               <p className="font-mono text-[11px] tracking-[0.12em] text-white/50">WHAT THE CHAIN SEES</p>
               <p className="mt-3 text-[22px] font-semibold tracking-[-0.03em]">Nothing about your balance.</p>
               <ul className="mt-6 divide-y divide-white/10 border-y border-white/10">

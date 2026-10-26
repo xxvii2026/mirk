@@ -8,7 +8,7 @@ export interface VoxelTopographyGridProps {
   /** Hex color for the voxels, e.g. #b9a6ff. */
   primaryColor?: string;
   wireColor?: string;
-  /** Hex color the canvas clears to; match the surface behind it. */
+  /** Color the canvas clears to. Defaults to the theme's --canvas, and follows theme changes. */
   background?: string;
   /** Wave speed, in radians per 60th of a second. */
   speed?: number;
@@ -53,7 +53,7 @@ export function VoxelTopographyGrid({
   maxHeight = 70,
   primaryColor = "#b9a6ff",
   wireColor = "rgba(11, 11, 12, 0.5)",
-  background = "#0b0b0c",
+  background,
   speed = 0.015,
   maxDpr = 2,
   fps = 60,
@@ -92,8 +92,12 @@ export function VoxelTopographyGrid({
     let hs = new Float32Array(0);
     let lv = new Uint8Array(0);
 
+    const readBackground = () =>
+      background ?? (getComputedStyle(container).getPropertyValue("--canvas").trim() || "#0b0b0c");
+    let clear = readBackground();
+
     const draw = () => {
-      ctx.fillStyle = background;
+      ctx.fillStyle = clear;
       ctx.fillRect(0, 0, width, height);
 
       const originX = width * 0.5;
@@ -241,6 +245,13 @@ export function VoxelTopographyGrid({
     ro.observe(container);
     resize();
 
+    // Repaint in the new canvas color when the page switches theme.
+    const mo = new MutationObserver(() => {
+      clear = readBackground();
+      draw();
+    });
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
     const io = new IntersectionObserver(([entry]) => {
       visible = !!entry?.isIntersecting;
       if (visible) start();
@@ -262,6 +273,7 @@ export function VoxelTopographyGrid({
 
     return () => {
       ro.disconnect();
+      mo.disconnect();
       io.disconnect();
       window.removeEventListener("pointermove", move);
       cancelAnimationFrame(frame);

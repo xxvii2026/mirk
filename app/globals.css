@@ -1,7 +1,75 @@
 @import "tailwindcss";
 
-/* mirk is dark only: one token set, no theme switching. */
-:root {
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="light"] {
+  --tone-50: #fafafa;
+  --tone-100: #f2f2f3;
+  --tone-200: #e4e4e7;
+  --tone-300: #cfd0d4;
+  --tone-400: #9fa1a8;
+  --tone-500: #6f727a;
+  --tone-600: #45474d;
+  --tone-700: #2a2b2f;
+  --tone-800: #18181b;
+  --tone-900: #0e0e10;
+
+  --ground: #f2f3f5;
+  --shell: #eceef1;
+  --canvas: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f4f5f7;
+  --surface-3: #ebedf1;
+  --ink: #0b0b0c;
+  --ink-2: #565d6a;
+  --muted: #676c78;
+  --line: #e5e7ec;
+  --line-strong: #d2d6de;
+  /* The one accent, lavender. Deeper text and focus tones keep contrast on white. */
+  --signal: #a891ff;
+  --signal-tint: #f0ecff;
+  --signal-text: #5b44cc;
+  --on-signal: #160f2e;
+  --signal-glow: rgba(124, 98, 234, 0.18);
+  --danger: #b42318;
+  --danger-tint: #fff0ef;
+  --on-ink: #ffffff;
+  --chrome: rgba(255, 255, 255, 0.9);
+
+  /* Depth: a hairline lift plus a soft drop, so surfaces sit above the ground. */
+  --shadow-card:
+    0 0 0 1px rgba(11, 11, 12, 0.04), 0 1px 2px rgba(11, 11, 12, 0.05), 0 8px 24px -8px rgba(11, 11, 12, 0.1);
+  --shadow-raised:
+    0 0 0 1px rgba(11, 11, 12, 0.05), 0 2px 4px rgba(11, 11, 12, 0.05), 0 18px 40px -12px rgba(11, 11, 12, 0.18);
+  --shadow-float: 0 24px 60px -18px rgba(11, 11, 12, 0.28), 0 8px 18px -8px rgba(11, 11, 12, 0.14);
+  --shadow-workspace:
+    0 0 0 1px rgba(11, 11, 12, 0.05), 0 1px 2px rgba(11, 11, 12, 0.04), 0 12px 32px -12px rgba(11, 11, 12, 0.1);
+  --highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  /* Dusk field: pale grey above, ink settling bottom right. */
+  --stage:
+    radial-gradient(120% 90% at 18% 10%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 58%),
+    radial-gradient(95% 80% at 92% 108%, rgba(11, 11, 12, 0.92) 0%, rgba(11, 11, 12, 0.5) 30%, rgba(11, 11, 12, 0) 66%),
+    linear-gradient(160deg, var(--tone-50) 0%, var(--tone-100) 40%, var(--tone-300) 100%);
+  --stage-soft: linear-gradient(155deg, #fcfcfc 0%, var(--tone-100) 50%, var(--tone-200) 100%);
+  --stage-deep:
+    radial-gradient(90% 50% at 20% 0%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 62%),
+    linear-gradient(176deg, var(--tone-200) 0%, var(--tone-400) 28%, var(--tone-600) 58%, var(--tone-900) 100%);
+  --night:
+    radial-gradient(
+      70% 90% at 50% 115%,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.03) 45%,
+      rgba(255, 255, 255, 0) 70%
+    ),
+    linear-gradient(180deg, #141415 0%, #0b0b0c 100%);
+  --panel-soft: linear-gradient(160deg, #f8f9fb, #eceef2);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
   --tone-50: #fafafa;
   --tone-100: #f2f2f3;
   --tone-200: #e4e4e7;
@@ -182,10 +250,19 @@ body {
 
   /* Liquid glass: frosted, saturated, with a lit rim. */
   .glass {
-    background: rgba(24, 24, 27, 0.62);
+    background: rgba(255, 255, 255, 0.72);
     backdrop-filter: blur(14px) saturate(140%);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(11, 11, 12, 0.04),
+      0 1px 2px rgba(11, 11, 12, 0.06),
+      0 12px 32px -12px rgba(11, 11, 12, 0.22);
+  }
+  [data-theme="dark"] .glass {
+    background: rgba(24, 24, 27, 0.62);
+    border-color: rgba(255, 255, 255, 0.09);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
       0 12px 32px -12px rgba(0, 0, 0, 0.7);
@@ -304,7 +381,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--signal);
+  outline: 2px solid var(--signal-text);
   outline-offset: 2px;
   border-radius: 8px;
 }
@@ -321,7 +398,7 @@ body {
 
 input,
 textarea {
-  caret-color: var(--signal);
+  caret-color: var(--signal-text);
 }
 
 @media (prefers-reduced-motion: no-preference) {

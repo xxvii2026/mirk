@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { useEffect, useId, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from "react";
 import { Mark } from "@/components/brand/wordmark";
-import {
-  IconArrowRight,
-  IconArrowUpRight,
-  IconLink,
-  IconReceive,
-  IconSend,
-  IconWallet,
-} from "@/components/shared/icons";
+import { IconArrowRight, IconLink, IconReceive, IconSend, IconWallet } from "@/components/shared/icons";
 import { cx } from "@/components/shared/ui";
 
 /**
@@ -106,23 +99,6 @@ function useInView(ref: RefObject<Element | null>, once = false) {
   return seen;
 }
 
-function useCountUp(target: number, run: boolean, reduced: boolean, duration = 1300) {
-  const [v, setV] = useState(0);
-  useEffect(() => {
-    if (!run || reduced) return;
-    let raf = 0;
-    const t0 = performance.now();
-    const tick = (now: number) => {
-      const p = Math.min(1, (now - t0) / duration);
-      setV(target * (1 - Math.pow(1 - p, 4)));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [target, run, reduced, duration]);
-  return run && reduced ? target : v;
-}
-
 function smooth(pts: ReadonlyArray<readonly [number, number]>) {
   return pts
     .map(([x, y], i) => {
@@ -214,89 +190,6 @@ function Pills<T extends string>({
 const Tag = ({ children }: { children: ReactNode }) => (
   <span className="text-ink-2 font-mono text-[11px]">{children}</span>
 );
-
-/* ------------------------------------------------------------------ */
-/*  Balance: greeting, private balance, 30-day flow strip              */
-/* ------------------------------------------------------------------ */
-
-function BalanceTile({ seen, reduced }: Live) {
-  const value = YEAR.balance[DAYS - 1]!;
-  const shown = useCountUp(value, seen, reduced);
-  const month = YEAR.balance.slice(-31);
-  const daily = month.slice(1).map((v, i) => v - month[i]!);
-  const maxAbs = Math.max(...daily.map(Math.abs), 0.01);
-  const change = value - month[0]!;
-  const [hover, setHover] = useState<number | null>(null);
-  const dayLabel = (i: number) => {
-    const ago = daily.length - 1 - i;
-    return ago === 0 ? "Today" : `${ago}d ago`;
-  };
-
-  return (
-    <Tile className="sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-start-1">
-      <div className="flex flex-wrap items-start justify-between gap-6">
-        <div className="min-w-0">
-          <p className="text-[28px] leading-[1.1] font-semibold tracking-[-0.03em] sm:text-[32px]">
-            gm, <span className="text-signal tabular">{ACCOUNT}</span>
-          </p>
-          <p className="text-ink-2 mt-1 text-sm">Your month, readable by you alone.</p>
-        </div>
-        <div className="sm:text-right">
-          <p className="text-ink-2 text-[12px]">Private balance</p>
-          <p className="tabular font-mono text-[34px] leading-none font-semibold tracking-[-0.04em] sm:text-[38px]">
-            {usdg(shown)}
-            <span className="text-ink-2 ml-1.5 text-[14px] tracking-normal">USDG</span>
-          </p>
-          <p className="tabular mt-1.5 font-mono text-[12px]">
-            <span className={change >= 0 ? "text-signal-text" : "text-ink-2"}>
-              {change >= 0 ? "+" : "−"}
-              {usdg(Math.abs(change))}
-            </span>
-            <span className="text-ink-2"> · 30d</span>
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-6 flex flex-1 flex-col">
-        <div
-          className="flex flex-1 items-end gap-[3px]"
-          style={{ minHeight: 64 }}
-          onPointerLeave={() => setHover(null)}
-        >
-          {daily.map((d, i) => {
-            const h = d === 0 ? 6 : 18 + (Math.abs(d) / maxAbs) * 82;
-            const up = d >= 0;
-            return (
-              <button
-                key={i}
-                type="button"
-                onPointerEnter={() => setHover(i)}
-                onFocus={() => setHover(i)}
-                onBlur={() => setHover(null)}
-                aria-label={`${dayLabel(i)}: ${d === 0 ? "no change" : `${up ? "+" : "−"}${usdg(Math.abs(d))} USDG`}`}
-                className={cx("relative flex-1 rounded-[4px]", up ? "bg-signal" : "bg-tone-500")}
-                style={{
-                  height: seen ? `${h}%` : "6%",
-                  opacity: hover === null ? 0.35 + (Math.abs(d) / maxAbs) * 0.65 : hover === i ? 1 : 0.25,
-                  transition: reduced ? "none" : `height 900ms ${EASE} ${i * 18}ms, opacity 200ms ease`,
-                }}
-              />
-            );
-          })}
-        </div>
-        <div className="text-ink-2 mt-2 flex items-center justify-between font-mono text-[11px]">
-          <span>30d ago</span>
-          <span className="text-ink tabular" aria-live="polite">
-            {hover !== null
-              ? `${dayLabel(hover)} · ${daily[hover]! === 0 ? "no change" : `${daily[hover]! > 0 ? "+" : "−"}${usdg(Math.abs(daily[hover]!))}`}`
-              : "Daily net flow · example"}
-          </span>
-          <span>Today</span>
-        </div>
-      </div>
-    </Tile>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /*  Claim links: a fanned stack, click one to bring it forward         */
@@ -402,7 +295,7 @@ function ClaimLinksTile({ seen, reduced }: Live) {
 
         {/* The panel the stack tucks under. */}
         <div
-          className="border-line relative z-10 flex h-[84px] shrink-0 items-end justify-between gap-3 border-t bg-[rgba(21,21,24,0.82)] px-5 pb-4 backdrop-blur-md"
+          className="border-line relative z-10 flex h-[84px] shrink-0 items-end justify-between gap-3 border-t bg-[color-mix(in_srgb,var(--surface)_82%,transparent)] px-5 pb-4 backdrop-blur-md"
           aria-live="polite"
         >
           <div className="min-w-0">
@@ -521,7 +414,7 @@ function ChartTile({ seen, reduced }: Live) {
   return (
     <Tile
       title="Your balance vs the public record"
-      className="sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-span-2 lg:row-start-2"
+      className="sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-span-2 lg:row-start-1"
       action={<Pills label="Chart range" value={range} options={RANGES} onChange={setRange} />}
     >
       <div className="flex flex-wrap items-end gap-x-8 gap-y-2">
@@ -748,31 +641,6 @@ function AccountTile() {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Pool                                                               */
-/* ------------------------------------------------------------------ */
-
-function PoolTile({ pool, chainId, explorer }: { pool: string; chainId: number; explorer: string }) {
-  return (
-    <Tile title="Where the money sits" className="lg:col-start-3 lg:row-start-3" action={<Tag>testnet</Tag>}>
-      <p className="text-[17px] leading-tight font-semibold tracking-[-0.02em]">Gloam&apos;s shielded pool</p>
-      <p className="text-ink-2 tabular mt-1 font-mono text-[12px]">
-        {pool.slice(0, 6)}…{pool.slice(-4)} · chain {chainId}
-      </p>
-      <div className="hatch mt-5 h-10 rounded-[10px] opacity-80" aria-hidden />
-      <p className="text-ink-2 mt-3 text-[12px]">mirk never holds it. Only keys on your device can move it.</p>
-      <a
-        href={`${explorer}/address/${pool}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-ink hover:text-signal-text mt-auto inline-flex items-center gap-1 pt-4 text-[13px] font-medium transition-colors"
-      >
-        View the contract <IconArrowUpRight className="size-3.5" />
-      </a>
-    </Tile>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  The public record, block by block                                  */
 /* ------------------------------------------------------------------ */
 
@@ -786,7 +654,7 @@ function makeBlock(n: number, r: () => number): Block {
 function BlocksTile({ on, reduced }: Live) {
   const [blocks, setBlocks] = useState<Block[]>(() => {
     const r = seeded(11);
-    return Array.from({ length: 42 }, (_, i) => makeBlock(1_000_000 + i, r));
+    return Array.from({ length: 28 }, (_, i) => makeBlock(1_000_000 + i, r));
   });
   const rnd = useMemo(() => seeded(29), []);
   useEffect(() => {
@@ -802,13 +670,13 @@ function BlocksTile({ on, reduced }: Live) {
   return (
     <Tile
       title="The public record"
-      className="sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-start-4"
+      className="sm:col-span-2 lg:col-span-1 lg:col-start-3 lg:row-start-3"
       action={<Tag>illustrative</Tag>}
     >
       <p className="text-ink-2 text-[13px]">
         Each lavender block carries a private transfer. The record shows it happened; nothing more.
       </p>
-      <div className="mt-4 flex flex-1 items-end gap-[3px]" style={{ minHeight: 64 }} aria-hidden>
+      <div className="mt-4 flex flex-1 items-end gap-[2px]" style={{ minHeight: 64 }} aria-hidden>
         {blocks.map((b, i) => {
           const isLast = i === blocks.length - 1;
           return (
@@ -827,9 +695,9 @@ function BlocksTile({ on, reduced }: Live) {
       </div>
       <dl className="border-line mt-4 grid grid-cols-3 gap-3 border-t pt-3">
         {[
-          ["Blocks shown", String(blocks.length)],
-          ["With a transfer", String(withTransfer)],
-          ["Amounts readable", "0"],
+          ["Blocks", String(blocks.length)],
+          ["Transfers", String(withTransfer)],
+          ["Amounts", "0 seen"],
         ].map(([k, v]) => (
           <div key={k} className="min-w-0">
             <dt className="text-ink-2 text-[11px]">{k}</dt>
@@ -874,7 +742,7 @@ function ActivityTile({ seen, reduced }: Live) {
   return (
     <Tile
       title="Activity"
-      className="sm:col-span-2 lg:col-span-2 lg:col-start-3 lg:row-start-4"
+      className="sm:col-span-2 lg:col-span-2 lg:col-start-1 lg:row-start-3"
       action={<Tag>USDG · example</Tag>}
     >
       <ul className="-mx-2 -my-1">
@@ -920,13 +788,10 @@ function ActivityTile({ seen, reduced }: Live) {
 /* ------------------------------------------------------------------ */
 
 export interface Web3BentoProps {
-  pool: string;
-  chainId: number;
-  explorer: string;
   className?: string;
 }
 
-export function Web3Bento({ pool, chainId, explorer, className }: Web3BentoProps) {
+export function Web3Bento({ className }: Web3BentoProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const seen = useInView(ref, true);
@@ -935,15 +800,13 @@ export function Web3Bento({ pool, chainId, explorer, className }: Web3BentoProps
 
   return (
     <div ref={ref} className={cx("grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4", className)}>
-      <BalanceTile {...live} />
+      <ChartTile {...live} />
       <ClaimLinksTile {...live} />
       <ProofTile {...live} />
-      <ChartTile {...live} />
       <MovesTile {...live} />
       <AccountTile />
-      <PoolTile pool={pool} chainId={chainId} explorer={explorer} />
-      <BlocksTile {...live} />
       <ActivityTile {...live} />
+      <BlocksTile {...live} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ComponentType, ReactNode, SVGProps } from "react";
 import { useAccount } from "wagmi";
+import { ThemeToggle } from "@/components/brand/theme-toggle";
 import { Logo } from "@/components/brand/wordmark";
 import {
   IconClock,
@@ -67,7 +68,7 @@ function RailLink({ item, path }: { item: Item; path: string }) {
         on ? "raised text-ink font-medium" : "text-ink-2 hover:text-ink hover:bg-surface/55",
       )}
     >
-      <Icon className={cx("size-[18px] shrink-0", on && "text-signal")} />
+      <Icon className={cx("size-[18px] shrink-0", on && "text-signal-text")} />
       <span className="flex-1">{item.label}</span>
       {item.soon ? (
         <span className="bg-surface-3 text-ink-2 rounded-full px-2 py-0.5 text-[10px] font-medium">Soon</span>
@@ -149,6 +150,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {short(address)}
                 </span>
               ) : null}
+              <ThemeToggle />
               {address ? (
                 <Link href="/app/add" className="btn btn-accent min-h-10 px-4 text-[14px]">
                   Add money
@@ -180,7 +182,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                     on ? "bg-surface-2 text-ink font-semibold" : "text-ink-2",
                   )}
                 >
-                  <Icon className={cx("size-[19px]", on && "text-signal")} />
+                  <Icon className={cx("size-[19px]", on && "text-signal-text")} />
                   {item.label}
                 </Link>
               </li>
