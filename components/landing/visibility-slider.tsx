@@ -16,7 +16,7 @@ const STOPS = [
   },
   {
     label: "Claim link",
-    title: "The claim secret lives after the #, which browsers never send to MIRK.",
+    title: "The claim secret lives after the #, which browsers never send to mirk.",
     shown: ["That a private transfer happened"],
   },
   {

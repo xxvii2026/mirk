@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { InfoPage } from "@/components/brand/site-chrome";
 
-export const metadata: Metadata = { title: "How MIRK works" };
+export const metadata: Metadata = { title: "How mirk works" };
 
 export default function Docs() {
   return (
-    <InfoPage title="How MIRK works">
+    <InfoPage title="How mirk works">
       <p>
-        MIRK is an interface to the <strong>Gloam shielded pool</strong> on Robinhood Chain testnet. It does not hold
+        mirk is an interface to the <strong>Gloam shielded pool</strong> on Robinhood Chain testnet. It does not hold
         your money. It helps your browser create, store and spend private notes in that pool.
       </p>
       <h2>Your private balance</h2>
       <p>
         When you add money, your browser creates a private note and a zero-knowledge proof, and your wallet deposits the
-        asset into the pool. The note&apos;s secret is the only thing that can spend it. MIRK encrypts it on this device
+        asset into the pool. The note&apos;s secret is the only thing that can spend it. mirk encrypts it on this device
         with a key unlocked by a wallet signature that never leaves the device. Your private balance is the sum of your
         unspent notes.
       </p>
@@ -26,7 +26,7 @@ export default function Docs() {
       <p>
         A private transfer spends one of your notes into a payment note and a change note, proved on your device and
         submitted through the Gloam relay so your wallet does not appear. The payment note is sealed to the
-        recipient&apos;s receive key and posted to an encrypted message board. The recipient&apos;s MIRK finds it and
+        recipient&apos;s receive key and posted to an encrypted message board. The recipient&apos;s mirk finds it and
         moves it into a fresh note only they know before counting it.
       </p>
       <h2>Claim links</h2>

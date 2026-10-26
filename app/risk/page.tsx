@@ -7,11 +7,11 @@ export default function Risk() {
   return (
     <InfoPage title="Risk">
       <p>
-        <strong>Testnet only.</strong> MIRK runs on Robinhood Chain testnet. Test assets have no value. Do not send real
+        <strong>Testnet only.</strong> mirk runs on Robinhood Chain testnet. Test assets have no value. Do not send real
         assets.
       </p>
       <p>
-        <strong>No audit.</strong> MIRK has not been externally audited. Gloam&apos;s testnet contracts use single-party
+        <strong>No audit.</strong> mirk has not been externally audited. Gloam&apos;s testnet contracts use single-party
         development keys.
       </p>
       <p>
@@ -26,8 +26,8 @@ export default function Risk() {
         <strong>Claim links are bearer instruments.</strong> Whoever has the complete link can take the money.
       </p>
       <p>
-        <strong>Third parties.</strong> MIRK depends on Gloam&apos;s contracts and relay, Robinhood Chain, and Reown for
-        wallet connections. Outages or changes there affect MIRK.
+        <strong>Third parties.</strong> mirk depends on Gloam&apos;s contracts and relay, Robinhood Chain, and Reown for
+        wallet connections. Outages or changes there affect mirk.
       </p>
     </InfoPage>
   );

@@ -3,9 +3,9 @@ import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "MIRK · Private money for the open economy", template: "%s · MIRK" },
+  title: { default: "mirk · Private money for the open economy", template: "%s · mirk" },
   description: "Hold, send and receive privately on Robinhood Chain testnet, built on Gloam's shielded pool.",
-  applicationName: "MIRK",
+  applicationName: "mirk",
   referrer: "no-referrer",
   robots: { index: true, follow: true },
   formatDetection: { telephone: false },

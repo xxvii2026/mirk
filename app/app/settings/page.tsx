@@ -200,7 +200,7 @@ export default function SettingsPage() {
           <Row label="Payment message board">
             <ExternalLink href={addressUrl(PAY_MEMO_ADDRESS)}>{PAY_MEMO_ADDRESS}</ExternalLink>
           </Row>
-          <Row label="MIRK account registry">
+          <Row label="mirk account registry">
             {REGISTRY_ADDRESS ? (
               <ExternalLink href={addressUrl(REGISTRY_ADDRESS)}>{REGISTRY_ADDRESS}</ExternalLink>
             ) : (
@@ -266,10 +266,10 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="border-danger/30 space-y-4">
-        <h2 className="text-lg font-semibold">Clear local MIRK data</h2>
+        <h2 className="text-lg font-semibold">Clear local mirk data</h2>
         <Notice tone="danger" title="This can lose money permanently">
           Clearing deletes the encrypted keys for this wallet from this device. Any private balance they hold becomes
-          unspendable unless you have an encrypted backup and its passphrase. MIRK cannot recover it.
+          unspendable unless you have an encrypted backup and its passphrase. mirk cannot recover it.
         </Notice>
         <Field id="confirm-clear" label='Type "delete my keys" to confirm'>
           <input

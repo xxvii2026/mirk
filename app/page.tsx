@@ -46,15 +46,15 @@ function Hero() {
     <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-24 sm:pt-20">
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 -z-10 h-[1040px] [mask-image:linear-gradient(180deg,#000_45%,transparent_100%)] opacity-55"
+        className="absolute inset-x-0 top-0 -z-10 h-[1040px] [mask-image:linear-gradient(180deg,#000_40%,transparent_100%)] opacity-35"
       >
         <VoxelTopographyGrid
           tileSize={40}
           maxHeight={64}
-          primaryColor="#2aa868"
-          wireColor="rgba(11, 11, 12, 0.6)"
+          primaryColor="#8b7bd8"
+          wireColor="rgba(11, 11, 12, 0.7)"
           speed={0.02}
-          maxDpr={1}
+          maxDpr={0.5}
           fps={30}
         />
         {/* A pool of dark behind the copy, so the type reads over the field. */}
@@ -75,7 +75,7 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open MIRK <IconArrowRight className="size-4" />
+            Open mirk <IconArrowRight className="size-4" />
           </Link>
           <Link href="#how" className="btn btn-light min-h-12 px-6 text-[16px]">
             How it works <IconChevronDown className="size-4" />
@@ -110,7 +110,7 @@ function PayANumber() {
       <div className={`${WRAP} grid items-center gap-16 lg:grid-cols-[1fr_1.05fr]`}>
         <div data-scroll style={rise}>
           <Copy title="Pay a number, not an address.">
-            Every MIRK account has a 12-digit number. It reveals no name, no wallet and no balance. Pay it like a bank
+            Every mirk account has a 12-digit number. It reveals no name, no wallet and no balance. Pay it like a bank
             account, or send a claim link to someone who has no account yet.
           </Copy>
           <Character className="mt-10 hidden size-16 lg:block" />
@@ -167,7 +167,7 @@ function Night() {
       <div className="relative isolate overflow-hidden bg-[#111213] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_28%_at_50%_0%,rgba(62,229,143,0.13)_0%,rgba(62,229,143,0)_70%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_28%_at_50%_0%,rgba(185,166,255,0.13)_0%,rgba(185,166,255,0)_70%)]"
         />
 
         <div className={`${WRAP} pt-40`}>
@@ -188,7 +188,7 @@ function Night() {
         <div className={`${WRAP} grid gap-x-8 gap-y-16 pt-28 pb-32 md:grid-cols-2`}>
           <div data-scroll className="flex flex-col" style={rise}>
             <Pair title="Your balance keeps quiet.">
-              On a public chain, every balance is a billboard. MIRK keeps your money in Gloam&apos;s shielded pool, so
+              On a public chain, every balance is a billboard. mirk keeps your money in Gloam&apos;s shielded pool, so
               the record shows that something happened and leaves the rest to you.
             </Pair>
             <div className="relative flex flex-1 flex-col rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-8">
@@ -272,7 +272,7 @@ function Closing() {
     <section className="border-line relative isolate overflow-hidden border-t py-28 text-center sm:py-32">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(45%_55%_at_50%_100%,rgba(62,229,143,0.14)_0%,rgba(62,229,143,0)_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(45%_55%_at_50%_100%,rgba(185,166,255,0.14)_0%,rgba(185,166,255,0)_70%)]"
       />
       <div className={WRAP}>
         <Character className="mx-auto size-16" />
@@ -282,7 +282,7 @@ function Closing() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open MIRK
+            Open mirk
           </Link>
           <Link href="/docs" className="btn btn-light min-h-12 px-6 text-[16px]">
             Read the docs

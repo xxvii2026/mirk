@@ -6,7 +6,7 @@ import { REGISTRY_ADDRESS } from "../robinhood/network";
 
 export class RegistryUnavailableError extends Error {
   constructor() {
-    super("The MIRK account registry is not configured on this deployment.");
+    super("The mirk account registry is not configured on this deployment.");
     this.name = "RegistryUnavailableError";
   }
 }

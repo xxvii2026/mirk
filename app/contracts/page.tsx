@@ -41,7 +41,7 @@ export default function Contracts() {
       <Row
         name="Gloam shielded pool"
         address={POOL_ADDRESS}
-        note="Holds all deposited test assets. Deployed and operated by Gloam; MIRK reads its address from the Gloam SDK."
+        note="Holds all deposited test assets. Deployed and operated by Gloam; mirk reads its address from the Gloam SDK."
       />
       <Row
         name="Gloam payment message board"

@@ -1,4 +1,4 @@
-/** Minimal ABIs for the pool calls MIRK signs. Argument order matches the SDK's exec.args. */
+/** Minimal ABIs for the pool calls mirk signs. Argument order matches the SDK's exec.args. */
 
 export const SHIELD_BOUND_ABI = [
   {

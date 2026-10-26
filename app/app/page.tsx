@@ -101,7 +101,7 @@ export default function Dashboard() {
         <div className="space-y-5">
           <Card className="space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold">Your MIRK account</h2>
+              <h2 className="text-lg font-semibold">Your mirk account</h2>
               <AccountStatus />
             </div>
             {account ? (
@@ -124,7 +124,7 @@ export default function Dashboard() {
             <h2 className="text-lg font-semibold">How privacy works here</h2>
             <p className="text-muted text-sm">
               Your money sits in Gloam&apos;s shielded pool on Robinhood Chain. The keys that can spend it are encrypted
-              on this device. Nobody, including MIRK, can move your money.
+              on this device. Nobody, including mirk, can move your money.
             </p>
             <p className="text-muted text-sm">
               Adding money and cashing out are public. Balances and private transfers are not.

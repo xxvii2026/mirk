@@ -69,7 +69,7 @@ export default function SendPage() {
               ...r,
               link: null as string | null,
             }))
-          : Promise.reject(new Error("Enter a valid MIRK account number."))
+          : Promise.reject(new Error("Enter a valid mirk account number."))
         : createClaimLink(ctx, asset.address, amount, window.location.origin),
     [mode, accountCheck, asset.address, amount],
   );
@@ -100,7 +100,7 @@ export default function SendPage() {
             </>
           ) : (
             <p className="text-muted text-[15px]">
-              Confirmed on chain. The amount and recipient are not public. The recipient&apos;s MIRK will find the
+              Confirmed on chain. The amount and recipient are not public. The recipient&apos;s mirk will find the
               payment automatically.
             </p>
           )}
@@ -144,7 +144,7 @@ export default function SendPage() {
           >
             {(
               [
-                ["account", "MIRK account"],
+                ["account", "mirk account"],
                 ["link", "Claim link"],
               ] as const
             ).map(([m, label]) => (
@@ -168,12 +168,12 @@ export default function SendPage() {
           {mode === "account" ? (
             <Field
               id={`${id}-to`}
-              label="MIRK account number"
+              label="mirk account number"
               error={
                 resolution.state === "invalid"
                   ? resolution.message
                   : resolution.state === "unknown"
-                    ? "No MIRK account has this number."
+                    ? "No mirk account has this number."
                     : resolution.state === "error"
                       ? resolution.message
                       : null
@@ -196,15 +196,15 @@ export default function SendPage() {
                 {resolution.state === "checking" ? <span className="text-muted">Checking…</span> : null}
                 {resolution.state === "valid" ? (
                   <Pill tone="signal">
-                    <SignalDot /> Valid MIRK account
+                    <SignalDot /> Valid mirk account
                   </Pill>
                 ) : null}
               </p>
             </Field>
           ) : (
-            <Notice title="Pay someone without MIRK">
-              MIRK creates a one-time key on this device, sends the money to it privately, and gives you a link. Whoever
-              opens the link can claim the money into their own MIRK account.
+            <Notice title="Pay someone without mirk">
+              mirk creates a one-time key on this device, sends the money to it privately, and gives you a link. Whoever
+              opens the link can claim the money into their own mirk account.
             </Notice>
           )}
 

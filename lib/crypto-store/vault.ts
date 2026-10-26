@@ -235,10 +235,10 @@ export function parseBackupFile(text: string): BackupFile {
   try {
     json = JSON.parse(text);
   } catch {
-    throw new Error("This file is not a MIRK backup.");
+    throw new Error("This file is not a mirk backup.");
   }
   const parsed = backupFile.safeParse(json);
-  if (!parsed.success) throw new Error("This file is not a MIRK backup, or its version is not supported.");
+  if (!parsed.success) throw new Error("This file is not a mirk backup, or its version is not supported.");
   return parsed.data;
 }
 

@@ -4,7 +4,7 @@ import { CHAIN_ID } from "../robinhood/network";
 
 /**
  * Relay submission. The browser cannot call the Gloam relay directly (it sends
- * no CORS headers), so requests go through MIRK's /api/relay pass-through. It
+ * no CORS headers), so requests go through mirk's /api/relay pass-through. It
  * forwards only public proof data that would appear on chain anyway: no note
  * secret, receive key or wallet signature is ever in these requests.
  */

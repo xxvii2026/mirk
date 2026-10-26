@@ -1,5 +1,5 @@
 /**
- * MIRK account numbers: 12 digits, the first 11 cryptographically random and
+ * mirk account numbers: 12 digits, the first 11 cryptographically random and
  * the last a Luhn check digit. Never derived from any identity or key.
  */
 
@@ -58,10 +58,10 @@ export function isAccountNumber(input: string): input is AccountNumber {
 }
 
 export const ACCOUNT_NUMBER_ERRORS: Record<Exclude<AccountNumberCheck, { ok: true }>["reason"], string> = {
-  empty: "Enter a MIRK account number.",
+  empty: "Enter a mirk account number.",
   format: "Account numbers contain digits only.",
-  length: "MIRK account numbers have 12 digits.",
-  zero: "This is not a valid MIRK account number.",
+  length: "mirk account numbers have 12 digits.",
+  zero: "This is not a valid mirk account number.",
   checksum: "This number does not pass the check digit. Check it for typos.",
 };
 

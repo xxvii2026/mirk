@@ -16,7 +16,7 @@ export const registerRequest = z
   })
   .strict();
 
-/** The only relay calls MIRK forwards: public proof data, never secrets. */
+/** The only relay calls mirk forwards: public proof data, never secrets. */
 export const relayRequest = z.discriminatedUnion("action", [
   z
     .object({

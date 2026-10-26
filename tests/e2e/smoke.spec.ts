@@ -79,8 +79,8 @@ test("connect → add money → private send → recipient sweep → cash out", 
 
   // --- A sends privately to B's account number, through the relay.
   await pageA.getByRole("link", { name: "Send" }).first().click();
-  await pageA.getByLabel("MIRK account number").fill(numberB);
-  await expect(pageA.getByText("Valid MIRK account")).toBeVisible({ timeout: 30_000 });
+  await pageA.getByLabel("mirk account number").fill(numberB);
+  await expect(pageA.getByText("Valid mirk account")).toBeVisible({ timeout: 30_000 });
   await pageA.getByLabel(/Amount/).fill("0.0001");
   await pageA.getByRole("button", { name: "Send privately" }).click();
   await expect(pageA.getByRole("heading", { name: "Sent privately" })).toBeVisible({ timeout: 300_000 });
@@ -178,7 +178,7 @@ test("claim link: create → open in a new browser → claim into a new account"
   await expect.poll(() => new URL(pageD.url()).hash).toBe("");
   await expect(pageD.getByText("Waiting to be claimed")).toBeVisible({ timeout: 60_000 });
   await connectAndUnlock(pageD);
-  await pageD.getByRole("button", { name: "Claim into my MIRK account" }).click();
+  await pageD.getByRole("button", { name: "Claim into my mirk account" }).click();
   await expect(pageD.getByText("Confirmed on chain and now in your private balance.")).toBeVisible({
     timeout: 300_000,
   });
@@ -194,7 +194,7 @@ test("claim link: create → open in a new browser → claim into a new account"
     [
       `\n## Claim-link smoke ${new Date().toISOString()}`,
       ...report,
-      "- D claimed the link into a new MIRK account; a second browser then saw no unclaimed payment.",
+      "- D claimed the link into a new mirk account; a second browser then saw no unclaimed payment.",
       "",
     ].join("\n"),
   );

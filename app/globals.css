@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* MIRK is dark only: one token set, no theme switching. */
+/* mirk is dark only: one token set, no theme switching. */
 :root {
   --tone-50: #fafafa;
   --tone-100: #f2f2f3;
@@ -24,12 +24,12 @@
   --muted: #979aa3;
   --line: #26262b;
   --line-strong: #36363d;
-  /* The one accent: a phosphor green for action, focus, selection and "yours". */
-  --signal: #3ee58f;
-  --signal-tint: #0f2619;
-  --signal-text: #6ff0aa;
-  --on-signal: #04140b;
-  --signal-glow: rgba(62, 229, 143, 0.16);
+  /* The one accent: a light lavender for action, focus, selection and "yours". */
+  --signal: #b9a6ff;
+  --signal-tint: #1c1830;
+  --signal-text: #cdbfff;
+  --on-signal: #160f2e;
+  --signal-glow: rgba(185, 166, 255, 0.18);
   --danger: #ff8a80;
   --danger-tint: #2a1514;
   --on-ink: #0b0b0c;
@@ -171,8 +171,8 @@ body {
   /* Liquid glass: frosted, saturated, with a lit rim. */
   .glass {
     background: rgba(24, 24, 27, 0.62);
-    backdrop-filter: blur(22px) saturate(180%);
-    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.09);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.08),

@@ -68,7 +68,7 @@ export async function decodeClaimPackage(fragment: string): Promise<ClaimParse> 
 
 export const CLAIM_ERRORS: Record<Exclude<ClaimParse, { ok: true }>["reason"], string> = {
   empty: "This claim link is missing its code. Ask the sender for the complete link.",
-  version: "This claim link was made by a newer version of MIRK.",
+  version: "This claim link was made by a newer version of mirk.",
   malformed: "This claim link is incomplete or damaged. Ask the sender for the complete link.",
   integrity: "This claim link failed its integrity check. It may have been cut off when copied.",
 };

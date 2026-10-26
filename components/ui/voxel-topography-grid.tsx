@@ -5,18 +5,24 @@ import { useEffect, useRef } from "react";
 export interface VoxelTopographyGridProps {
   tileSize?: number;
   maxHeight?: number;
-  /** Hex color for the voxels, e.g. #3ee58f. */
+  /** Hex color for the voxels, e.g. #b9a6ff. */
   primaryColor?: string;
   wireColor?: string;
   /** Hex color the canvas clears to; match the surface behind it. */
   background?: string;
+  /** Wave speed, in radians per 60th of a second. */
   speed?: number;
-  /** Cap on device pixel ratio; 1 is plenty for a background under a scrim. */
+  /** Cap on device pixel ratio. Below 1 renders at reduced resolution and lets CSS scale it up, which suits a dimmed background. */
   maxDpr?: number;
   /** Frame-rate cap. */
   fps?: number;
   className?: string;
 }
+
+/** Top faces are shaded in this many elevation steps; each step is one fill per row. */
+const LEVELS = 10;
+const LIFT = 55;
+const RADIUS = 220;
 
 const hexToRgb = (hex: string) => {
   const clean = hex.replace("#", "");
@@ -36,12 +42,17 @@ const hexToRgb = (hex: string) => {
  * An isometric field of voxels rolling on two sine waves, rising under the
  * pointer. Fills its parent; position the parent. Pauses off screen, and with
  * reduced motion paints a single still frame.
+ *
+ * Voxels on one screen diagonal never overlap, so each diagonal is drawn as a
+ * handful of batched paths (left faces, right faces, one per top shade, the
+ * wireframe), back to front. That keeps a frame to a few hundred canvas calls
+ * instead of several per voxel.
  */
 export function VoxelTopographyGrid({
   tileSize = 28,
   maxHeight = 70,
-  primaryColor = "#3ee58f",
-  wireColor = "rgba(62, 229, 143, 0.35)",
+  primaryColor = "#b9a6ff",
+  wireColor = "rgba(11, 11, 12, 0.5)",
   background = "#0b0b0c",
   speed = 0.015,
   maxDpr = 2,
@@ -67,85 +78,124 @@ export function VoxelTopographyGrid({
     let visible = false;
 
     const base = hexToRgb(primaryColor);
-    const shade = (k: number, a: number) =>
-      `rgba(${Math.floor(base.r * k)}, ${Math.floor(base.g * k)}, ${Math.floor(base.b * k)}, ${a})`;
-    const leftFace = shade(0.45, 0.85);
-    const rightFace = shade(0.65, 0.85);
-    // Top faces light up with elevation; precomputed so a frame allocates nothing.
-    const topLUT = Array.from({ length: 101 }, (_, i) => shade(0.55 + (i / 100) * 0.45, 1));
+    const shade = (k: number) => `rgb(${Math.floor(base.r * k)}, ${Math.floor(base.g * k)}, ${Math.floor(base.b * k)})`;
+    const leftFace = shade(0.4);
+    const rightFace = shade(0.58);
+    const topShades = Array.from({ length: LEVELS }, (_, i) => shade(0.55 + (i / (LEVELS - 1)) * 0.45));
 
     const tileW = tileSize * 0.866025; // cos 30°
     const tileH = tileSize * 0.5; // sin 30°
-    const radius = 220;
-    const invMaxHeight = 1 / (maxHeight + 55);
+    const invTop = 1 / (maxHeight + LIFT);
+
+    // Per-row scratch, reused every frame.
+    let xs = new Float32Array(0);
+    let hs = new Float32Array(0);
+    let lv = new Uint8Array(0);
 
     const draw = () => {
-      time += speed;
-      mouse.x += (mouse.targetX - mouse.x) * 0.32;
-      mouse.y += (mouse.targetY - mouse.y) * 0.32;
-
       ctx.fillStyle = background;
       ctx.fillRect(0, 0, width, height);
 
-      const cols = Math.ceil(width / tileW) + 4;
-      const rows = Math.ceil(height / tileH) + 8;
       const originX = width * 0.5;
       const originY = height / 3.2;
+      const mx = mouse.x;
+      const my = mouse.y;
+      const near = mx > -500;
 
-      // Back to front, so nearer voxels paint over farther ones.
-      for (let r = -Math.floor(rows / 2); r < Math.ceil(rows / 2); r++) {
-        for (let c = -Math.floor(cols / 2); c < Math.ceil(cols / 2); c++) {
-          const isoX = originX + (c - r) * tileW;
-          const isoY = originY + (c + r) * tileH;
+      // u = c − r runs across the screen, d = c + r down it; a voxel exists where they share parity.
+      const uMin = Math.floor(-originX / tileW) - 1;
+      const uMax = Math.ceil((width - originX) / tileW) + 1;
+      const dMin = Math.floor((-tileH - 15 - originY) / tileH);
+      const dMax = Math.ceil((height + maxHeight + LIFT + tileH - originY) / tileH);
 
+      for (let d = dMin; d <= dMax; d++) {
+        const isoY = originY + d * tileH;
+        let n = 0;
+        let used = 0;
+        for (let u = uMin + ((((uMin - d) % 2) + 2) % 2); u <= uMax; u += 2) {
+          const c = (d + u) / 2;
+          const r = (d - u) / 2;
+          const isoX = originX + u * tileW;
           let h =
             (Math.sin(time * 2 + c * 0.25 + r * 0.25) + Math.cos(time * 1.5 + c * 0.15 - r * 0.3) + 2) *
             0.25 *
             maxHeight;
-          const dx = isoX - mouse.x;
-          const dy = isoY - mouse.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < radius * radius) {
-            const influence = 1 - Math.sqrt(distSq) / radius;
-            h += influence * influence * 55;
+          if (near) {
+            const dx = isoX - mx;
+            const dy = isoY - my;
+            const distSq = dx * dx + dy * dy;
+            if (distSq < RADIUS * RADIUS) {
+              const k = 1 - Math.sqrt(distSq) / RADIUS;
+              h += k * k * LIFT;
+            }
           }
-
-          const py = isoY - h;
-          if (isoX + tileW < 0 || isoX - tileW > width || py + h + 15 < 0 || py - tileH > height) continue;
-
-          const drop = h + 15;
-
-          ctx.beginPath();
-          ctx.moveTo(isoX - tileW, py);
-          ctx.lineTo(isoX, py + tileH);
-          ctx.lineTo(isoX, py + tileH + drop);
-          ctx.lineTo(isoX - tileW, py + drop);
-          ctx.closePath();
-          ctx.fillStyle = leftFace;
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.moveTo(isoX, py + tileH);
-          ctx.lineTo(isoX + tileW, py);
-          ctx.lineTo(isoX + tileW, py + drop);
-          ctx.lineTo(isoX, py + tileH + drop);
-          ctx.closePath();
-          ctx.fillStyle = rightFace;
-          ctx.fill();
-
-          ctx.beginPath();
-          ctx.moveTo(isoX, py - tileH);
-          ctx.lineTo(isoX + tileW, py);
-          ctx.lineTo(isoX, py + tileH);
-          ctx.lineTo(isoX - tileW, py);
-          ctx.closePath();
-          const light = Math.min(1, Math.max(0.1, h * invMaxHeight));
-          ctx.fillStyle = topLUT[(light * 100) | 0]!;
-          ctx.fill();
-          ctx.strokeStyle = wireColor;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
+          if (isoY - h - tileH > height) continue;
+          const light = Math.min(1, Math.max(0.1, h * invTop));
+          const level = Math.min(LEVELS - 1, (light * LEVELS) | 0);
+          xs[n] = isoX;
+          hs[n] = h;
+          lv[n] = level;
+          used |= 1 << level;
+          n++;
         }
+        if (!n) continue;
+
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+          const x = xs[i]!;
+          const py = isoY - hs[i]!;
+          const drop = hs[i]! + 15;
+          ctx.moveTo(x - tileW, py);
+          ctx.lineTo(x, py + tileH);
+          ctx.lineTo(x, py + tileH + drop);
+          ctx.lineTo(x - tileW, py + drop);
+          ctx.closePath();
+        }
+        ctx.fillStyle = leftFace;
+        ctx.fill();
+
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+          const x = xs[i]!;
+          const py = isoY - hs[i]!;
+          const drop = hs[i]! + 15;
+          ctx.moveTo(x, py + tileH);
+          ctx.lineTo(x + tileW, py);
+          ctx.lineTo(x + tileW, py + drop);
+          ctx.lineTo(x, py + tileH + drop);
+          ctx.closePath();
+        }
+        ctx.fillStyle = rightFace;
+        ctx.fill();
+
+        for (let level = 0; level < LEVELS; level++) {
+          if (!(used & (1 << level))) continue;
+          ctx.beginPath();
+          for (let i = 0; i < n; i++) {
+            if (lv[i] !== level) continue;
+            const x = xs[i]!;
+            const py = isoY - hs[i]!;
+            ctx.moveTo(x, py - tileH);
+            ctx.lineTo(x + tileW, py);
+            ctx.lineTo(x, py + tileH);
+            ctx.lineTo(x - tileW, py);
+            ctx.closePath();
+          }
+          ctx.fillStyle = topShades[level]!;
+          ctx.fill();
+        }
+
+        ctx.beginPath();
+        for (let i = 0; i < n; i++) {
+          const x = xs[i]!;
+          const py = isoY - hs[i]!;
+          ctx.moveTo(x, py - tileH);
+          ctx.lineTo(x + tileW, py);
+          ctx.lineTo(x, py + tileH);
+          ctx.lineTo(x - tileW, py);
+          ctx.closePath();
+        }
+        ctx.stroke();
       }
     };
 
@@ -153,23 +203,38 @@ export function VoxelTopographyGrid({
     const loop = (now: number) => {
       frame = 0;
       if (!visible) return;
-      if (now - last >= 1000 / fps - 2) {
+      const dt = now - last;
+      if (dt >= 1000 / fps - 2) {
+        // Time-based, so the waves keep their pace at any frame rate.
+        time += speed * Math.min(dt, 100) * 0.06;
         last = now;
+        mouse.x += (mouse.targetX - mouse.x) * 0.32;
+        mouse.y += (mouse.targetY - mouse.y) * 0.32;
         draw();
       }
       frame = requestAnimationFrame(loop);
     };
     const start = () => {
-      if (!still && !frame) frame = requestAnimationFrame(loop);
+      if (still || frame) return;
+      last = performance.now();
+      frame = requestAnimationFrame(loop);
     };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, maxDpr);
       width = container.clientWidth;
       height = container.clientHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.strokeStyle = wireColor;
+      ctx.lineWidth = 0.6;
+      const perRow = Math.ceil(width / tileW) + 4;
+      if (xs.length < perRow) {
+        xs = new Float32Array(perRow);
+        hs = new Float32Array(perRow);
+        lv = new Uint8Array(perRow);
+      }
       draw();
     };
     const ro = new ResizeObserver(resize);

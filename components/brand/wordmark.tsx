@@ -1,5 +1,5 @@
 /**
- * The MIRK mark: a soft square carrying an M of three slanted pills. It is the
+ * The mirk mark: a soft square carrying an M of three slanted pills. It is the
  * whole logo; there is no wordmark. Inherits `currentColor`; size it with height and width.
  */
 
@@ -30,5 +30,5 @@ export function MarkTile({ className = "size-12" }: { className?: string }) {
 
 /** The logo as a labelled image, for headers and footers. */
 export function Logo({ className = "size-8" }: { className?: string }) {
-  return <Mark className={className} title="MIRK" />;
+  return <Mark className={className} title="mirk" />;
 }

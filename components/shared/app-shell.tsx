@@ -52,7 +52,7 @@ function isActive(path: string, href: string) {
 function titleFor(path: string) {
   const exact = TITLES[path];
   if (exact) return exact;
-  return [...ALL].reverse().find((i) => isActive(path, i.href))?.label ?? "MIRK";
+  return [...ALL].reverse().find((i) => isActive(path, i.href))?.label ?? "mirk";
 }
 
 function RailLink({ item, path }: { item: Item; path: string }) {
@@ -94,7 +94,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </a>
 
       <aside className="sticky top-0 hidden h-dvh w-[262px] shrink-0 flex-col px-4 pt-5 pb-4 md:flex">
-        <Link href="/" aria-label="MIRK home" className="mb-6 flex min-h-11 w-fit items-center gap-2.5 px-2">
+        <Link href="/" aria-label="mirk home" className="mb-6 flex min-h-11 w-fit items-center gap-2.5 px-2">
           <Logo className="size-9" />
           <span className="border-line-strong text-ink-2 rounded-full border px-2.5 py-0.5 text-[12px] font-medium">
             Testnet
@@ -110,7 +110,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               Testnet money
             </p>
             <p className="text-ink-2 mt-1.5 leading-relaxed">
-              Testnet assets carry no value, and MIRK has not been externally audited.
+              Testnet assets carry no value, and mirk has not been externally audited.
             </p>
             {address ? (
               <p className="text-ink-2 border-line mt-3 flex items-center gap-2 border-t pt-3 font-mono text-[12px]">
@@ -132,7 +132,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="bg-canvas min-h-dvh min-w-0 flex-1 md:my-3 md:mr-3 md:min-h-[calc(100dvh-1.5rem)] md:rounded-[22px] md:shadow-[var(--shadow-workspace)]">
         <header className="border-line sticky top-0 z-30 border-b bg-[var(--chrome)] backdrop-blur-md md:rounded-t-[22px]">
           <div className="flex h-16 items-center justify-between gap-3 px-4 md:h-[68px] md:px-8">
-            <Link href="/app" aria-label="MIRK home" className="flex min-h-11 items-center gap-2.5 md:hidden">
+            <Link href="/app" aria-label="mirk home" className="flex min-h-11 items-center gap-2.5 md:hidden">
               <Logo className="size-8" />
               <span className="border-line-strong text-ink-2 rounded-full border px-2.5 py-0.5 text-[12px] font-medium">
                 Testnet

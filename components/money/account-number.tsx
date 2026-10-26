@@ -72,7 +72,7 @@ export function AccountStatus() {
   );
 }
 
-/** QR containing only the MIRK account number, never a wallet address. */
+/** QR containing only the mirk account number, never a wallet address. */
 export function AccountQr({ number, size = 176 }: { number: string; size?: number }) {
   const [svg, setSvg] = useState<string | null>(null);
   useEffect(() => {
@@ -94,7 +94,7 @@ export function AccountQr({ number, size = 176 }: { number: string; size?: numbe
       className="border-line rounded-2xl border bg-white p-3"
       style={{ width: size + 24, height: size + 24 }}
       role="img"
-      aria-label="QR code of your MIRK account number"
+      aria-label="QR code of your mirk account number"
     >
       {svg ? <div className="size-full [&_svg]:size-full" dangerouslySetInnerHTML={{ __html: svg }} /> : null}
     </div>

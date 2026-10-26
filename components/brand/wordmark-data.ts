@@ -1,5 +1,5 @@
 /**
- * Geometry for the MIRK mark: a soft square with an M cut from three slanted
+ * Geometry for the mirk mark: a soft square with an M cut from three slanted
  * pills. Traced from the master artwork; one even-odd path, so the pills are
  * holes and the mark works on any ground.
  */
@@ -10,5 +10,5 @@ export const MARK_PATH =
   "M 40.04 2.25 C 11.92 5.31, 0 19.41, 0 49.6 C 0 78.43, 10.16 92.26, 34.58 96.67 C 41.15 97.86, 58.97 97.84, 65.5 96.65 C 89.92 92.17, 100 78.43, 100 49.6 C 100 24.57, 92.13 11.21, 73.79 5.09 C 67.15 2.88, 62.74 2.31, 51.45 2.19 C 45.97 2.14, 40.83 2.17, 40.04 2.25 M 34.8 23.63 C 32.5 24.47, 29.88 27.27, 29.18 29.63 C 28.05 33.41, 28.14 33.74, 34.21 49.29 C 35.54 52.68, 37.7 58.21, 39.01 61.59 C 40.87 66.35, 41.72 68.06, 42.81 69.24 C 46.35 73.08, 52.71 73.45, 56.56 70.06 C 59.99 67.03, 60.69 62.7, 58.61 57.27 C 54.85 47.42, 47.72 29.3, 47.23 28.32 C 46.41 26.69, 44.61 24.89, 42.94 24.02 C 40.99 23.02, 37 22.83, 34.8 23.63 M 58.69 23.37 C 54.38 24.68, 51.05 29.48, 51.54 33.68 C 51.64 34.49, 53.51 39.81, 55.71 45.49 C 65.29 70.22, 64.93 69.49, 68.56 71.35 C 75.15 74.71, 82.79 70.06, 82.75 62.7 C 82.74 60.4, 82.47 59.47, 79.83 52.74 C 78.23 48.65, 75.5 41.64, 73.76 37.16 C 70.19 27.96, 69.41 26.45, 67.6 25.06 C 65.23 23.25, 61.43 22.53, 58.69 23.37 M 19.52 46.14 C 16.11 47.92, 13.77 52.25, 14.26 55.85 C 14.54 57.91, 17.82 66.44, 19.04 68.28 C 22.41 73.37, 30.3 73.82, 34.41 69.15 C 37.59 65.54, 37.67 62.28, 34.79 54.98 C 31.76 47.28, 29.42 45.13, 24.1 45.13 C 21.92 45.13, 21.13 45.3, 19.52 46.14";
 
 export function markSvg(fill: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MARK_VIEWBOX}"><title>MIRK</title><path fill="${fill}" fill-rule="evenodd" d="${MARK_PATH}"/></svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${MARK_VIEWBOX}"><title>mirk</title><path fill="${fill}" fill-rule="evenodd" d="${MARK_PATH}"/></svg>\n`;
 }

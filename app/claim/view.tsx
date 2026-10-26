@@ -98,7 +98,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
             </p>
           ) : null}
           <p className="text-muted text-[15px]">Confirmed on chain and now in your private balance.</p>
-          <ButtonLink href="/app">Open MIRK</ButtonLink>
+          <ButtonLink href="/app">Open mirk</ButtonLink>
         </div>
       );
     }
@@ -106,7 +106,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
       r.status === "taken"
         ? "This payment was claimed by someone else, or taken back by the sender, before your claim landed."
         : r.status === "pending"
-          ? "Your claim was submitted but is not confirmed yet. Open MIRK in a moment; it will finish automatically."
+          ? "Your claim was submitted but is not confirmed yet. Open mirk in a moment; it will finish automatically."
           : "No unclaimed payment was found for this link. It may have been claimed already, or is still confirming.";
     return (
       <div className="space-y-3">
@@ -124,7 +124,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
         <FlowProgress steps={STEPS} current={flow.step} part={flow.part} />
       ) : (
         <Button className="w-full" onClick={() => flow.run()}>
-          Claim into my MIRK account
+          Claim into my mirk account
         </Button>
       )}
       <FlowErrorNotice flow={flow} onRetry={() => flow.run()} />
@@ -151,7 +151,7 @@ export function ClaimView() {
     <Providers>
       <div className="min-h-dvh">
         <header className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4">
-          <Link href="/" aria-label="MIRK home" className="flex min-h-11 items-center">
+          <Link href="/" aria-label="mirk home" className="flex min-h-11 items-center">
             <Logo className="size-8" />
           </Link>
           <Pill>Testnet</Pill>
@@ -169,7 +169,7 @@ export function ClaimView() {
                 {parsed.message}
               </Notice>
               <ButtonLink href="/" variant="ghost">
-                Go to MIRK
+                Go to mirk
               </ButtonLink>
             </Card>
           ) : null}
@@ -178,7 +178,7 @@ export function ClaimView() {
               <Card className="space-y-4">
                 <Preview payload={parsed.payload} />
                 <Notice title="Anyone holding the complete link can claim it">
-                  The code is part of the link itself and never reaches MIRK&apos;s servers. We removed it from your
+                  The code is part of the link itself and never reaches mirk&apos;s servers. We removed it from your
                   address bar; keep the original message until you have claimed. Test assets have no value.
                 </Notice>
               </Card>

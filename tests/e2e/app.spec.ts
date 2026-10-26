@@ -4,7 +4,7 @@ import { connectAndUnlock, installWallet } from "./wallet";
 test.describe("connect, network and unlock", () => {
   test("shows the connect-wallet screen", async ({ page }) => {
     await page.goto("/app");
-    await expect(page.getByRole("heading", { name: "Connect a wallet to open MIRK" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Connect a wallet to open mirk" })).toBeVisible();
     await expect(page.getByText("Test assets have no value").first()).toBeVisible();
   });
 
@@ -53,7 +53,7 @@ test.describe("money forms", () => {
   test("send validates account numbers before any lookup", async ({ page }) => {
     // In-app navigation: a full reload would (correctly) lock the store again.
     await page.getByRole("link", { name: "Send" }).first().click();
-    const input = page.getByLabel("MIRK account number");
+    const input = page.getByLabel("mirk account number");
     await input.fill("4829 1630 7715");
     await expect(page.getByText("does not pass the check digit")).toBeVisible();
     await input.fill("12ab");

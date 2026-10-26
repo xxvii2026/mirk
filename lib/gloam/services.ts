@@ -1,5 +1,5 @@
 /**
- * MIRK's application services over the Gloam SDK. React components call these;
+ * mirk's application services over the Gloam SDK. React components call these;
  * they never assemble proofs or calldata themselves.
  *
  * Every secret is encrypted into the private store before the transaction that
@@ -500,7 +500,7 @@ async function payTag(
         await ctx.vault.remove(memoId);
       } catch {
         // The money moved; only the delivery message is outstanding. Reconcile retries it.
-        await patchActivity(ctx, activityId, { error: "Delivery message pending. MIRK will retry it." });
+        await patchActivity(ctx, activityId, { error: "Delivery message pending. mirk will retry it." });
       }
     }
     await patchActivity(ctx, activityId, { status: "confirmed" });
@@ -528,9 +528,9 @@ export async function sendToAccount(
   if (!REGISTRY_ADDRESS)
     throw new FlowError("The account registry is not available on this deployment.", "no-registry");
   const tag = await resolveAccount(ctx.client, account);
-  if (!tag) throw new FlowError("No MIRK account has this number.", "unknown-account");
+  if (!tag) throw new FlowError("No mirk account has this number.", "unknown-account");
   const own = ctx.vault.list("account")[0]?.value;
-  if (own?.tag === tag) throw new FlowError("This is your own MIRK account number.", "unknown-account");
+  if (own?.tag === tag) throw new FlowError("This is your own mirk account number.", "unknown-account");
   const r = await payTag(ctx, tag, asset, amountWei, "sent", `To •••• ${formatAccountNumber(account).slice(-4)}`);
   return r;
 }

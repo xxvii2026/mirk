@@ -23,9 +23,9 @@ function ConnectWallet() {
     <Frame>
       <MarkTile className="size-14" />
       <div className="w-full space-y-2">
-        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Connect a wallet to open MIRK</h1>
+        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Connect a wallet to open mirk</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
-          Any EVM wallet works. MIRK never holds your money: it sits in Gloam&apos;s shielded pool, and only keys on
+          Any EVM wallet works. mirk never holds your money: it sits in Gloam&apos;s shielded pool, and only keys on
           this device can move it.
         </p>
       </div>
@@ -45,7 +45,7 @@ function WrongNetwork({ actual }: { actual: number | undefined }) {
       <div className="w-full space-y-2">
         <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Switch to Robinhood Chain testnet</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
-          Your wallet is on network {actual ?? "unknown"}. MIRK only works on Robinhood Chain testnet (chain {CHAIN_ID}
+          Your wallet is on network {actual ?? "unknown"}. mirk only works on Robinhood Chain testnet (chain {CHAIN_ID}
           ).
         </p>
       </div>
@@ -108,7 +108,7 @@ export function PrivateGate({ children }: { children: ReactNode }) {
       <Frame>
         <Notice tone="danger" title="Private storage is unavailable">
           This browser is blocking secure local storage (IndexedDB), often in private windows or with strict site-data
-          settings. MIRK needs it to keep your encrypted keys on this device. Try a regular window.
+          settings. mirk needs it to keep your encrypted keys on this device. Try a regular window.
         </Notice>
       </Frame>
     );
