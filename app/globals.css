@@ -1,6 +1,12 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *:not([data-theme="light"] *)));
+
+/* The landing is always light, whatever the visitor's theme; its overscroll matches. */
+html:has(.landing) {
+  background: #ffffff;
+  color-scheme: light;
+}
 
 :root,
 [data-theme="light"] {
@@ -26,12 +32,13 @@
   --muted: #676c78;
   --line: #e5e7ec;
   --line-strong: #d2d6de;
-  /* The one accent, lavender. Deeper text and focus tones keep contrast on white. */
-  --signal: #a891ff;
-  --signal-tint: #f0ecff;
-  --signal-text: #5b44cc;
-  --on-signal: #160f2e;
-  --signal-glow: rgba(124, 98, 234, 0.18);
+  /* The one accent: on white it deepens to violet, so white labels on it read at 5:1. */
+  --signal: #6e56cf;
+  --signal-hover: #5b44bd;
+  --signal-tint: #efebff;
+  --signal-text: #5a43c8;
+  --on-signal: #ffffff;
+  --signal-glow: rgba(110, 86, 207, 0.18);
   --danger: #b42318;
   --danger-tint: #fff0ef;
   --on-ink: #ffffff;
@@ -94,6 +101,7 @@
   --line-strong: #36363d;
   /* The one accent: a light lavender for action, focus, selection and "yours". */
   --signal: #b9a6ff;
+  --signal-hover: #cbbcff;
   --signal-tint: #1c1830;
   --signal-text: #cdbfff;
   --on-signal: #160f2e;
@@ -230,12 +238,17 @@ body {
   .btn-accent {
     color: var(--on-signal);
     background: var(--signal);
+    box-shadow:
+      0 1px 2px rgba(22, 15, 46, 0.12),
+      0 6px 16px -8px var(--signal-glow);
+  }
+  .btn-accent:hover:not(:disabled) {
+    background: var(--signal-hover);
   }
   .btn-dark {
     color: var(--on-ink);
     background: var(--ink);
   }
-  .btn-accent:hover:not(:disabled),
   .btn-dark:hover:not(:disabled) {
     opacity: 0.88;
   }
@@ -260,7 +273,7 @@ body {
       0 1px 2px rgba(11, 11, 12, 0.06),
       0 12px 32px -12px rgba(11, 11, 12, 0.22);
   }
-  [data-theme="dark"] .glass {
+  [data-theme="dark"] .glass:not([data-theme="light"] *) {
     background: rgba(24, 24, 27, 0.62);
     border-color: rgba(255, 255, 255, 0.09);
     box-shadow:

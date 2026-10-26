@@ -8,7 +8,6 @@ import { ScrollFX } from "@/components/landing/scroll-fx";
 import { VisibilitySlider } from "@/components/landing/visibility-slider";
 import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
-import { VoxelTopographyGrid } from "@/components/ui/voxel-topography-grid";
 import { Web3Bento } from "@/components/ui/web3-bento";
 import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
@@ -47,20 +46,8 @@ function Hero() {
     <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-24 sm:pt-20">
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 -z-10 h-[1040px] [mask-image:linear-gradient(180deg,#000_40%,transparent_100%)] opacity-35"
-      >
-        <VoxelTopographyGrid
-          tileSize={40}
-          maxHeight={64}
-          primaryColor="#8b7bd8"
-          wireColor="rgba(11, 11, 12, 0.7)"
-          speed={0.02}
-          maxDpr={0.5}
-          fps={30}
-        />
-        {/* A pool of dark behind the copy, so the type reads over the field. */}
-        <div className="absolute inset-0 bg-[radial-gradient(42%_38%_at_50%_34%,color-mix(in_srgb,var(--canvas)_92%,transparent)_0%,color-mix(in_srgb,var(--canvas)_60%,transparent)_55%,transparent_100%)]" />
-      </div>
+        className="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_50%_0%,var(--signal-glow)_0%,transparent_70%)]"
+      />
 
       <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
         <Character className="mx-auto size-[72px]" />
@@ -134,7 +121,7 @@ function Night() {
     ["Who you paid", "Not on chain"],
   ];
   return (
-    <section id="privacy" className="relative -mt-24 text-white">
+    <section id="privacy" data-theme="dark" className="relative -mt-24 text-white">
       <div className="relative isolate overflow-hidden bg-[#111213] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
         <div
           aria-hidden
@@ -267,8 +254,8 @@ function Closing() {
 
 export default function Landing() {
   return (
-    <div className="bg-canvas text-ink min-h-dvh [zoom:0.8]">
-      <SiteHeader />
+    <div data-theme="light" className="landing bg-canvas text-ink min-h-dvh [zoom:0.8]">
+      <SiteHeader themeToggle={false} />
       <main className="-mt-[76px] sm:-mt-20">
         <Hero />
         <Tour />

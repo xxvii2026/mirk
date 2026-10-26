@@ -139,10 +139,22 @@ test.describe("coming soon, navigation, theme", () => {
     for (const scheme of ["light", "dark"] as const) {
       const ctx = await browser.newContext({ colorScheme: scheme });
       const page = await ctx.newPage();
-      await page.goto("/");
+      await page.goto("/docs");
       await expect(page.locator("html")).toHaveAttribute("data-theme", scheme);
       const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
       expect(bg).toBe(scheme === "dark" ? "rgb(10, 10, 11)" : "rgb(242, 243, 245)");
+      await ctx.close();
+    }
+  });
+
+  test("keeps the landing light whatever the system theme", async ({ browser }) => {
+    for (const scheme of ["light", "dark"] as const) {
+      const ctx = await browser.newContext({ colorScheme: scheme });
+      const page = await ctx.newPage();
+      await page.goto("/");
+      const bg = await page.evaluate(() => getComputedStyle(document.querySelector(".landing")!).backgroundColor);
+      expect(bg).toBe("rgb(255, 255, 255)");
+      await expect(page.locator('header button[aria-label^="Theme"]')).toHaveCount(0);
       await ctx.close();
     }
   });

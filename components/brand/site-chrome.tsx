@@ -14,7 +14,7 @@ const NAV = [
 ] as const;
 
 /** A floating liquid-glass pill: the mark, the sections, the theme switch and one action. */
-export function SiteHeader() {
+export function SiteHeader({ themeToggle = true }: { themeToggle?: boolean }) {
   return (
     <>
       <header className="fixed inset-x-0 top-3 z-40 px-4 sm:top-4">
@@ -34,7 +34,7 @@ export function SiteHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-1.5">
-            <ThemeToggle />
+            {themeToggle ? <ThemeToggle /> : null}
             <Link href="/app" className="btn btn-accent min-h-10 px-5 text-[14px]">
               Open mirk
             </Link>
