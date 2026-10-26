@@ -9,7 +9,8 @@ import { VisibilitySlider } from "@/components/landing/visibility-slider";
 import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
 import { VoxelTopographyGrid } from "@/components/ui/voxel-topography-grid";
-import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
+import { Web3Bento } from "@/components/ui/web3-bento";
+import { CHAIN_ID, EXPLORER_URL, POOL_ADDRESS } from "@/lib/robinhood/network";
 
 const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
 
@@ -99,48 +100,18 @@ function Hero() {
   );
 }
 
-function PayANumber() {
-  const cards = [
-    { k: "Send to", v: "4829 1630 7714", a: "250.00 USDG", note: "Private transfer" },
-    { k: "Claim link", v: "mirk…/claim#m1.••••••", a: "40.00 USDG", note: "For someone without an account" },
-    { k: "Your account number", v: "7709 8827 9921", a: "", note: "Share it to get paid" },
-  ];
+function Tour() {
   return (
     <section id="how" className="relative pt-20 pb-44 sm:pb-52">
-      <div className={`${WRAP} grid items-center gap-16 lg:grid-cols-[1fr_1.05fr]`}>
-        <div data-scroll style={rise}>
-          <Copy title="Pay a number, not an address.">
-            Every mirk account has a 12-digit number. It reveals no name, no wallet and no balance. Pay it like a bank
-            account, or send a claim link to someone who has no account yet.
-          </Copy>
-          <Character className="mt-10 hidden size-16 lg:block" />
+      <div className={WRAP}>
+        <div data-scroll style={rise} className="grid items-end gap-6 lg:grid-cols-[1fr_1fr]">
+          <h2 className="display-l max-w-[14ch]">Everything you need. Nothing the chain needs.</h2>
+          <p className="text-ink-2 max-w-[30rem] text-[17px] leading-relaxed lg:justify-self-end">
+            Pay a 12-digit number instead of an address, send a link to someone with no account yet, and watch your
+            balance in a view nobody else gets. One example account, tile by tile.
+          </p>
         </div>
-        <div data-scroll className="relative mx-auto h-[400px] w-full max-w-[460px]">
-          {cards.map((c, i) => (
-            <div
-              key={c.k}
-              className="raised absolute inset-x-0 rounded-[22px] p-5"
-              style={{
-                top: `${i * 132}px`,
-                zIndex: 3 - i,
-                transform: `translateY(calc((1 - var(--e)) * ${70 + i * 70}px)) rotate(calc((1 - var(--e)) * ${
-                  (i - 1) * 5
-                }deg))`,
-                opacity: "calc(0.2 + var(--e) * 0.8)",
-              }}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                  <p className="text-ink-2 text-[12px]">{c.k}</p>
-                  <p className="tabular mt-1 truncate font-mono text-[16px]">{c.v}</p>
-                </div>
-                {c.a ? <p className="tabular shrink-0 text-[20px] font-semibold tracking-[-0.03em]">{c.a}</p> : null}
-              </div>
-              <p className="text-ink-2 mt-3 text-[13px]">{c.note}</p>
-            </div>
-          ))}
-          <p className="text-ink-2 absolute -bottom-6 left-1 text-[12px]">Example values</p>
-        </div>
+        <Web3Bento className="mt-12" pool={POOL_ADDRESS} chainId={CHAIN_ID} explorer={EXPLORER_URL} />
       </div>
     </section>
   );
@@ -300,7 +271,7 @@ export default function Landing() {
       <SiteHeader />
       <main className="-mt-[76px] sm:-mt-20">
         <Hero />
-        <PayANumber />
+        <Tour />
         <Night />
         <ClaimLinks />
         <Closing />

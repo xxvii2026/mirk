@@ -36,22 +36,34 @@
   --chrome: rgba(11, 11, 12, 0.88);
 
   /* Depth on a dark ground: a faint lit rim plus a deep, soft drop. */
-  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -10px rgba(0, 0, 0, 0.6);
-  --shadow-raised: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.4), 0 20px 44px -12px rgba(0, 0, 0, 0.7);
+  --shadow-card:
+    0 0 0 1px rgba(255, 255, 255, 0.04), 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  --shadow-raised:
+    0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 4px rgba(0, 0, 0, 0.4), 0 20px 44px -12px rgba(0, 0, 0, 0.7);
   --shadow-float: 0 24px 60px -18px rgba(0, 0, 0, 0.8), 0 8px 18px -8px rgba(0, 0, 0, 0.5);
   --shadow-workspace: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 12px 32px -12px rgba(0, 0, 0, 0.7);
   --highlight: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   --stage:
     radial-gradient(110% 80% at 15% 5%, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0) 60%),
-    radial-gradient(95% 80% at 92% 108%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 32%, rgba(255, 255, 255, 0) 68%),
+    radial-gradient(
+      95% 80% at 92% 108%,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.05) 32%,
+      rgba(255, 255, 255, 0) 68%
+    ),
     linear-gradient(160deg, #1b1b1e 0%, #141416 55%, #0f0f11 100%);
   --stage-soft: linear-gradient(155deg, #1a1a1d 0%, #141416 55%, #101012 100%);
   --stage-deep:
     radial-gradient(90% 50% at 20% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 62%),
     linear-gradient(176deg, #3a3b40 0%, #222326 40%, #0e0e10 100%);
   --night:
-    radial-gradient(70% 90% at 50% 115%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(
+      70% 90% at 50% 115%,
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 45%,
+      rgba(255, 255, 255, 0) 70%
+    ),
     linear-gradient(180deg, #141415 0%, #0d0d0e 100%);
   --panel-soft: linear-gradient(160deg, #18181b, #121214);
 
@@ -230,6 +242,59 @@ body {
 /* Diagonal hatch for values that are on chain but unreadable. */
 .hatch {
   background: repeating-linear-gradient(135deg, var(--surface-3) 0 4px, var(--line-strong) 4px 6px);
+}
+
+/* Holographic film on the bento's claim-link cards. */
+.glare {
+  background-image: linear-gradient(
+    115deg,
+    transparent 18%,
+    rgba(255, 190, 235, 0.5) 32%,
+    rgba(180, 210, 255, 0.5) 42%,
+    rgba(210, 255, 220, 0.45) 52%,
+    rgba(255, 225, 180, 0.4) 62%,
+    transparent 78%
+  );
+  background-size: 260% 100%;
+  background-position: 30% 0;
+  mix-blend-mode: soft-light;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glare {
+    animation: glare 9s ease-in-out infinite alternate;
+  }
+}
+@keyframes glare {
+  from {
+    background-position: 0% 0;
+  }
+  to {
+    background-position: 70% 0;
+  }
+}
+@keyframes gauge-arc {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes gauge-needle {
+  from {
+    transform: rotate(-90deg);
+  }
+  to {
+    transform: rotate(90deg);
+  }
+}
+@keyframes block-pop {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 /* Ripple lines, after the mark's waterline. */
