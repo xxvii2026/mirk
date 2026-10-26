@@ -8,6 +8,7 @@ import { ScrollFX } from "@/components/landing/scroll-fx";
 import { VisibilitySlider } from "@/components/landing/visibility-slider";
 import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
+import { VoxelTopographyGrid } from "@/components/ui/voxel-topography-grid";
 import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
 const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
@@ -45,8 +46,20 @@ function Hero() {
     <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-24 sm:pt-20">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_50%_0%,rgba(62,229,143,0.12)_0%,rgba(62,229,143,0)_70%),radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_70%)]"
-      />
+        className="absolute inset-x-0 top-0 -z-10 h-[1040px] [mask-image:linear-gradient(180deg,#000_45%,transparent_100%)] opacity-55"
+      >
+        <VoxelTopographyGrid
+          tileSize={40}
+          maxHeight={64}
+          primaryColor="#2aa868"
+          wireColor="rgba(11, 11, 12, 0.6)"
+          speed={0.02}
+          maxDpr={1}
+          fps={30}
+        />
+        {/* A pool of dark behind the copy, so the type reads over the field. */}
+        <div className="absolute inset-0 bg-[radial-gradient(42%_38%_at_50%_34%,rgba(11,11,12,0.92)_0%,rgba(11,11,12,0.6)_55%,rgba(11,11,12,0)_100%)]" />
+      </div>
 
       <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
         <Character className="mx-auto size-[72px]" />
