@@ -127,7 +127,7 @@ export async function installWallet(
 /** Open AppKit and pick the injected test wallet. */
 export async function connectAndUnlock(page: Page, { unlock = true } = {}) {
   const connect = page.getByRole("button", { name: "Connect wallet" });
-  const connected = page.getByRole("heading", { name: /Unlock your private store|Switch to Robinhood Chain testnet/ });
+  const connected = page.getByRole("heading", { name: /Open your private balance|Switch to Robinhood Chain testnet/ });
   // An injected EIP-6963 wallet may already be connected on load.
   await expect(connect.or(connected).first()).toBeVisible({ timeout: 20_000 });
   if (await connect.isVisible()) {
@@ -135,6 +135,6 @@ export async function connectAndUnlock(page: Page, { unlock = true } = {}) {
     await page.getByText("E2E Wallet").first().click();
   }
   if (unlock) {
-    await page.getByRole("button", { name: "Unlock" }).click();
+    await page.getByRole("button", { name: "Sign to open" }).click();
   }
 }

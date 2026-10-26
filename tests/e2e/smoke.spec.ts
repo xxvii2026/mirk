@@ -57,7 +57,7 @@ test("connect → add money → private send → recipient sweep → cash out", 
   const walletA = await installWallet(pageA, { privateKey: keyA, broadcast: true });
   await pageA.goto("/app");
   await connectAndUnlock(pageA);
-  await expect(pageA.getByText("Your private balance")).toBeVisible();
+  await expect(pageA.getByText("Your private balance", { exact: true })).toBeVisible();
   await expect(pageA.getByText("Active").first()).toBeVisible({ timeout: 120_000 });
 
   await pageA.getByRole("link", { name: "Add money" }).click();

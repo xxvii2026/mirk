@@ -22,6 +22,11 @@ function Base({ children, className = "size-5", ...rest }: IconProps) {
   );
 }
 
+export const IconPlus = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </Base>
+);
 export const IconArrowRight = (p: IconProps) => (
   <Base {...p}>
     <path d="M5 12h14M13 6l6 6-6 6" />

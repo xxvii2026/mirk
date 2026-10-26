@@ -28,7 +28,7 @@ export default function ActivityPage() {
       />
       <Card>
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold">History</h2>
+          <h2 className="text-[17px]">History</h2>
           <Button
             variant="ghost"
             disabled={busy}
@@ -55,7 +55,7 @@ export default function ActivityPage() {
 
       {claims.length ? (
         <Card className="space-y-3">
-          <h2 className="text-lg font-semibold">Your open claim links</h2>
+          <h2 className="text-[17px]">Your open claim links</h2>
           <p className="text-muted text-sm">
             Anyone holding a link can claim it. To take money back, open the link yourself and claim it into this
             account.

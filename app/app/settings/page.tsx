@@ -48,7 +48,7 @@ function BackupSection() {
   return (
     <Card className="space-y-6">
       <div className="space-y-1">
-        <h2 className="text-lg font-semibold">Encrypted backup</h2>
+        <h2 className="text-[17px]">Encrypted backup</h2>
         <p className="text-muted text-sm">
           Your private balance can only be spent with keys stored on this device. If you clear this browser or lose the
           device, a backup is the only way back. The file is encrypted with your passphrase and contains no readable
@@ -178,7 +178,7 @@ export default function SettingsPage() {
       <PageHeader title="Settings" />
 
       <Card className="space-y-5">
-        <h2 className="text-lg font-semibold">Display</h2>
+        <h2 className="text-[17px]">Display</h2>
         <div
           role="radiogroup"
           aria-label="Theme"
@@ -212,7 +212,7 @@ export default function SettingsPage() {
       </Card>
 
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">Network and contracts</h2>
+        <h2 className="mb-2 text-[17px]">Network and contracts</h2>
         <div className="divide-line divide-y">
           <Row label="Network">Robinhood Chain testnet ({CHAIN_ID})</Row>
           <Row label="RPC">{RPC_URL}</Row>
@@ -237,7 +237,7 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="text-lg font-semibold">Private store</h2>
+        <h2 className="text-[17px]">Private store</h2>
         <div className="flex flex-wrap gap-2">
           <Button variant="ghost" onClick={lock}>
             Lock private store
@@ -269,7 +269,7 @@ export default function SettingsPage() {
       <BackupSection />
 
       <Card className="space-y-4">
-        <h2 className="text-lg font-semibold">Wallet</h2>
+        <h2 className="text-[17px]">Wallet</h2>
         <p className="text-muted text-sm">{address ? `Connected public wallet ${address}` : "No wallet connected."}</p>
         <div className="flex flex-wrap gap-2">
           <Button variant="ghost" onClick={() => open({ view: "Account" })}>
@@ -288,7 +288,7 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="border-danger/30 space-y-4">
-        <h2 className="text-lg font-semibold">Clear local mirk data</h2>
+        <h2 className="text-[17px]">Clear local mirk data</h2>
         <Notice tone="danger" title="This can lose money permanently">
           Clearing deletes the encrypted keys for this wallet from this device. Any private balance they hold becomes
           unspendable unless you have an encrypted backup and its passphrase. mirk cannot recover it.

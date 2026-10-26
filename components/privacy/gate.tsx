@@ -4,26 +4,42 @@ import { useAppKit } from "@reown/appkit/react";
 import type { ReactNode } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import { MarkTile } from "@/components/brand/wordmark";
-import { Button, Notice, Pill, SignalDot } from "@/components/shared/ui";
+import { IconLock } from "@/components/shared/icons";
+import { Button, Notice, Pill } from "@/components/shared/ui";
 import { REOWN_PROJECT_ID } from "@/lib/reown/config";
 import { CHAIN_ID } from "@/lib/robinhood/network";
 import { useVault } from "./vault-provider";
 
+/** A single card, left-aligned like Gloam's welcome sheet. */
 function Frame({ children }: { children: ReactNode }) {
   return (
-    <div className="fade-in border-line-strong rounded-[22px] border border-dashed px-5 py-12 sm:py-16">
-      <div className="mx-auto flex max-w-md flex-col items-center gap-5 text-center">{children}</div>
+    <div className="fade-in flex min-h-[60dvh] items-center justify-center py-6">
+      <div className="border-line bg-surface flex w-full max-w-[440px] flex-col items-start gap-5 rounded-[20px] border p-6 sm:p-7">
+        {children}
+      </div>
     </div>
   );
 }
+
+/** A quiet aside with a lock, for what lives on this device. */
+function DeviceNote({ children }: { children: ReactNode }) {
+  return (
+    <p className="bg-surface-2 text-ink-2 flex w-full gap-3 rounded-[14px] px-4 py-3 text-[13px] leading-relaxed">
+      <IconLock className="text-signal-text mt-0.5 size-4 shrink-0" />
+      <span>{children}</span>
+    </p>
+  );
+}
+
+const TITLE = "text-[28px] leading-[1.1] font-light tracking-[-0.02em]";
 
 function ConnectWallet() {
   const { open } = useAppKit();
   return (
     <Frame>
-      <MarkTile className="size-14" />
+      <MarkTile className="size-10" />
       <div className="w-full space-y-2">
-        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Connect a wallet to open mirk</h1>
+        <h1 className={TITLE}>Connect a wallet to open mirk</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
           Any EVM wallet works. mirk never holds your money: it sits in Gloam&apos;s shielded pool, and only keys on
           this device can move it.
@@ -43,7 +59,7 @@ function WrongNetwork({ actual }: { actual: number | undefined }) {
     <Frame>
       <Pill tone="danger">Wrong network</Pill>
       <div className="w-full space-y-2">
-        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Switch to Robinhood Chain testnet</h1>
+        <h1 className={TITLE}>Switch to Robinhood Chain testnet</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
           Your wallet is on network {actual ?? "unknown"}. mirk only works on Robinhood Chain testnet (chain {CHAIN_ID}
           ).
@@ -61,23 +77,22 @@ function Unlock() {
   const { unlock, status, error } = useVault();
   return (
     <Frame>
-      <Pill tone="signal">
-        <SignalDot /> Private store
-      </Pill>
+      <MarkTile className="size-10" />
       <div className="w-full space-y-2">
-        <h1 className="text-[24px] font-semibold tracking-[-0.03em]">Unlock your private store</h1>
+        <h1 className={TITLE}>Open your private balance</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
-          Your wallet will ask you to sign a message. The signature never leaves this device and does not authorize a
-          transaction. It unlocks the encrypted keys that hold your private balance here.
+          Your private balance lives in this browser, encrypted. Sign a message with your wallet to open it. Signing is
+          free, moves no money and never leaves this device.
         </p>
       </div>
+      <DeviceNote>
+        The signature is the key to your data here. Save a backup in Settings once you hold money, in case this browser
+        is cleared.
+      </DeviceNote>
       <Button className="w-full" disabled={status === "unlocking"} onClick={unlock}>
-        {status === "unlocking" ? "Waiting for signature…" : "Unlock"}
+        {status === "unlocking" ? "Check your wallet…" : "Sign to open"}
       </Button>
       {error ? <Notice tone="danger">{error}</Notice> : null}
-      <p className="text-muted text-xs">
-        A signature is not a perfect recovery method. Export an encrypted backup from Settings once you hold money.
-      </p>
     </Frame>
   );
 }

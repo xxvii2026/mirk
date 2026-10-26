@@ -59,7 +59,7 @@ export default function ReceivePage() {
 
       <Card className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="text-lg font-semibold">Incoming payments</h2>
+          <h2 className="text-[17px]">Incoming payments</h2>
           <Button variant="ghost" disabled={inboxStatus === "checking"} onClick={() => void checkNow()}>
             {inboxStatus === "checking" ? "Checking…" : "Check now"}
           </Button>

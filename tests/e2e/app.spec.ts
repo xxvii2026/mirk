@@ -14,7 +14,7 @@ test.describe("connect, network and unlock", () => {
     await connectAndUnlock(page, { unlock: false });
     await expect(page.getByRole("heading", { name: "Switch to Robinhood Chain testnet" })).toBeVisible();
     await page.getByRole("button", { name: "Switch network" }).click();
-    await expect(page.getByRole("heading", { name: "Unlock your private store" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Open your private balance" })).toBeVisible();
   });
 
   test("keeps the store locked when the signature is rejected", async ({ page }) => {
@@ -22,14 +22,14 @@ test.describe("connect, network and unlock", () => {
     await page.goto("/app");
     await connectAndUnlock(page);
     await expect(page.getByText("You cancelled the signature")).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Unlock your private store" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Open your private balance" })).toBeVisible();
   });
 
   test("unlocks, creates an account number and hides balances", async ({ page }) => {
     await installWallet(page);
     await page.goto("/app");
     await connectAndUnlock(page);
-    await expect(page.getByText("Your private balance")).toBeVisible();
+    await expect(page.getByText("Your private balance", { exact: true })).toBeVisible();
     await expect(page.getByText("Only you can see this amount.")).toBeVisible();
 
     // A 12-digit grouped account number is created on this device.
@@ -47,7 +47,7 @@ test.describe("money forms", () => {
     await installWallet(page);
     await page.goto("/app");
     await connectAndUnlock(page);
-    await expect(page.getByText("Your private balance")).toBeVisible();
+    await expect(page.getByText("Your private balance", { exact: true })).toBeVisible();
   });
 
   test("send validates account numbers before any lookup", async ({ page }) => {
@@ -142,7 +142,7 @@ test.describe("coming soon, navigation, theme", () => {
       await page.goto("/docs");
       await expect(page.locator("html")).toHaveAttribute("data-theme", scheme);
       const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-      expect(bg).toBe(scheme === "dark" ? "rgb(10, 10, 11)" : "rgb(242, 243, 245)");
+      expect(bg).toBe(scheme === "dark" ? "rgb(10, 10, 11)" : "rgb(244, 244, 245)");
       await ctx.close();
     }
   });

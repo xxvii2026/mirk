@@ -12,8 +12,9 @@ type Variant = "primary" | "dark" | "ghost" | "quiet" | "danger";
 
 const base = "min-h-11 px-5 text-[15px]";
 
+// Inside the app, actions stay monochrome, after Gloam: ink pills, quiet secondaries.
 const variants: Record<Variant, string> = {
-  primary: "btn btn-accent",
+  primary: "btn btn-dark",
   dark: "btn btn-dark",
   ghost: "btn btn-light",
   quiet: "inline-flex items-center justify-center gap-2 rounded-full px-3 font-medium text-ink-2 hover:text-ink",
@@ -41,7 +42,7 @@ export function Card({
   ...rest
 }: { className?: string; children: ReactNode; as?: "section" | "div" | "article" } & Record<string, unknown>) {
   return (
-    <As className={cx("raised rounded-[22px] p-5 sm:p-6", className)} {...rest}>
+    <As className={cx("border-line bg-surface rounded-[18px] border p-5 sm:p-6", className)} {...rest}>
       {children}
     </As>
   );
@@ -122,7 +123,7 @@ export function Field({
 }
 
 export const inputClass =
-  "w-full min-h-12 rounded-[14px] border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-muted outline-none transition-[border-color,box-shadow] duration-150 focus:border-signal focus:shadow-[0_0_0_3px_var(--signal-tint)] aria-[invalid=true]:border-danger";
+  "w-full min-h-12 rounded-[14px] border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-muted outline-none transition-[border-color,box-shadow] duration-150 focus:border-ink-2 focus:shadow-[0_0_0_3px_var(--surface-3)] aria-[invalid=true]:border-danger";
 
 export function PageHeader({
   title,
@@ -140,7 +141,7 @@ export function PageHeader({
           <IconArrowRight className="size-4 rotate-180" /> Back
         </Link>
       ) : null}
-      <h1 className="text-[28px] leading-tight font-semibold tracking-[-0.03em] sm:text-[32px]">{title}</h1>
+      <h1 className="text-[30px] leading-[1.1] font-light tracking-[-0.02em] sm:text-[34px]">{title}</h1>
       {description ? <p className="text-ink-2 max-w-prose text-[15px] leading-relaxed">{description}</p> : null}
     </header>
   );
