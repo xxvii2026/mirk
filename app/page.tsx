@@ -3,6 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { SiteFooter, SiteHeader, WRAP } from "@/components/brand/site-chrome";
 import { Mark } from "@/components/brand/wordmark";
 import { AppWindow } from "@/components/landing/app-window";
+import { KeyLens } from "@/components/landing/key-lens";
 import { ScrollFX } from "@/components/landing/scroll-fx";
 import { VisibilitySlider } from "@/components/landing/visibility-slider";
 import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
@@ -44,7 +45,7 @@ function Hero() {
     <section data-scroll className="relative isolate overflow-hidden pt-[76px] pb-24 sm:pt-20">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.08)_0%,rgba(255,255,255,0)_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(50%_45%_at_50%_0%,rgba(62,229,143,0.12)_0%,rgba(62,229,143,0)_70%),radial-gradient(60%_50%_at_50%_0%,rgba(255,255,255,0.06)_0%,rgba(255,255,255,0)_70%)]"
       />
 
       <div className={`${WRAP} pt-14 text-center sm:pt-20`}>
@@ -132,6 +133,16 @@ function PayANumber() {
   );
 }
 
+/** A smaller heading and paragraph, for two stories told side by side. */
+function Pair({ title, children }: { title: ReactNode; children: ReactNode }) {
+  return (
+    <div className="mb-7">
+      <h3 className="display-m max-w-[16ch]">{title}</h3>
+      <p className="mt-4 max-w-[30rem] text-[16px] leading-relaxed text-white/65">{children}</p>
+    </div>
+  );
+}
+
 function Night() {
   const rows: [string, ReactNode][] = [
     ["Your balance", <HiddenDots key="b" />],
@@ -140,24 +151,37 @@ function Night() {
   ];
   return (
     <section id="privacy" className="relative -mt-24 text-white">
-      <div className="relative isolate overflow-hidden bg-[#131315] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
+      <div className="relative isolate overflow-hidden bg-[#111213] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
         <div
           aria-hidden
-          className="absolute inset-0 -z-10 bg-[radial-gradient(60%_30%_at_50%_0%,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_70%)]"
+          className="absolute inset-0 -z-10 bg-[radial-gradient(55%_28%_at_50%_0%,rgba(62,229,143,0.13)_0%,rgba(62,229,143,0)_70%)]"
         />
 
-        <div className={`${WRAP} grid items-center gap-16 pt-40 pb-20 lg:grid-cols-[1fr_1.05fr]`}>
-          <div data-scroll style={rise}>
-            <Copy title="Your balance keeps quiet.">
+        <div className={`${WRAP} pt-40`}>
+          <div data-scroll style={rise} className="grid items-end gap-6 lg:grid-cols-[1fr_1fr]">
+            <h2 className="display-l max-w-[13ch]">
+              On the record, it reads as <span className="text-signal">noise.</span>
+            </h2>
+            <p className="max-w-[30rem] text-[17px] leading-relaxed text-white/65 lg:justify-self-end">
+              Anyone can see that an entry landed and when. Your key, which never leaves your device, is what turns it
+              back into names and amounts. Move across the ledger to read it the way you do.
+            </p>
+          </div>
+          <div data-scroll className="mt-12" style={rise}>
+            <KeyLens />
+          </div>
+        </div>
+
+        <div className={`${WRAP} grid gap-x-8 gap-y-16 pt-28 pb-32 md:grid-cols-2`}>
+          <div data-scroll className="flex flex-col" style={rise}>
+            <Pair title="Your balance keeps quiet.">
               On a public chain, every balance is a billboard. MIRK keeps your money in Gloam&apos;s shielded pool, so
               the record shows that something happened and leaves the rest to you.
-            </Copy>
-          </div>
-          <div data-scroll className="relative" style={rise}>
-            <Character className="absolute -top-16 right-4 size-14 sm:-right-4" />
-            <div className="rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] backdrop-blur-xl sm:p-8">
+            </Pair>
+            <div className="relative flex flex-1 flex-col rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-8">
+              <Character className="absolute -top-7 right-6 size-12" />
               <p className="font-mono text-[11px] tracking-[0.12em] text-white/50">WHAT THE CHAIN SEES</p>
-              <p className="mt-3 text-[24px] font-semibold tracking-[-0.03em]">Nothing about your balance.</p>
+              <p className="mt-3 text-[22px] font-semibold tracking-[-0.03em]">Nothing about your balance.</p>
               <ul className="mt-6 divide-y divide-white/10 border-y border-white/10">
                 {rows.map(([k, v]) => (
                   <li key={k} className="flex items-center justify-between py-3.5 text-[15px]">
@@ -166,22 +190,19 @@ function Night() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 flex flex-wrap justify-between gap-2 font-mono text-[11px] text-white/45">
+              <p className="mt-auto flex flex-wrap justify-between gap-2 pt-5 font-mono text-[11px] text-white/45">
                 <span>POOL {short(POOL_ADDRESS)}</span>
                 <span>CHAIN {CHAIN_ID}</span>
               </p>
             </div>
           </div>
-        </div>
-
-        <div className={`${WRAP} grid items-center gap-16 pt-12 pb-32 lg:grid-cols-[1fr_1.05fr]`}>
-          <div data-scroll style={rise}>
-            <Copy title="You see exactly what goes public.">
+          <div data-scroll className="flex flex-col" style={rise}>
+            <Pair title="You see exactly what goes public.">
               Adding money and cashing out are public. Everything between them is not. Slide through the steps.
-            </Copy>
-          </div>
-          <div data-scroll style={rise}>
-            <VisibilitySlider />
+            </Pair>
+            <div className="flex-1">
+              <VisibilitySlider />
+            </div>
           </div>
         </div>
       </div>
@@ -212,10 +233,12 @@ function ClaimLinks() {
               {steps.map(([t, d], i) => (
                 <li key={t} className="flex gap-4">
                   <span className="flex flex-col items-center">
-                    <span className="bg-ink text-on-ink grid size-7 place-items-center rounded-full font-mono text-[11px]">
+                    <span className="bg-signal text-on-signal grid size-7 place-items-center rounded-full font-mono text-[11px] font-medium">
                       {i + 1}
                     </span>
-                    {i < steps.length - 1 ? <span className="bg-line-strong mt-1 w-px flex-1" /> : null}
+                    {i < steps.length - 1 ? (
+                      <span className="from-signal/60 to-line-strong mt-1 w-px flex-1 bg-gradient-to-b" />
+                    ) : null}
                   </span>
                   <span className="pb-1">
                     <span className="block text-[17px] font-semibold tracking-[-0.02em]">{t}</span>
@@ -236,7 +259,7 @@ function Closing() {
     <section className="border-line relative isolate overflow-hidden border-t py-28 text-center sm:py-32">
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[radial-gradient(55%_60%_at_50%_100%,rgba(255,255,255,0.07)_0%,rgba(255,255,255,0)_70%)]"
+        className="absolute inset-0 -z-10 bg-[radial-gradient(45%_55%_at_50%_100%,rgba(62,229,143,0.14)_0%,rgba(62,229,143,0)_70%)]"
       />
       <div className={WRAP}>
         <Character className="mx-auto size-16" />

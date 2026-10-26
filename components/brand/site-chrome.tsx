@@ -26,7 +26,7 @@ export function SiteHeader() {
               <Link
                 key={href}
                 href={href}
-                className="text-ink-2 hover:text-ink rounded-full px-3.5 py-2 text-[14px] transition-colors hover:bg-black/[0.04]"
+                className="text-ink-2 hover:text-ink rounded-full px-3.5 py-2 text-[14px] transition-colors hover:bg-white/[0.06]"
               >
                 {label}
               </Link>

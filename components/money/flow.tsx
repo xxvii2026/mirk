@@ -108,7 +108,7 @@ export function FlowProgress({
                 aria-hidden
                 className={cx(
                   "grid size-5 place-items-center rounded-full border text-[10px]",
-                  state === "done" && "border-signal bg-signal text-white",
+                  state === "done" && "border-signal bg-signal text-on-signal",
                   state === "active" && "border-signal",
                   state === "todo" && "border-line",
                 )}
