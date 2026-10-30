@@ -8,7 +8,6 @@ import { ScrollFX } from "@/components/landing/scroll-fx";
 import { VisibilitySlider } from "@/components/landing/visibility-slider";
 import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
-import { Web3Bento } from "@/components/ui/web3-bento";
 import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
 const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
@@ -87,23 +86,6 @@ function Hero() {
   );
 }
 
-function Tour() {
-  return (
-    <section id="how" className="relative pt-20 pb-44 sm:pb-52">
-      <div className={WRAP}>
-        <div data-scroll style={rise} className="grid items-end gap-6 lg:grid-cols-[1fr_1fr]">
-          <h2 className="display-l max-w-[14ch]">Everything you need. Nothing the chain needs.</h2>
-          <p className="text-ink-2 max-w-[30rem] text-[17px] leading-relaxed lg:justify-self-end">
-            Pay a 12-digit number instead of an address, send a link to someone with no account yet, and watch your
-            balance in a view nobody else gets. One example account, tile by tile.
-          </p>
-        </div>
-        <Web3Bento className="mt-12" />
-      </div>
-    </section>
-  );
-}
-
 /** A smaller heading and paragraph, for two stories told side by side. */
 function Pair({ title, children }: { title: ReactNode; children: ReactNode }) {
   return (
@@ -121,8 +103,11 @@ function Night() {
     ["Who you paid", "Not on chain"],
   ];
   return (
-    <section id="privacy" data-theme="dark" className="relative -mt-24 text-white">
-      <div className="relative isolate overflow-hidden bg-[#111213] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]">
+    <section id="how" data-theme="dark" className="relative -mt-24 text-white">
+      <div
+        id="privacy"
+        className="relative isolate overflow-hidden bg-[#111213] [clip-path:ellipse(150%_100%_at_50%_100%)] sm:[clip-path:ellipse(115%_100%_at_50%_100%)]"
+      >
         <div
           aria-hidden
           className="absolute inset-0 -z-10 bg-[radial-gradient(55%_28%_at_50%_0%,rgba(185,166,255,0.13)_0%,rgba(185,166,255,0)_70%)]"
@@ -258,7 +243,6 @@ export default function Landing() {
       <SiteHeader themeToggle={false} />
       <main className="-mt-[76px] sm:-mt-20">
         <Hero />
-        <Tour />
         <Night />
         <ClaimLinks />
         <Closing />
