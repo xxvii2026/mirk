@@ -33,7 +33,7 @@ export const docs: DocPage[] = [
       {
         id: "your-wallet-and-your-private-store",
         title: "Your wallet and your private store",
-        text: "Connecting identifies your public wallet. Signing to open unlocks your encrypted private store in this browser. These are separate steps: a connected wallet alone cannot display your private notes. You can explore Home before connecting; balances and account details stay empty.",
+        text: "Connecting identifies your public wallet and requests the signature that unlocks your encrypted private store in this browser. The dashboard stays visible while you confirm in your wallet; there is no separate sign-to-open screen. You can explore Home before connecting; balances and account details stay empty.",
       },
       {
         id: "start-with-the-essentials",
@@ -52,7 +52,7 @@ export const docs: DocPage[] = [
       {
         id: "connect-and-open",
         title: "Connect and open",
-        text: "Open Mirk and choose Connect wallet. Use an EVM wallet on Robinhood Chain testnet. If prompted, switch networks, then choose Sign to open. This signature unlocks local data; it is not a deposit or a payment.",
+        text: "Open Mirk and choose Connect wallet. Use an EVM wallet on Robinhood Chain testnet. If prompted, switch networks, then confirm the connection signature in your wallet. This signature unlocks local data; it is not a deposit or a payment.",
       },
       {
         id: "add-a-small-amount",
@@ -372,12 +372,12 @@ export const docs: DocPage[] = [
       {
         id: "my-balance-is-empty",
         title: "My balance is empty",
-        text: "Before connecting, Home intentionally shows no amount. Connect the correct wallet, switch to the supported network, and sign to open the private store. Check the selected asset. On a new browser, restore your backup; connecting the same wallet does not automatically bring every note back.",
+        text: "Before connecting, Home intentionally shows no amount. Connect the correct wallet, switch to the supported network, and confirm the connection signature in your wallet. Check the selected asset. On a new browser, restore your backup; connecting the same wallet does not automatically bring every note back.",
       },
       {
         id: "my-wallet-signature-was-rejected",
         title: "My wallet signature was rejected",
-        text: "Choose Sign to open again when ready. A rejected signature leaves the store locked and does not move funds. If a signature cannot open an existing store, use your encrypted backup rather than deleting the only copy of your keys.",
+        text: "Choose Retry connection when ready. A rejected signature leaves the store locked and does not move funds. If a signature cannot open an existing store, use your encrypted backup rather than deleting the only copy of your keys.",
       },
       {
         id: "my-payment-is-pending",

@@ -124,22 +124,22 @@ export async function installWallet(
   };
 }
 
-/** Open AppKit and pick the injected test wallet. */
+/** Connect the injected wallet; the private store opens as part of connection. */
 export async function connectAndUnlock(page: Page, { unlock = true } = {}) {
   const connect = page.getByRole("button", { name: "Connect wallet" }).locator("visible=true").first();
-  const connected = page.getByRole("heading", { name: /Open your private balance|Switch to Robinhood Chain testnet/ });
-  // An injected EIP-6963 wallet may already be connected on load.
+  const connected = page.getByTitle("Connected public wallet").locator("visible=true").first();
   await expect(connect.or(connected).first()).toBeVisible({ timeout: 20_000 });
   if (await connect.isVisible()) {
-    // AppKit can restore the injected wallet between the visibility check and
-    // the click. Treat that as success instead of waiting on a vanished button.
     await connect.click({ timeout: 2_000 }).catch(() => {});
     const wallet = page.getByText("E2E Wallet").first();
-    if (await wallet.isVisible({ timeout: 2_000 }).catch(() => false)) {
-      await wallet.click();
-    }
+    await wallet
+      .waitFor({ state: "visible", timeout: 3_000 })
+      .then(() => wallet.click())
+      .catch(() => {});
   }
   if (unlock) {
-    await page.getByRole("button", { name: "Sign to open" }).click({ timeout: 20_000 });
+    const ready = page.getByText("Only you can see this amount.", { exact: true });
+    const rejected = page.getByText("You cancelled the signature", { exact: false });
+    await expect(ready.or(rejected).first()).toBeVisible({ timeout: 20_000 });
   }
 }

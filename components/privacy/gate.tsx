@@ -2,10 +2,9 @@
 
 import { useAppKit } from "@reown/appkit/react";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import { MarkTile } from "@/components/brand/wordmark";
-import { IconLock } from "@/components/shared/icons";
 import { Button, Notice, Pill } from "@/components/shared/ui";
 import { REOWN_PROJECT_ID } from "@/lib/reown/config";
 import { CHAIN_ID, POOL_CONFIGURED } from "@/lib/robinhood/network";
@@ -19,16 +18,6 @@ function Frame({ children }: { children: ReactNode }) {
         {children}
       </div>
     </div>
-  );
-}
-
-/** A quiet aside with a lock, for what lives on this device. */
-function DeviceNote({ children }: { children: ReactNode }) {
-  return (
-    <p className="bg-surface-2 text-ink-2 flex w-full gap-3 rounded-[14px] px-4 py-3 text-[13px] leading-relaxed">
-      <IconLock className="text-signal-text mt-0.5 size-4 shrink-0" />
-      <span>{children}</span>
-    </p>
   );
 }
 
@@ -74,37 +63,58 @@ function WrongNetwork({ actual }: { actual: number | undefined }) {
   );
 }
 
-function Unlock() {
-  const { unlock, status, error } = useVault();
-  return (
-    <Frame>
-      <MarkTile className="size-10" />
-      <div className="w-full space-y-2">
-        <h1 className={TITLE}>Open your private balance</h1>
-        <p className="text-ink-2 text-[15px] leading-relaxed">
-          Your private balance lives in this browser, encrypted. Sign a message with your wallet to open it. Signing is
-          free, moves no money and never leaves this device.
-        </p>
-      </div>
-      <DeviceNote>
-        The signature is the key to your data here. Save a backup in Settings once you hold money, in case this browser
-        is cleared.
-      </DeviceNote>
-      <Button className="w-full" disabled={status === "unlocking"} onClick={unlock}>
-        {status === "unlocking" ? "Check your wallet…" : "Sign to open"}
-      </Button>
-      {error ? <Notice tone="danger">{error}</Notice> : null}
-    </Frame>
-  );
-}
-
 /** Home can show its empty dashboard; private operations require a wallet and an unlocked store. */
 export function PrivateGate({ children }: { children: ReactNode }) {
   const path = usePathname();
-  const { isConnected, chainId, status: accountStatus } = useAccount();
-  const { status } = useVault();
+  const { address, isConnected, chainId, status: accountStatus } = useAccount();
+  const { status, unlock, error } = useVault();
+  const attempted = useRef<string | undefined>(undefined);
 
-  if (path === "/app" && !isConnected) return <>{children}</>;
+  useEffect(() => {
+    if (!isConnected) {
+      attempted.current = undefined;
+      return;
+    }
+    if (
+      !POOL_CONFIGURED ||
+      !REOWN_PROJECT_ID ||
+      chainId !== CHAIN_ID ||
+      status !== "locked" ||
+      !address ||
+      attempted.current === address
+    )
+      return;
+    attempted.current = address;
+    void unlock();
+  }, [address, chainId, isConnected, status, unlock]);
+
+  const connectionStatus =
+    status !== "open" && isConnected ? (
+      <div className="mb-5" role="status" aria-live="polite">
+        {status === "unlocking" ? (
+          <p className="text-muted text-sm">Confirm the connection in your wallet…</p>
+        ) : status === "locked" ? (
+          <Notice tone={error ? "danger" : "neutral"}>
+            {error ?? "Your private store is locked."}{" "}
+            <button
+              type="button"
+              className="min-h-11 font-medium underline underline-offset-4"
+              onClick={() => void unlock()}
+            >
+              {error ? "Retry connection" : "Reconnect private store"}
+            </button>
+          </Notice>
+        ) : null}
+      </div>
+    ) : null;
+
+  if (path === "/app" && (!isConnected || (chainId === CHAIN_ID && status !== "unavailable")))
+    return (
+      <>
+        {connectionStatus}
+        {children}
+      </>
+    );
 
   if (!POOL_CONFIGURED)
     return (
@@ -145,6 +155,6 @@ export function PrivateGate({ children }: { children: ReactNode }) {
   }
   if (!isConnected) return <ConnectWallet />;
   if (chainId !== CHAIN_ID) return <WrongNetwork actual={chainId} />;
-  if (status !== "open") return <Unlock />;
+  if (status !== "open") return connectionStatus;
   return <>{children}</>;
 }

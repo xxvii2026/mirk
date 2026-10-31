@@ -69,7 +69,11 @@ export default function Dashboard() {
             )}
           </p>
           <p className="text-ink-2 text-[15px]">
-            {ready ? "Only you can see this amount." : "Connect your wallet to view your private balance."}
+            {ready
+              ? "Only you can see this amount."
+              : isConnected
+                ? "Your private balance will appear when the connection is ready."
+                : "Connect your wallet to view your private balance."}
           </p>
           {ready && settling > 0n ? (
             <p className="text-ink-2 text-sm">
@@ -129,7 +133,11 @@ export default function Dashboard() {
           <Card className="space-y-4">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-[17px]">Your Mirk account</h2>
-              {ready ? <AccountStatus /> : <span className="text-muted text-sm">Not connected</span>}
+              {ready ? (
+                <AccountStatus />
+              ) : (
+                <span className="text-muted text-sm">{isConnected ? "Connecting…" : "Not connected"}</span>
+              )}
             </div>
             {ready && account ? (
               <>
@@ -144,7 +152,11 @@ export default function Dashboard() {
                 </p>
               </>
             ) : !ready ? (
-              <p className="text-muted text-sm">Connect your wallet to access your account number.</p>
+              <p className="text-muted text-sm">
+                {isConnected
+                  ? "Your account number will appear when the connection is ready."
+                  : "Connect your wallet to access your account number."}
+              </p>
             ) : null}
           </Card>
 

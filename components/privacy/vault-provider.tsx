@@ -65,10 +65,16 @@ export function VaultProvider({ children }: { children: ReactNode }) {
     try {
       // The signature is used only here, locally, and then dropped.
       const signature = await signMessageAsync({ message: UNLOCK_MESSAGE });
+      if (owner.current !== address) return;
       const { vault: v } = await unlockStore(address, signature);
+      if (owner.current !== address) {
+        v.lock();
+        return;
+      }
       setVault(v);
       setStatus("open");
     } catch (e) {
+      if (owner.current !== address) return;
       setStatus("locked");
       if (isUserRejection(e)) setError("You cancelled the signature. Your private store stays locked.");
       else if (e instanceof WrongKeyError)
