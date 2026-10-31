@@ -47,9 +47,9 @@ test("connect → add money → private send → recipient sweep → cash out", 
   const keyB = generatePrivateKey();
   const addrA = privateKeyToAccount(keyA).address;
   const addrB = privateKeyToAccount(keyB).address;
-  const fund = await funder.sendTransaction({ to: addrA, value: parseEther("0.0008") });
+  const fund = await funder.sendTransaction({ to: addrA, value: parseEther("0.00012") });
   await client.waitForTransactionReceipt({ hash: fund });
-  record("Fund sender's public wallet (0.0008 ETH)", fund);
+  record("Fund sender's public wallet (0.00012 ETH)", fund);
 
   // --- Person A: connect, unlock, register, add money.
   const ctxA = await browser.newContext();
@@ -61,12 +61,12 @@ test("connect → add money → private send → recipient sweep → cash out", 
   await expect(pageA.getByText("Active").first()).toBeVisible({ timeout: 120_000 });
 
   await pageA.getByRole("link", { name: "Add money" }).click();
-  await pageA.getByLabel(/Amount/).fill("0.0003");
+  await pageA.getByLabel(/Amount/).fill("0.00004");
   await pageA.getByRole("button", { name: "Add to private balance" }).click();
   await expect(pageA.getByRole("heading", { name: "Added to private balance" })).toBeVisible({ timeout: 240_000 });
-  record("A adds 0.0003 ETH to private balance (shieldBound, browser proof)", walletA.sent.at(-1)!);
+  record("A adds 0.00004 ETH to private balance (shieldBound, browser proof)", walletA.sent.at(-1)!);
   await pageA.getByRole("link", { name: "Done" }).click();
-  await expect(pageA.getByText("0.0003").first()).toBeVisible();
+  await expect(pageA.getByText("0.00004").first()).toBeVisible();
 
   // --- Person B: connect, unlock, get a registered account number.
   const ctxB = await browser.newContext();
@@ -79,15 +79,15 @@ test("connect → add money → private send → recipient sweep → cash out", 
 
   // --- A sends privately to B's account number, through the relay.
   await pageA.getByRole("link", { name: "Send" }).first().click();
-  await pageA.getByLabel("mirk account number").fill(numberB);
-  await expect(pageA.getByText("Valid mirk account")).toBeVisible({ timeout: 30_000 });
-  await pageA.getByLabel(/Amount/).fill("0.0001");
+  await pageA.getByLabel("Mirk account number").fill(numberB);
+  await expect(pageA.getByText("Valid Mirk account")).toBeVisible({ timeout: 30_000 });
+  await pageA.getByLabel(/Amount/).fill("0.00002");
   await pageA.getByRole("button", { name: "Send privately" }).click();
   await expect(pageA.getByRole("heading", { name: "Sent privately" })).toBeVisible({ timeout: 300_000 });
   const sendHashes = await pageA
     .locator("a[href*='/tx/']")
     .evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).href.split("/tx/")[1]!));
-  for (const h of sendHashes) record("A sends 0.0001 ETH privately to B (transfer via Gloam relay)", h);
+  for (const h of sendHashes) record("A sends 0.00002 ETH privately to B (transfer via Mirk relay)", h);
 
   // --- B discovers the payment and sweeps it into a note only B knows.
   await pageB.getByRole("link", { name: "Receive" }).first().click();
@@ -103,10 +103,10 @@ test("connect → add money → private send → recipient sweep → cash out", 
   if (sweep) record("B sweeps the received payment (transfer via relay)", sweep.split("/tx/")[1]!);
 
   // --- B cashes out to B's public wallet.
-  await pageB.getByRole("link", { name: "Home" }).first().click();
+  await pageB.goto("/app");
   await pageB.getByRole("link", { name: "Cash out" }).click();
   await pageB.getByRole("button", { name: "My wallet" }).click();
-  await pageB.getByLabel(/Amount/).fill("0.0001");
+  await pageB.getByLabel(/Amount/).fill("0.00002");
   await pageB.getByLabel("I understand the destination and amount become public.").check();
   const before = await client.getBalance({ address: addrB });
   await pageB.getByRole("button", { name: "Cash out" }).click();
@@ -114,9 +114,9 @@ test("connect → add money → private send → recipient sweep → cash out", 
   const outHashes = await pageB
     .locator("a[href*='/tx/']")
     .evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).href.split("/tx/")[1]!));
-  for (const h of outHashes) record("B cashes out 0.0001 ETH to B's public wallet (unshield via relay)", h);
+  for (const h of outHashes) record("B cashes out 0.00002 ETH to B's public wallet (unshield via relay)", h);
   const after = await client.getBalance({ address: addrB });
-  expect(after - before).toBe(parseEther("0.0001"));
+  expect(after - before).toBe(parseEther("0.00002"));
 
   mkdirSync("deployments", { recursive: true });
   appendFileSync(
@@ -164,7 +164,7 @@ test("claim link: create → open in a new browser → claim into a new account"
   await pageC.getByRole("button", { name: "Create claim link" }).click();
   await expect(pageC.getByRole("heading", { name: "Claim link ready" })).toBeVisible({ timeout: 300_000 });
   const link = (await pageC.locator(".select-all").textContent())!.trim();
-  expect(link).toMatch(/\/claim#m1\./);
+  expect(link).toMatch(/\/claim#m2\./);
   for (const h of await pageC
     .locator("a[href*='/tx/']")
     .evaluateAll((as) => as.map((a) => (a as HTMLAnchorElement).href.split("/tx/")[1]!)))
@@ -178,7 +178,7 @@ test("claim link: create → open in a new browser → claim into a new account"
   await expect.poll(() => new URL(pageD.url()).hash).toBe("");
   await expect(pageD.getByText("Waiting to be claimed")).toBeVisible({ timeout: 60_000 });
   await connectAndUnlock(pageD);
-  await pageD.getByRole("button", { name: "Claim into my mirk account" }).click();
+  await pageD.getByRole("button", { name: "Claim into my Mirk account" }).click();
   await expect(pageD.getByText("Confirmed on chain and now in your private balance.")).toBeVisible({
     timeout: 300_000,
   });
@@ -194,7 +194,7 @@ test("claim link: create → open in a new browser → claim into a new account"
     [
       `\n## Claim-link smoke ${new Date().toISOString()}`,
       ...report,
-      "- D claimed the link into a new mirk account; a second browser then saw no unclaimed payment.",
+      "- D claimed the link into a new Mirk account; a second browser then saw no unclaimed payment.",
       "",
     ].join("\n"),
   );

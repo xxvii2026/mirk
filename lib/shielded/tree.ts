@@ -1,10 +1,10 @@
-import { IncrementalMerkleTreePoseidon, fieldToHex, hexToField, type PoseidonMerklePath } from "@gloamtrade/sdk";
+import { IncrementalMerkleTreePoseidon, fieldToHex, hexToField, type PoseidonMerklePath } from "@/lib/shielded/sdk";
 import type { Address, Hex, PublicClient } from "viem";
 import { getDb } from "../crypto-store/db";
-import { LOG_CHUNK_BLOCKS, POOL_ADDRESS, POOL_DEPLOY_BLOCK } from "../robinhood/network";
+import { LOG_CHUNK_BLOCKS, POOL_ADDRESS, POOL_DEPLOY_BLOCK, assertPoolConfigured } from "../robinhood/network";
 
 /**
- * Incremental rebuild of the Gloam pool's Merkle tree. Mirrors the SDK's
+ * Incremental rebuild of the Mirk pool's Merkle tree. Mirrors the SDK's
  * syncTree (same events, same on-chain ordering) but caches the public leaf
  * list in IndexedDB so a refresh only fetches new blocks. Chain events stay the
  * source of truth: the rebuilt root must equal the pool's currentRoot at the
@@ -176,6 +176,7 @@ let inflight: Promise<PoolTree> | null = null;
 
 /** Sync the pool tree to the latest block and verify its root against the chain. */
 export function syncPoolTree(client: PublicClient): Promise<PoolTree> {
+  assertPoolConfigured();
   inflight ??= doSync(client).finally(() => {
     inflight = null;
   });

@@ -8,8 +8,8 @@ import { AssetSelect } from "@/components/money/asset-select";
 import { FlowErrorNotice, FlowProgress, TxLinks, useFlow, type StepDef } from "@/components/money/flow";
 import { useOpenVault, useRecords } from "@/components/privacy/vault-provider";
 import { Button, ButtonLink, Card, Field, Notice, PageHeader, inputClass } from "@/components/shared/ui";
-import { privateBalance } from "@/lib/gloam/notes";
-import { cashOut, previewParts, type ServiceContext } from "@/lib/gloam/services";
+import { privateBalance } from "@/lib/shielded/notes";
+import { cashOut, previewParts, type ServiceContext } from "@/lib/shielded/services";
 import { ASSETS } from "@/lib/robinhood/network";
 import { AMOUNT_ERRORS, amountToInput, parseAmount } from "@/lib/validation/amount";
 

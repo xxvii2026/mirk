@@ -5,9 +5,9 @@ import { THEME_BOOTSTRAP } from "@/components/shared/theme";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "mirk · Private money for the open economy", template: "%s · mirk" },
-  description: "Hold, send and receive privately on Robinhood Chain testnet, built on Gloam's shielded pool.",
-  applicationName: "mirk",
+  title: { default: "Mirk · Private money for the open economy", template: "%s · Mirk" },
+  description: "Hold, send and receive privately on Robinhood Chain testnet, using Mirk's shielded pool.",
+  applicationName: "Mirk",
   referrer: "no-referrer",
   robots: { index: true, follow: true },
   formatDetection: { telephone: false },

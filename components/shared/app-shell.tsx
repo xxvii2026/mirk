@@ -59,7 +59,7 @@ function RailLink({ item, path }: { item: Item; path: string }) {
       aria-current={on ? "page" : undefined}
       className={cx(
         "flex min-h-10 items-center gap-3 rounded-[12px] px-3 text-[15px] transition-colors duration-150",
-        on ? "bg-surface-2 text-ink" : "text-ink-2 hover:text-ink hover:bg-surface-2/60",
+        on ? "bg-signal-tint text-signal-text font-medium" : "text-ink-2 hover:text-ink hover:bg-surface-2/60",
       )}
     >
       <Icon className="size-4 shrink-0" />
@@ -92,7 +92,7 @@ function WalletPill() {
     <button
       type="button"
       onClick={() => open({ view: "Connect" })}
-      className="btn btn-dark min-h-11 w-full text-[15px]"
+      className="btn btn-accent min-h-11 w-full text-[15px]"
     >
       <IconWallet className="size-4" /> Connect wallet
     </button>
@@ -119,11 +119,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
 
-      {/* The rail floats as its own panel, after Gloam's app. */}
+      {/* The rail floats as its own panel. */}
       <aside className="border-line bg-surface sticky top-3 m-3 hidden h-[calc(100dvh-1.5rem)] w-[248px] shrink-0 flex-col rounded-[20px] border p-3 md:flex">
-        <Link href="/" aria-label="mirk home" className="flex min-h-11 w-fit items-center gap-2.5 px-2">
+        <Link href="/" aria-label="Mirk home" className="flex min-h-11 w-fit items-center gap-2.5 px-2">
           <Logo className="size-7" />
-          <span className="text-[19px] font-medium tracking-[-0.02em]">mirk</span>
+          <span className="text-[19px] font-medium tracking-[-0.02em]">Mirk</span>
         </Link>
         <div className="bg-surface-2 mt-3 flex items-center gap-3 rounded-[14px] px-3 py-2.5">
           <span className="bg-ink text-on-ink grid size-8 shrink-0 place-items-center rounded-[9px]">
@@ -154,12 +154,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="min-w-0 flex-1">
         <header className="border-line sticky top-0 z-30 border-b bg-[var(--chrome)] backdrop-blur-md md:hidden">
           <div className="flex h-16 items-center justify-between gap-3 px-4">
-            <Link href="/app" aria-label="mirk home" className="flex min-h-11 items-center gap-2">
+            <Link href="/app" aria-label="Mirk home" className="flex min-h-11 items-center gap-2">
               <Logo className="size-7" />
-              <span className="text-[18px] font-medium tracking-[-0.02em]">mirk</span>
+              <span className="text-[18px] font-medium tracking-[-0.02em]">Mirk</span>
             </Link>
             <div className="flex items-center gap-1">
-              <span className="text-ink-2 text-[12px]">Testnet</span>
+              {REOWN_PROJECT_ID && client ? <WalletPill /> : null}
+              <span className="text-ink-2 hidden text-[12px] sm:inline">Testnet</span>
               <ThemeToggle />
             </div>
           </div>
@@ -167,7 +168,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main id="main" className="mx-auto w-full max-w-[1080px] px-4 pt-6 pb-28 md:px-10 md:pt-10 md:pb-10">
           {children}
           <footer className="border-line text-ink-2 mt-14 flex flex-col gap-3 border-t pt-5 text-[13px] sm:flex-row sm:items-center sm:justify-between">
-            <p>mirk on Robinhood Chain testnet. Test assets have no value. Not externally audited.</p>
             <p className="flex gap-4">
               {(
                 [
@@ -200,7 +200,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   aria-current={on ? "page" : undefined}
                   className={cx(
                     "flex min-h-14 flex-col items-center justify-center gap-1 rounded-[14px] text-[11px] transition-colors",
-                    on ? "bg-surface-2 text-ink font-medium" : "text-ink-2",
+                    on ? "bg-signal-tint text-signal-text font-medium" : "text-ink-2",
                   )}
                 >
                   <Icon className="size-[19px]" />

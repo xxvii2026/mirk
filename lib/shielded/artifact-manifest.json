@@ -1,0 +1,48 @@
+{
+  "protocol": "mirk-shielded-v1",
+  "testnetOnly": true,
+  "circuits": {
+    "shield": {
+      "wasm": {
+        "url": "/circuits/shield-1847647da14b2662.wasm",
+        "sha256": "1847647da14b2662ccc55b86a184e67fff844919cc49e2b333bc8193d4ba330e"
+      },
+      "zkey": {
+        "url": "/circuits/shield-ed5566c63e294607.zkey",
+        "sha256": "ed5566c63e29460782a343ef918ad574f57e89930036ee79ab37cd979ef6987f"
+      },
+      "verificationKey": {
+        "url": "/circuits/shield-df440b815074bb71.vkey.json",
+        "sha256": "df440b815074bb7150b2e6054878f9d841b2b964bd40b6d9c42c74e32db5db70"
+      }
+    },
+    "transfer": {
+      "wasm": {
+        "url": "/circuits/transfer-51a7f017794788e6.wasm",
+        "sha256": "51a7f017794788e60cffa685c71187dcc29a24423b903b472ba2375149fdeb60"
+      },
+      "zkey": {
+        "url": "/circuits/transfer-899d2c3cf2c5ce6e.zkey",
+        "sha256": "899d2c3cf2c5ce6e5fd3bdff1a2a149e4c20e0f6b419847d96c840860be73da8"
+      },
+      "verificationKey": {
+        "url": "/circuits/transfer-dacdd40046a98bb2.vkey.json",
+        "sha256": "dacdd40046a98bb24e34483667a143a4a24a3f4cd45e8b9e4bf083f68d8988b6"
+      }
+    },
+    "unshield": {
+      "wasm": {
+        "url": "/circuits/unshield-e321ecebac32d1ca.wasm",
+        "sha256": "e321ecebac32d1ca35695ad1e8870152f311181bc401670a047a34786b232901"
+      },
+      "zkey": {
+        "url": "/circuits/unshield-6aca40b04e170335.zkey",
+        "sha256": "6aca40b04e1703358a814fdade63ef8dc8dd9632631daa17ba7c4fd4938579bf"
+      },
+      "verificationKey": {
+        "url": "/circuits/unshield-b46333b72903edf6.vkey.json",
+        "sha256": "b46333b72903edf6faa97acdf2c2e2e0f865d8498139fbd57a8870c1a2e27177"
+      }
+    }
+  }
+}

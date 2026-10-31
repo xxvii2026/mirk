@@ -14,8 +14,8 @@ import {
   parseBackupFile,
   restoreBackup,
 } from "@/lib/crypto-store/vault";
-import { userMessage } from "@/lib/gloam/errors";
-import { clearTreeCache } from "@/lib/gloam/tree";
+import { userMessage } from "@/lib/shielded/errors";
+import { clearTreeCache } from "@/lib/shielded/tree";
 import {
   CHAIN_ID,
   EXPLORER_URL,
@@ -216,13 +216,13 @@ export default function SettingsPage() {
         <div className="divide-line divide-y">
           <Row label="Network">Robinhood Chain testnet ({CHAIN_ID})</Row>
           <Row label="RPC">{RPC_URL}</Row>
-          <Row label="Gloam shielded pool">
+          <Row label="Mirk shielded pool">
             <ExternalLink href={addressUrl(POOL_ADDRESS)}>{POOL_ADDRESS}</ExternalLink>
           </Row>
           <Row label="Payment message board">
             <ExternalLink href={addressUrl(PAY_MEMO_ADDRESS)}>{PAY_MEMO_ADDRESS}</ExternalLink>
           </Row>
-          <Row label="mirk account registry">
+          <Row label="Mirk account registry">
             {REGISTRY_ADDRESS ? (
               <ExternalLink href={addressUrl(REGISTRY_ADDRESS)}>{REGISTRY_ADDRESS}</ExternalLink>
             ) : (
@@ -288,10 +288,10 @@ export default function SettingsPage() {
       </Card>
 
       <Card className="border-danger/30 space-y-4">
-        <h2 className="text-[17px]">Clear local mirk data</h2>
+        <h2 className="text-[17px]">Clear local Mirk data</h2>
         <Notice tone="danger" title="This can lose money permanently">
           Clearing deletes the encrypted keys for this wallet from this device. Any private balance they hold becomes
-          unspendable unless you have an encrypted backup and its passphrase. mirk cannot recover it.
+          unspendable unless you have an encrypted backup and its passphrase. Mirk cannot recover it.
         </Notice>
         <Field id="confirm-clear" label='Type "delete my keys" to confirm'>
           <input

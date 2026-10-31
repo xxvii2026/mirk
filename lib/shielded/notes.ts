@@ -40,7 +40,7 @@ export type Selection =
   | { ok: false; reason: "insufficient" | "too-many-parts"; available: bigint };
 
 /**
- * Pick notes to cover `target`. Each Gloam spend consumes exactly one note, so
+ * Pick notes to cover `target`. Each Mirk spend consumes exactly one note, so
  * a payment larger than any single note becomes several explicit parts.
  *  - Prefer the smallest single note that covers the target (one transaction).
  *  - Otherwise take notes largest-first; every part spends a whole note except

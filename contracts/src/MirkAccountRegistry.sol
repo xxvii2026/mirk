@@ -2,7 +2,7 @@
 pragma solidity 0.8.28;
 
 /// @title MirkAccountRegistry
-/// @notice Maps 12-digit MIRK account numbers to Gloam receive tags.
+/// @notice Maps 12-digit Mirk account numbers to Mirk receive tags.
 /// @dev Holds no funds, names, wallet addresses, balances or profile data. A registration is
 ///      permanent: nobody, including the owner, can edit or remove it. The owner can only rotate
 ///      the registrar address that is allowed to add new registrations.

@@ -1,4 +1,4 @@
-import { isReceiveTag } from "@gloamtrade/sdk";
+import { isReceiveTag } from "@/lib/shielded/sdk";
 import { z } from "zod";
 import { checkAccountNumber } from "../account-number";
 import { CHAIN_ID } from "../robinhood/network";

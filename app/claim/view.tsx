@@ -10,10 +10,10 @@ import { FlowErrorNotice, FlowProgress, useFlow, type StepDef } from "@/componen
 import { PrivateGate } from "@/components/privacy/gate";
 import { Providers } from "@/components/shared/providers";
 import { ButtonLink, Button, Card, Notice, Pill } from "@/components/shared/ui";
-import { CLAIM_ERRORS, decodeClaimPackage, type ClaimPayload } from "@/lib/gloam/claim-package";
-import { userMessage } from "@/lib/gloam/errors";
-import { claimFromLink, ensureAccount, previewClaim, type ServiceContext } from "@/lib/gloam/services";
-import { CHAIN_ID, assetByAddress } from "@/lib/robinhood/network";
+import { CLAIM_ERRORS, decodeClaimPackage, type ClaimPayload } from "@/lib/shielded/claim-package";
+import { userMessage } from "@/lib/shielded/errors";
+import { claimFromLink, ensureAccount, previewClaim, type ServiceContext } from "@/lib/shielded/services";
+import { CHAIN_ID, POOL_ADDRESS, assetByAddress } from "@/lib/robinhood/network";
 
 const STEPS: StepDef[] = [
   { key: ["preparing", "syncing"], label: "Finding the payment" },
@@ -98,7 +98,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
             </p>
           ) : null}
           <p className="text-muted text-[15px]">Confirmed on chain and now in your private balance.</p>
-          <ButtonLink href="/app">Open mirk</ButtonLink>
+          <ButtonLink href="/app">Open Mirk</ButtonLink>
         </div>
       );
     }
@@ -106,7 +106,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
       r.status === "taken"
         ? "This payment was claimed by someone else, or taken back by the sender, before your claim landed."
         : r.status === "pending"
-          ? "Your claim was submitted but is not confirmed yet. Open mirk in a moment; it will finish automatically."
+          ? "Your claim was submitted but is not confirmed yet. Open Mirk in a moment; it will finish automatically."
           : "No unclaimed payment was found for this link. It may have been claimed already, or is still confirming.";
     return (
       <div className="space-y-3">
@@ -124,7 +124,7 @@ function ClaimAction({ payload }: { payload: ClaimPayload }) {
         <FlowProgress steps={STEPS} current={flow.step} part={flow.part} />
       ) : (
         <Button className="w-full" onClick={() => flow.run()}>
-          Claim into my mirk account
+          Claim into my Mirk account
         </Button>
       )}
       <FlowErrorNotice flow={flow} onRetry={() => flow.run()} />
@@ -141,7 +141,7 @@ export function ClaimView() {
     if (hash) window.history.replaceState(null, "", window.location.pathname);
     decodeClaimPackage(hash).then((r) => {
       if (!r.ok) setParsed({ state: "invalid", message: CLAIM_ERRORS[r.reason] });
-      else if (r.payload.n !== CHAIN_ID)
+      else if (r.payload.n !== CHAIN_ID || r.payload.p.toLowerCase() !== POOL_ADDRESS.toLowerCase())
         setParsed({ state: "invalid", message: "This claim link is for a different network." });
       else setParsed({ state: "ok", payload: r.payload });
     });
@@ -151,7 +151,7 @@ export function ClaimView() {
     <Providers>
       <div className="min-h-dvh">
         <header className="mx-auto flex h-16 max-w-3xl items-center justify-between px-4">
-          <Link href="/" aria-label="mirk home" className="flex min-h-11 items-center">
+          <Link href="/" aria-label="Mirk home" className="flex min-h-11 items-center">
             <Logo className="size-8" />
           </Link>
           <Pill>Testnet</Pill>
@@ -169,7 +169,7 @@ export function ClaimView() {
                 {parsed.message}
               </Notice>
               <ButtonLink href="/" variant="ghost">
-                Go to mirk
+                Go to Mirk
               </ButtonLink>
             </Card>
           ) : null}
@@ -178,7 +178,7 @@ export function ClaimView() {
               <Card className="space-y-4">
                 <Preview payload={parsed.payload} />
                 <Notice title="Anyone holding the complete link can claim it">
-                  The code is part of the link itself and never reaches mirk&apos;s servers. We removed it from your
+                  The code is part of the link itself and never reaches Mirk&apos;s servers. We removed it from your
                   address bar; keep the original message until you have claimed. Test assets have no value.
                 </Notice>
               </Card>

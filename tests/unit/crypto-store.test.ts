@@ -1,8 +1,20 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { privateKeyToAccount, generatePrivateKey } from "viem/accounts";
-import { UNLOCK_MESSAGE, WrongKeyError, decryptJson, deriveKek, encryptJson } from "@/lib/crypto-store/crypto";
+import {
+  UNLOCK_MESSAGE,
+  WrongKeyError,
+  decryptJson,
+  deriveKek,
+  encryptJson,
+  deriveBackupKey,
+  fromB64,
+  storeIdFor,
+  sha256Hex,
+} from "@/lib/crypto-store/crypto";
 import { MirkDb, getDb, setDb } from "@/lib/crypto-store/db";
 import {
+  BACKUP_FORMAT,
+  BACKUP_VERSION,
   deleteStore,
   exportBackup,
   parseBackupFile,
@@ -109,5 +121,30 @@ describe("backups", () => {
     await expect(restoreBackup(vault, file, "wrong horse battery!")).rejects.toBeInstanceOf(WrongKeyError);
     expect(() => parseBackupFile("{}")).toThrow();
     expect(() => parseBackupFile("not json")).toThrow();
+  });
+});
+
+describe("pool isolation", () => {
+  it("does not reuse the legacy wallet-only storage namespace", async () => {
+    const { account } = await wallet();
+    expect(await storeIdFor(account.address)).not.toBe(
+      await sha256Hex(`mirk-store|46630|${account.address.toLowerCase()}`),
+    );
+  });
+  it("rejects an authenticated backup from another pool before merging records", async () => {
+    const { account, signature } = await wallet();
+    const { vault } = await unlockStore(account.address, signature);
+    await vault.put(note("1000"));
+    const passphrase = "a sufficiently long test passphrase";
+    const file = await exportBackup(vault, passphrase, 46630, 100_000);
+    const key = await deriveBackupKey(passphrase, fromB64(file.kdf.salt), file.kdf.iterations);
+    const sealed = await encryptJson(
+      key,
+      { chainId: 46630, pool: "0x2222222222222222222222222222222222222222", records: vault.allRecords() },
+      `${BACKUP_FORMAT}|v${BACKUP_VERSION}`,
+    );
+    const before = vault.allRecords();
+    await expect(restoreBackup(vault, { ...file, ...sealed }, passphrase)).rejects.toThrow("different pool");
+    expect(vault.allRecords()).toEqual(before);
   });
 });

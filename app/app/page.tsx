@@ -2,24 +2,22 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useAccount } from "wagmi";
 import { ActivityList } from "@/components/dashboard/activity-list";
-import {
-  AccountNumberText,
-  AccountQr,
-  AccountStatus,
-  CopyButton,
-  useAccountRecord,
-} from "@/components/money/account-number";
+import { AccountNumberText, AccountStatus, CopyButton, useAccountRecord } from "@/components/money/account-number";
 import { Amount } from "@/components/money/amount";
 import { AssetSelect } from "@/components/money/asset-select";
-import { useRecords } from "@/components/privacy/vault-provider";
+import { useRecords, useVault } from "@/components/privacy/vault-provider";
 import { useHideBalance } from "@/components/shared/theme";
 import { IconLock, IconPlus, IconReceive, IconSend, IconWallet } from "@/components/shared/icons";
 import { ButtonLink, Card, Pill } from "@/components/shared/ui";
-import { incomingBalance, privateBalance } from "@/lib/gloam/notes";
+import { incomingBalance, privateBalance } from "@/lib/shielded/notes";
 import { ASSETS } from "@/lib/robinhood/network";
 
 export default function Dashboard() {
+  const { isConnected } = useAccount();
+  const { status } = useVault();
+  const ready = isConnected && status === "open";
   const [asset, setAsset] = useState(ASSETS[0]!);
   const notes = useRecords("note");
   const account = useAccountRecord();
@@ -46,8 +44,9 @@ export default function Dashboard() {
             <button
               type="button"
               onClick={() => setHidden(!hidden)}
-              className="text-ink-2 hover:text-ink min-h-11 px-2 text-sm"
+              className="text-ink-2 hover:text-ink min-h-11 px-2 text-sm disabled:cursor-not-allowed disabled:opacity-45"
               aria-pressed={hidden}
+              disabled={!ready}
             >
               {hidden ? "Show" : "Hide"}
             </button>
@@ -57,16 +56,22 @@ export default function Dashboard() {
 
         <div className="space-y-3">
           <p className="tabular min-h-[3.5rem] text-[52px] leading-none font-light tracking-[-0.03em] sm:text-[72px]">
-            <Amount
-              value={balance}
-              decimals={asset.decimals}
-              symbol={asset.symbol}
-              hidden={hidden}
-              className="font-light!"
-            />
+            {ready ? (
+              <Amount
+                value={balance}
+                decimals={asset.decimals}
+                symbol={asset.symbol}
+                hidden={hidden}
+                className="font-light!"
+              />
+            ) : (
+              <span aria-label="Balance unavailable">—</span>
+            )}
           </p>
-          <p className="text-ink-2 text-[15px]">Only you can see this amount.</p>
-          {settling > 0n ? (
+          <p className="text-ink-2 text-[15px]">
+            {ready ? "Only you can see this amount." : "Connect your wallet to view your private balance."}
+          </p>
+          {ready && settling > 0n ? (
             <p className="text-ink-2 text-sm">
               Plus{" "}
               <Amount
@@ -111,36 +116,43 @@ export default function Dashboard() {
               See all
             </Link>
           </div>
-          <ActivityList limit={5} hidden={hidden} />
+          {ready ? (
+            <ActivityList limit={5} hidden={hidden} />
+          ) : (
+            <p className="text-muted py-6 text-[15px]">
+              Your activity will appear here once you open your private store.
+            </p>
+          )}
         </Card>
 
         <div className="space-y-5">
           <Card className="space-y-4">
             <div className="flex items-center justify-between gap-2">
-              <h2 className="text-[17px]">Your mirk account</h2>
-              <AccountStatus />
+              <h2 className="text-[17px]">Your Mirk account</h2>
+              {ready ? <AccountStatus /> : <span className="text-muted text-sm">Not connected</span>}
             </div>
-            {account ? (
+            {ready && account ? (
               <>
                 <p className="tabular text-[28px] font-light tracking-[-0.01em]">
                   <AccountNumberText number={account.number} />
                 </p>
                 <div className="flex flex-wrap items-end gap-4">
-                  <AccountQr number={account.number} size={112} />
                   <CopyButton text={account.number} label="Copy number" />
                 </div>
                 <p className="text-muted text-sm">
                   Share this number to get paid. It reveals no name, wallet or balance.
                 </p>
               </>
+            ) : !ready ? (
+              <p className="text-muted text-sm">Connect your wallet to access your account number.</p>
             ) : null}
           </Card>
 
           <Card className="space-y-3">
             <h2 className="text-[17px]">How privacy works here</h2>
             <p className="text-muted text-sm">
-              Your money sits in Gloam&apos;s shielded pool on Robinhood Chain. The keys that can spend it are encrypted
-              on this device. Nobody, including mirk, can move your money.
+              Your money sits in Mirk&apos;s shielded pool on Robinhood Chain. The keys that can spend it are encrypted
+              on this device. Nobody, including Mirk, can move your money.
             </p>
             <p className="text-muted text-sm">
               Adding money and cashing out are public. Balances and private transfers are not.

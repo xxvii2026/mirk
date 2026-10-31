@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { PublicClient } from "viem";
 import { useAccount, usePublicClient, useWalletClient } from "wagmi";
 import { useVault } from "@/components/privacy/vault-provider";
-import type { ServiceContext, SignerClient } from "@/lib/gloam/services";
+import type { ServiceContext, SignerClient } from "@/lib/shielded/services";
 import { CHAIN_ID } from "@/lib/robinhood/network";
 
 /** Everything a service call needs, from wagmi and the unlocked store. */

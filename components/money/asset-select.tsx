@@ -1,6 +1,6 @@
 "use client";
 
-import type { GloamAsset } from "@gloamtrade/sdk";
+import type { MirkAsset } from "@/lib/shielded/sdk";
 import { ASSETS } from "@/lib/robinhood/network";
 import { cx } from "@/components/shared/ui";
 
@@ -9,8 +9,8 @@ export function AssetSelect({
   onChange,
   label = "Asset",
 }: {
-  value: GloamAsset;
-  onChange: (a: GloamAsset) => void;
+  value: MirkAsset;
+  onChange: (a: MirkAsset) => void;
   label?: string;
 }) {
   return (

@@ -1,17 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { generateReceiveKey } from "@gloamtrade/sdk";
-import { decodeClaimPackage, encodeClaimPackage } from "@/lib/gloam/claim-package";
+import { generateReceiveKey } from "@/lib/shielded/sdk";
+import { decodeClaimPackage, encodeClaimPackage } from "@/lib/shielded/claim-package";
 
 async function payload() {
   const k = await generateReceiveKey();
-  return { n: 46630, k: { x: k.privateJwk.x!, y: k.privateJwk.y!, d: k.privateJwk.d! }, b: "141000000" };
+  return {
+    n: 46630,
+    p: "0x1111111111111111111111111111111111111111",
+    k: { x: k.privateJwk.x!, y: k.privateJwk.y!, d: k.privateJwk.d! },
+    b: "141000000",
+  };
 }
 
 describe("claim links", () => {
   it("round-trips", async () => {
     const p = await payload();
     const enc = await encodeClaimPackage(p);
-    expect(enc.startsWith("m1.")).toBe(true);
+    expect(enc.startsWith("m2.")).toBe(true);
     expect(await decodeClaimPackage(`#${enc}`)).toEqual({ ok: true, payload: p });
   });
 
@@ -26,7 +31,7 @@ describe("claim links", () => {
   it("rejects malformed and unknown versions", async () => {
     expect(await decodeClaimPackage("")).toMatchObject({ reason: "empty" });
     expect(await decodeClaimPackage("garbage")).toMatchObject({ reason: "malformed" });
-    expect(await decodeClaimPackage("m2.abc.def")).toMatchObject({ reason: "version" });
+    expect(await decodeClaimPackage("m1.abc.def")).toMatchObject({ reason: "version" });
     expect(await decodeClaimPackage("m1.@@@.x")).toMatchObject({ ok: false });
   });
 });

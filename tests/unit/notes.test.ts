@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { selectNotes } from "@/lib/gloam/notes";
+import { selectNotes } from "@/lib/shielded/notes";
 
 const n = (id: string, amount: bigint) => ({ id, amount });
 

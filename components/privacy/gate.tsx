@@ -1,13 +1,14 @@
 "use client";
 
 import { useAppKit } from "@reown/appkit/react";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { useAccount, useSwitchChain } from "wagmi";
 import { MarkTile } from "@/components/brand/wordmark";
 import { IconLock } from "@/components/shared/icons";
 import { Button, Notice, Pill } from "@/components/shared/ui";
 import { REOWN_PROJECT_ID } from "@/lib/reown/config";
-import { CHAIN_ID } from "@/lib/robinhood/network";
+import { CHAIN_ID, POOL_CONFIGURED } from "@/lib/robinhood/network";
 import { useVault } from "./vault-provider";
 
 /** A single card, left-aligned like Gloam's welcome sheet. */
@@ -39,10 +40,10 @@ function ConnectWallet() {
     <Frame>
       <MarkTile className="size-10" />
       <div className="w-full space-y-2">
-        <h1 className={TITLE}>Connect a wallet to open mirk</h1>
+        <h1 className={TITLE}>Connect a wallet to open Mirk</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
-          Any EVM wallet works. mirk never holds your money: it sits in Gloam&apos;s shielded pool, and only keys on
-          this device can move it.
+          Any EVM wallet works. Mirk never holds your money: it sits in Mirk&apos;s shielded pool, and only keys on this
+          device can move it.
         </p>
       </div>
       <Button className="w-full" onClick={() => open({ view: "Connect" })}>
@@ -61,7 +62,7 @@ function WrongNetwork({ actual }: { actual: number | undefined }) {
       <div className="w-full space-y-2">
         <h1 className={TITLE}>Switch to Robinhood Chain testnet</h1>
         <p className="text-ink-2 text-[15px] leading-relaxed">
-          Your wallet is on network {actual ?? "unknown"}. mirk only works on Robinhood Chain testnet (chain {CHAIN_ID}
+          Your wallet is on network {actual ?? "unknown"}. Mirk only works on Robinhood Chain testnet (chain {CHAIN_ID}
           ).
         </p>
       </div>
@@ -97,11 +98,25 @@ function Unlock() {
   );
 }
 
-/** Everything inside renders only with a connected wallet on the right chain and an unlocked store. */
+/** Home can show its empty dashboard; private operations require a wallet and an unlocked store. */
 export function PrivateGate({ children }: { children: ReactNode }) {
+  const path = usePathname();
   const { isConnected, chainId, status: accountStatus } = useAccount();
   const { status } = useVault();
 
+  if (path === "/app" && !isConnected) return <>{children}</>;
+
+  if (!POOL_CONFIGURED)
+    return (
+      <Frame>
+        <MarkTile className="size-10" />
+        <h1 className={TITLE}>Mirk is getting its own pool.</h1>
+        <p className="text-ink-2 text-[15px] leading-relaxed">
+          Payments will open once Mirk&apos;s testnet pool is deployed and verified. Existing funds stay in the previous
+          pool.
+        </p>
+      </Frame>
+    );
   if (!REOWN_PROJECT_ID) {
     return (
       <Frame>
@@ -123,7 +138,7 @@ export function PrivateGate({ children }: { children: ReactNode }) {
       <Frame>
         <Notice tone="danger" title="Private storage is unavailable">
           This browser is blocking secure local storage (IndexedDB), often in private windows or with strict site-data
-          settings. mirk needs it to keep your encrypted keys on this device. Try a regular window.
+          settings. Mirk needs it to keep your encrypted keys on this device. Try a regular window.
         </Notice>
       </Frame>
     );

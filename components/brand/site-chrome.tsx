@@ -19,7 +19,7 @@ export function SiteHeader({ themeToggle = true }: { themeToggle?: boolean }) {
     <>
       <header className="fixed inset-x-0 top-3 z-40 px-4 sm:top-4">
         <div className="glass mx-auto flex h-14 max-w-[820px] items-center justify-between gap-3 rounded-full pr-2 pl-4">
-          <Link href="/" aria-label="mirk home" className="flex min-h-11 items-center">
+          <Link href="/" aria-label="Mirk home" className="flex min-h-11 items-center">
             <Logo className="size-8" />
           </Link>
           <nav aria-label="Site" className="hidden items-center gap-0.5 md:flex">
@@ -36,7 +36,7 @@ export function SiteHeader({ themeToggle = true }: { themeToggle?: boolean }) {
           <div className="flex items-center gap-1.5">
             {themeToggle ? <ThemeToggle /> : null}
             <Link href="/app" className="btn btn-accent min-h-10 px-5 text-[14px]">
-              Open mirk
+              Open Mirk
             </Link>
           </div>
         </div>
@@ -50,7 +50,7 @@ const FOOTER: [string, [string, string][]][] = [
   [
     "Product",
     [
-      ["Open mirk", "/app"],
+      ["Open Mirk", "/app"],
       ["Send privately", "/app/send"],
       ["Receive", "/app/receive"],
       ["Claim a link", "/claim"],
@@ -83,7 +83,7 @@ export function SiteFooter() {
               Private money for the open economy. Your balance stays off the public record.
             </p>
             <p className="text-ink-2 flex items-center gap-2 text-[14px]">
-              <IconLayers className="size-4" /> Built on Robinhood Chain and Gloam
+              <IconLayers className="size-4" /> Built on Robinhood Chain
             </p>
           </div>
           {FOOTER.map(([heading, links]) => (
@@ -102,14 +102,14 @@ export function SiteFooter() {
           ))}
         </div>
         <div className="border-line text-ink-2 mt-14 flex flex-col gap-2 border-t pt-6 text-[13px] sm:flex-row sm:justify-between">
-          <p>Robinhood Chain testnet only. Test assets have no value. mirk has not been externally audited.</p>
+          <p>Robinhood Chain testnet only. Test assets have no value. Mirk has not been externally audited.</p>
           <a
-            href="https://gloam.trade"
+            href="/contracts"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-ink inline-flex items-center gap-1"
           >
-            Gloam shielded pool <IconArrowUpRight className="size-3.5" />
+            Mirk shielded pool <IconArrowUpRight className="size-3.5" />
           </a>
         </div>
       </div>

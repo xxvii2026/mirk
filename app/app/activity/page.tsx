@@ -7,7 +7,7 @@ import { useSync } from "@/components/privacy/sync-provider";
 import { useRecords } from "@/components/privacy/vault-provider";
 import { useHideBalance } from "@/components/shared/theme";
 import { Button, Card, Notice, PageHeader, Pill } from "@/components/shared/ui";
-import { userMessage } from "@/lib/gloam/errors";
+import { userMessage } from "@/lib/shielded/errors";
 import { assetByAddress } from "@/lib/robinhood/network";
 import { formatAmount } from "@/lib/validation/amount";
 

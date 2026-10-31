@@ -8,7 +8,7 @@
  */
 
 import { hexToBytes, type Hex } from "viem";
-import { CHAIN_ID } from "../robinhood/network";
+import { CHAIN_ID, POOL_ADDRESS } from "../robinhood/network";
 
 export const STORE_VERSION = 1;
 
@@ -60,7 +60,7 @@ export async function sha256Hex(input: string): Promise<string> {
 
 /** Stable, non-reversible store id for a wallet, so the address is not a database key. */
 export function storeIdFor(address: string): Promise<string> {
-  return sha256Hex(`mirk-store|${CHAIN_ID}|${address.toLowerCase()}`);
+  return sha256Hex(`mirk-store|${CHAIN_ID}|${POOL_ADDRESS.toLowerCase()}|${address.toLowerCase()}`);
 }
 
 /** Derive the key-encryption key from the wallet's unlock signature. */

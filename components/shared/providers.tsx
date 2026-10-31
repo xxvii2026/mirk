@@ -18,7 +18,7 @@ function ensureAppKit() {
     defaultNetwork: robinhoodTestnet,
     projectId: REOWN_PROJECT_ID,
     metadata: {
-      name: "mirk",
+      name: "Mirk",
       description: "Private money for the open economy. Testnet.",
       url: window.location.origin,
       icons: [`${window.location.origin}/brand/mirk-icon.svg`],

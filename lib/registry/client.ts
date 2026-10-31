@@ -1,12 +1,12 @@
-import { isReceiveTag } from "@gloamtrade/sdk";
+import { isReceiveTag } from "@/lib/shielded/sdk";
 import { hexToString, type PublicClient } from "viem";
 import { accountNumberToUint64, type AccountNumber } from "../account-number";
-import { REGISTRY_ABI } from "../gloam/abi";
+import { REGISTRY_ABI } from "../shielded/abi";
 import { REGISTRY_ADDRESS } from "../robinhood/network";
 
 export class RegistryUnavailableError extends Error {
   constructor() {
-    super("The mirk account registry is not configured on this deployment.");
+    super("The Mirk account registry is not configured on this deployment.");
     this.name = "RegistryUnavailableError";
   }
 }

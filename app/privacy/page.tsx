@@ -9,12 +9,12 @@ export default function Privacy() {
       <p>
         <strong>What stays on your device:</strong> note secrets, receive keys, claim links you create, your private
         activity, and the signature that unlocks them. They are encrypted with AES-GCM in your browser&apos;s IndexedDB.
-        mirk never receives them.
+        Mirk never receives them.
       </p>
       <p>
-        <strong>What mirk&apos;s servers see:</strong> when your account number is registered, the number and your
-        public receive key. When a private transfer or cash out is submitted, mirk forwards the already-public proof
-        data to the Gloam relay. Like any website, the hosting provider sees your IP address with these requests. mirk
+        <strong>What Mirk&apos;s servers see:</strong> when your account number is registered, the number and your
+        public receive key. When a private transfer or cash out is submitted, Mirk forwards the already-public proof
+        data to Mirk&apos;s relay. Like any website, the hosting provider sees your IP address with these requests. Mirk
         keeps no logs of them.
       </p>
       <p>
@@ -22,7 +22,7 @@ export default function Privacy() {
         destination), and that some private transfer happened. Amounts and parties of private transfers are not public.
       </p>
       <p>
-        mirk uses no analytics, no tracking cookies and no third-party trackers. Wallet connection is provided by Reown;
+        Mirk uses no analytics, no tracking cookies and no third-party trackers. Wallet connection is provided by Reown;
         their service sees the connection between your wallet and this site.
       </p>
       <p>

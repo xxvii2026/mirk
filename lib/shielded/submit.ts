@@ -1,29 +1,27 @@
-import { GloamRelayError, relayIntent, relayMemo, type GloamIntent } from "@gloamtrade/sdk";
+import { MirkRelayError, relayIntent, relayMemo, type MirkIntent } from "@/lib/shielded/sdk";
 import type { Hex } from "viem";
-import { CHAIN_ID } from "../robinhood/network";
+import { CHAIN_ID, POOL_ADDRESS, assertPoolConfigured } from "../robinhood/network";
 
-/**
- * Relay submission. The browser cannot call the Gloam relay directly (it sends
- * no CORS headers), so requests go through mirk's /api/relay pass-through. It
- * forwards only public proof data that would appear on chain anyway: no note
- * secret, receive key or wallet signature is ever in these requests.
- */
+/** Submits public proof data and encrypted memos to Mirk's own relay. */
 
 export const RELAY_PATH = "/api/relay";
 
-export class RelayUnavailableError extends Error {
-  constructor(message: string) {
-    super(message);
+export class RelayUnavailableError extends MirkRelayError {
+  constructor(message: string, code = "network") {
+    super(message, code);
     this.name = "RelayUnavailableError";
   }
 }
 
 function wrap(e: unknown): never {
-  if (e instanceof GloamRelayError) throw new RelayUnavailableError(e.message);
+  if (e instanceof MirkRelayError) throw new RelayUnavailableError(e.message, e.code);
   throw new RelayUnavailableError("The private relay could not be reached.");
 }
 
-export async function relaySpend(intent: GloamIntent): Promise<Hex> {
+export async function relaySpend(intent: MirkIntent): Promise<Hex> {
+  assertPoolConfigured();
+  if (intent.exec?.poolAddress.toLowerCase() !== POOL_ADDRESS.toLowerCase())
+    throw new Error("Wrong pool for this payment.");
   if (intent.chainId !== CHAIN_ID) throw new Error("Wrong network for this payment.");
   try {
     return await relayIntent(intent, { url: RELAY_PATH });

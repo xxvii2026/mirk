@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { InfoPage } from "@/components/brand/site-chrome";
 import {
   CHAIN_ID,
+  POOL_CONFIGURED,
   EXPLORER_URL,
   PAY_MEMO_ADDRESS,
   POOL_ADDRESS,
@@ -39,19 +40,19 @@ export default function Contracts() {
         </a>
       </p>
       <Row
-        name="Gloam shielded pool"
-        address={POOL_ADDRESS}
-        note="Holds all deposited test assets. Deployed and operated by Gloam; mirk reads its address from the Gloam SDK."
+        name="Mirk shielded pool"
+        address={POOL_CONFIGURED ? POOL_ADDRESS : null}
+        note="Holds all deposited test assets. Uses Mirk contracts and independently generated proving keys. The address must be configured after deployment."
       />
       <Row
-        name="Gloam payment message board"
-        address={PAY_MEMO_ADDRESS}
+        name="Mirk payment message board"
+        address={POOL_CONFIGURED ? PAY_MEMO_ADDRESS : null}
         note="Carries encrypted payment notes so recipients can find payments. Holds no funds."
       />
       <Row
         name="MirkAccountRegistry"
         address={REGISTRY_ADDRESS}
-        note="Maps account numbers to Gloam receive keys. Non-upgradeable, holds no funds, stores no names, wallets or balances."
+        note="Maps account numbers to Mirk receive keys. Non-upgradeable, holds no funds, stores no names, wallets or balances."
       />
     </InfoPage>
   );

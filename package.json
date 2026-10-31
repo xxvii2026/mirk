@@ -15,14 +15,17 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "contracts:build": "cd contracts && forge build",
-    "contracts:test": "cd contracts && forge test -vv"
+    "contracts:test": "cd contracts && forge test -vv",
+    "circuits:build": "node scripts/shielded/build.mjs",
+    "pool:test": "MIRK_PROOF_TEST=1 vitest run tests/unit/pool-proof.test.ts",
+    "pool:deploy": "node --env-file-if-exists=.env.local scripts/shielded/deploy.mjs"
   },
   "dependencies": {
-    "@gloamtrade/sdk": "0.2.2",
     "@reown/appkit": "1.8.24",
     "@reown/appkit-adapter-wagmi": "1.8.24",
     "@tanstack/react-query": "5.104.5",
     "@wagmi/core": "3.6.7",
+    "circomlibjs": "0.1.7",
     "dexie": "4.4.7",
     "geist": "1.8.2",
     "next": "16.4.2",
@@ -42,6 +45,8 @@
     "@types/qrcode": "1.5.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "^19.3.0",
+    "circom2": "0.2.22",
+    "circomlib": "2.0.5",
     "eslint": "^9.39.5",
     "eslint-config-next": "16.4.2",
     "fake-indexeddb": "6.2.6",

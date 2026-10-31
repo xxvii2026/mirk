@@ -4,6 +4,7 @@ import ts from "eslint-config-next/typescript";
 const config = [
   {
     ignores: [
+      ".agents/**",
       ".claude/**",
       ".next/**",
       "node_modules/**",

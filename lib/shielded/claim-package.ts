@@ -11,11 +11,13 @@ import { z } from "zod";
  * version and payload, which catches truncated or mistyped links.
  */
 
-export const CLAIM_VERSION = "m1";
+export const CLAIM_VERSION = "m2";
 
 const payload = z.object({
   /** chain id */
   n: z.number().int(),
+  /** Pool address: a claim never crosses pool deployments. */
+  p: z.string().regex(/^0x[0-9a-fA-F]{40}$/),
   /** P-256 private JWK fields */
   k: z.object({ x: z.string().min(40), y: z.string().min(40), d: z.string().min(40) }),
   /** block hint (decimal string): the payment was posted at or after this block */
@@ -68,7 +70,7 @@ export async function decodeClaimPackage(fragment: string): Promise<ClaimParse> 
 
 export const CLAIM_ERRORS: Record<Exclude<ClaimParse, { ok: true }>["reason"], string> = {
   empty: "This claim link is missing its code. Ask the sender for the complete link.",
-  version: "This claim link was made by a newer version of mirk.",
+  version: "This claim link was made by a newer version of Mirk.",
   malformed: "This claim link is incomplete or damaged. Ask the sender for the complete link.",
   integrity: "This claim link failed its integrity check. It may have been cut off when copied.",
 };

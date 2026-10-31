@@ -19,8 +19,8 @@ import {
   inputClass,
 } from "@/components/shared/ui";
 import { checkAccountNumber, formatAccountNumber } from "@/lib/account-number";
-import { privateBalance } from "@/lib/gloam/notes";
-import { createClaimLink, previewParts, sendToAccount, type ServiceContext } from "@/lib/gloam/services";
+import { privateBalance } from "@/lib/shielded/notes";
+import { createClaimLink, previewParts, sendToAccount, type ServiceContext } from "@/lib/shielded/services";
 import { useResolveAccount } from "@/lib/hooks/use-resolve";
 import { ASSETS } from "@/lib/robinhood/network";
 import { AMOUNT_ERRORS, amountToInput, parseAmount } from "@/lib/validation/amount";
@@ -69,7 +69,7 @@ export default function SendPage() {
               ...r,
               link: null as string | null,
             }))
-          : Promise.reject(new Error("Enter a valid mirk account number."))
+          : Promise.reject(new Error("Enter a valid Mirk account number."))
         : createClaimLink(ctx, asset.address, amount, window.location.origin),
     [mode, accountCheck, asset.address, amount],
   );
@@ -100,7 +100,7 @@ export default function SendPage() {
             </>
           ) : (
             <p className="text-muted text-[15px]">
-              Confirmed on chain. The amount and recipient are not public. The recipient&apos;s mirk will find the
+              Confirmed on chain. The amount and recipient are not public. The recipient&apos;s Mirk will find the
               payment automatically.
             </p>
           )}
@@ -144,7 +144,7 @@ export default function SendPage() {
           >
             {(
               [
-                ["account", "mirk account"],
+                ["account", "Mirk account"],
                 ["link", "Claim link"],
               ] as const
             ).map(([m, label]) => (
@@ -168,12 +168,12 @@ export default function SendPage() {
           {mode === "account" ? (
             <Field
               id={`${id}-to`}
-              label="mirk account number"
+              label="Mirk account number"
               error={
                 resolution.state === "invalid"
                   ? resolution.message
                   : resolution.state === "unknown"
-                    ? "No mirk account has this number."
+                    ? "No Mirk account has this number."
                     : resolution.state === "error"
                       ? resolution.message
                       : null
@@ -196,15 +196,15 @@ export default function SendPage() {
                 {resolution.state === "checking" ? <span className="text-muted">Checking…</span> : null}
                 {resolution.state === "valid" ? (
                   <Pill tone="signal">
-                    <SignalDot /> Valid mirk account
+                    <SignalDot /> Valid Mirk account
                   </Pill>
                 ) : null}
               </p>
             </Field>
           ) : (
-            <Notice title="Pay someone without mirk">
-              mirk creates a one-time key on this device, sends the money to it privately, and gives you a link. Whoever
-              opens the link can claim the money into their own mirk account.
+            <Notice title="Pay someone without Mirk">
+              Mirk creates a one-time key on this device, sends the money to it privately, and gives you a link. Whoever
+              opens the link can claim the money into their own Mirk account.
             </Notice>
           )}
 

@@ -30,5 +30,5 @@ export function MarkTile({ className = "size-12" }: { className?: string }) {
 
 /** The logo as a labelled image, for headers and footers. */
 export function Logo({ className = "size-8" }: { className?: string }) {
-  return <Mark className={className} title="mirk" />;
+  return <Mark className={className} title="Mirk" />;
 }

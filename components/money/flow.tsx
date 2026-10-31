@@ -3,8 +3,8 @@
 import { useCallback, useRef, useState } from "react";
 import type { Hex } from "viem";
 import { Button, ExternalLink, Notice, cx } from "@/components/shared/ui";
-import { FlowError, type ServiceContext, type Step } from "@/lib/gloam/services";
-import { userMessage } from "@/lib/gloam/errors";
+import { FlowError, type ServiceContext, type Step } from "@/lib/shielded/services";
+import { userMessage } from "@/lib/shielded/errors";
 import { useServiceContext } from "@/lib/hooks/use-service";
 import { txUrl } from "@/lib/robinhood/network";
 

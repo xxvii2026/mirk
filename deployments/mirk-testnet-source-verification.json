@@ -1,0 +1,60 @@
+{
+  "chainId": 46630,
+  "checkedAt": "2026-10-30T08:08:36.800Z",
+  "results": [
+    {
+      "contract": "src/generated/shield.sol:MirkShieldVerifier",
+      "address": "0xe78ccdda654d75f27dafc1aca191e80670c1db74",
+      "success": true,
+      "output": "5e5a1a3f-99c1-409b-b01c-234e803b3b0e\thttps://sourcify.dev/server/verify-ui/jobs/5e5a1a3f-99c1-409b-b01c-234e803b3b0e\n\nStart verifying contract `0xE78CcDda654d75f27dAFC1ACa191E80670c1dB74` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkShieldVerifier] 0xE78CcDda654d75f27dAFC1ACa191E80670c1dB74.\nSubmitted contract for verification:\n\tVerification Job ID: `5e5a1a3f-99c1-409b-b01c-234e803b3b0e`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/5e5a1a3f-99c1-409b-b01c-234e803b3b0e\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkGroth16Adapter.sol:MirkGroth16Adapter",
+      "address": "0x07f3c21e65c94a789225649fc01300a5b7bb1609",
+      "success": true,
+      "output": "33db910e-a74f-4111-9019-159f1e36fd51\thttps://sourcify.dev/server/verify-ui/jobs/33db910e-a74f-4111-9019-159f1e36fd51\n\nStart verifying contract `0x07F3C21e65c94a789225649Fc01300A5b7Bb1609` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkGroth16Adapter] 0x07F3C21e65c94a789225649Fc01300A5b7Bb1609.\nSubmitted contract for verification:\n\tVerification Job ID: `33db910e-a74f-4111-9019-159f1e36fd51`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/33db910e-a74f-4111-9019-159f1e36fd51\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/generated/transfer.sol:MirkTransferVerifier",
+      "address": "0xd267db3644a0e1f9f41c1cfddafa2e43666644e8",
+      "success": true,
+      "output": "c252f47a-c90f-498a-b992-f978b056a2c5\thttps://sourcify.dev/server/verify-ui/jobs/c252f47a-c90f-498a-b992-f978b056a2c5\n\nStart verifying contract `0xD267db3644A0e1f9F41c1CFDDaFA2E43666644e8` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkTransferVerifier] 0xD267db3644A0e1f9F41c1CFDDaFA2E43666644e8.\nSubmitted contract for verification:\n\tVerification Job ID: `c252f47a-c90f-498a-b992-f978b056a2c5`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/c252f47a-c90f-498a-b992-f978b056a2c5\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkGroth16Adapter.sol:MirkGroth16Adapter",
+      "address": "0x9f7f6d66d3bdf91fc2b5f1179ecaf1c041e17f27",
+      "success": true,
+      "output": "76d0b9e4-af92-45c8-b4be-87359a812d43\thttps://sourcify.dev/server/verify-ui/jobs/76d0b9e4-af92-45c8-b4be-87359a812d43\n\nStart verifying contract `0x9f7F6D66d3BdF91fC2B5F1179eCaF1c041e17f27` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkGroth16Adapter] 0x9f7F6D66d3BdF91fC2B5F1179eCaF1c041e17f27.\nSubmitted contract for verification:\n\tVerification Job ID: `76d0b9e4-af92-45c8-b4be-87359a812d43`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/76d0b9e4-af92-45c8-b4be-87359a812d43\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/generated/unshield.sol:MirkUnshieldVerifier",
+      "address": "0x6f54607fa96213aaaf292cc4f34715f28389730a",
+      "success": true,
+      "output": "aaabcd46-2f43-47ae-94c9-acaf6abc6953\thttps://sourcify.dev/server/verify-ui/jobs/aaabcd46-2f43-47ae-94c9-acaf6abc6953\n\nStart verifying contract `0x6f54607FA96213AAAf292cc4F34715F28389730a` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkUnshieldVerifier] 0x6f54607FA96213AAAf292cc4F34715F28389730a.\nSubmitted contract for verification:\n\tVerification Job ID: `aaabcd46-2f43-47ae-94c9-acaf6abc6953`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/aaabcd46-2f43-47ae-94c9-acaf6abc6953\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkGroth16Adapter.sol:MirkGroth16Adapter",
+      "address": "0x3ad0613d741bc2e0acdc727d39a9ca612174c595",
+      "success": true,
+      "output": "559421be-8d6d-49ae-8a50-a9dc639e60b3\thttps://sourcify.dev/server/verify-ui/jobs/559421be-8d6d-49ae-8a50-a9dc639e60b3\n\nStart verifying contract `0x3AD0613D741BC2e0AcDc727d39A9Ca612174c595` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkGroth16Adapter] 0x3AD0613D741BC2e0AcDc727d39A9Ca612174c595.\nSubmitted contract for verification:\n\tVerification Job ID: `559421be-8d6d-49ae-8a50-a9dc639e60b3`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/559421be-8d6d-49ae-8a50-a9dc639e60b3\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkShieldedPool.sol:MirkShieldedPool",
+      "address": "0xfe19c0cd4eb274d5b1cf9db942e045aab2dfbe99",
+      "success": true,
+      "output": "b8995b3a-a6e8-4273-8539-8bdefa150b32\thttps://sourcify.dev/server/verify-ui/jobs/b8995b3a-a6e8-4273-8539-8bdefa150b32\n\nStart verifying contract `0xFe19c0cD4eb274d5B1cf9Db942e045Aab2dFBE99` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkShieldedPool] 0xFe19c0cD4eb274d5B1cf9Db942e045Aab2dFBE99.\nSubmitted contract for verification:\n\tVerification Job ID: `b8995b3a-a6e8-4273-8539-8bdefa150b32`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/b8995b3a-a6e8-4273-8539-8bdefa150b32\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkPayMemo.sol:MirkPayMemo",
+      "address": "0x2e09890af25026e671ae8d52ba08f84e14431808",
+      "success": true,
+      "output": "fc9031cb-caa8-4435-8fc4-fa7033ff1b5b\thttps://sourcify.dev/server/verify-ui/jobs/fc9031cb-caa8-4435-8fc4-fa7033ff1b5b\n\nStart verifying contract `0x2e09890AF25026e671aE8D52bA08F84e14431808` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkPayMemo] 0x2e09890AF25026e671aE8D52bA08F84e14431808.\nSubmitted contract for verification:\n\tVerification Job ID: `fc9031cb-caa8-4435-8fc4-fa7033ff1b5b`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/fc9031cb-caa8-4435-8fc4-fa7033ff1b5b\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    },
+    {
+      "contract": "src/MirkAccountRegistry.sol:MirkAccountRegistry",
+      "address": "0x61b62f54b2f8c8c87f3ccfed28ec8299404b92ea",
+      "success": true,
+      "output": "04fbeaea-ed77-4e83-b5c2-1b7ec78700cb\thttps://sourcify.dev/server/verify-ui/jobs/04fbeaea-ed77-4e83-b5c2-1b7ec78700cb\n\nStart verifying contract `0x61B62F54b2f8C8c87f3cCFEd28EC8299404B92EA` deployed on robinhood-testnet\n\nVerifying on sourcify...\nSubmitting verification for [MirkAccountRegistry] 0x61B62F54b2f8C8c87f3cCFEd28EC8299404B92EA.\nSubmitted contract for verification:\n\tVerification Job ID: `04fbeaea-ed77-4e83-b5c2-1b7ec78700cb`\n\tURL: https://sourcify.dev/server/verify-ui/jobs/04fbeaea-ed77-4e83-b5c2-1b7ec78700cb\n\nWaiting for sourcify verification result...\nWarning: Verification is still pending...; waiting 5 seconds before trying again (4 tries remaining)\nContract successfully verified:\nStatus: `exact_match`\n"
+    }
+  ]
+}

@@ -1,19 +1,11 @@
 /// <reference lib="webworker" />
 /**
  * Groth16 prover. Runs off the main thread so the interface stays responsive.
- * Circuit files come from the SDK's official artifact URLs and are checked
- * against the SDK's pinned SHA-256 hashes before use.
+ * Circuit files are built and hosted by Mirk and verified against its manifest.
  */
-import {
-  circuitArtifactFiles,
-  circuitArtifactUrls,
-  ceremonyForChainId,
-  packGroth16Proof,
-  type Groth16Proof,
-  type PoolCircuit,
-} from "@gloamtrade/sdk";
-import { CHAIN_ID } from "../lib/robinhood/network";
-import type { ProverRequest, ProverResponse } from "../lib/gloam/prover-protocol";
+import { packGroth16Proof, type Groth16Proof, type PoolCircuit } from "@/lib/shielded/sdk";
+import { circuitArtifacts } from "../lib/shielded/artifacts";
+import type { ProverRequest, ProverResponse } from "../lib/shielded/prover-protocol";
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -64,11 +56,10 @@ function artifact(url: string, sha: string) {
 }
 
 async function load(circuit: PoolCircuit) {
-  const urls = circuitArtifactUrls(circuit, CHAIN_ID);
-  const files = circuitArtifactFiles(circuit, ceremonyForChainId(CHAIN_ID));
+  const files = await circuitArtifacts(circuit);
   const [wasm, zkey] = await Promise.all([
-    artifact(urls.wasm, files.sha256.wasm),
-    artifact(urls.zkey, files.sha256.zkey),
+    artifact(files.wasm.url, files.wasm.sha256),
+    artifact(files.zkey.url, files.zkey.sha256),
   ]);
   return { wasm, zkey };
 }

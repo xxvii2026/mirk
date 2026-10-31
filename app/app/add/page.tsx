@@ -7,7 +7,7 @@ import { Amount } from "@/components/money/amount";
 import { AssetSelect } from "@/components/money/asset-select";
 import { FlowErrorNotice, FlowProgress, TxLinks, useFlow, type StepDef } from "@/components/money/flow";
 import { Button, ButtonLink, Card, Field, Notice, PageHeader, inputClass } from "@/components/shared/ui";
-import { addMoney, type ServiceContext } from "@/lib/gloam/services";
+import { addMoney, type ServiceContext } from "@/lib/shielded/services";
 import { ASSETS, CHAIN_ID, isNativeAsset } from "@/lib/robinhood/network";
 import { AMOUNT_ERRORS, amountToInput, parseAmount } from "@/lib/validation/amount";
 

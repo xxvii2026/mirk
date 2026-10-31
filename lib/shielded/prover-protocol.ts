@@ -1,4 +1,4 @@
-import type { PoolCircuit } from "@gloamtrade/sdk";
+import type { PoolCircuit } from "@/lib/shielded/sdk";
 import type { Hex } from "viem";
 
 export type ProverRequest =

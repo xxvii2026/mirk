@@ -58,10 +58,10 @@ export function isAccountNumber(input: string): input is AccountNumber {
 }
 
 export const ACCOUNT_NUMBER_ERRORS: Record<Exclude<AccountNumberCheck, { ok: true }>["reason"], string> = {
-  empty: "Enter a mirk account number.",
+  empty: "Enter a Mirk account number.",
   format: "Account numbers contain digits only.",
-  length: "mirk account numbers have 12 digits.",
-  zero: "This is not a valid mirk account number.",
+  length: "Mirk account numbers have 12 digits.",
+  zero: "This is not a valid Mirk account number.",
   checksum: "This number does not pass the check digit. Check it for typos.",
 };
 

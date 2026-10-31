@@ -1,3 +1,25 @@
+# Mirk deployment record
+
+## Independent Mirk testnet deployment
+
+Deployed and verified on 2026-10-30 on Robinhood Chain testnet (chain id `46630`). The immutable pool has no owner, proxy, upgrade path, fee switch or withdrawal override. Exact bytecode and contract wiring passed 47 automated on-chain checks; all nine source contracts were exact-match verified through Sourcify. Machine-readable receipts are under `deployments/`.
+
+| Contract | Address | Deploy block |
+| --- | --- | ---: |
+| Mirk shielded pool | `0xfe19c0cd4eb274d5b1cf9db942e045aab2dfbe99` | 145251085 |
+| Mirk encrypted memo board | `0x2e09890af25026e671ae8d52ba08f84e14431808` | 145251101 |
+| Mirk account registry | `0x61b62f54b2f8c8c87f3ccfed28ec8299404b92ea` | 145251117 |
+| Poseidon hasher | `0xa9f6ac83efd70c65700e812997c81e75bb59e854` | — |
+| Shield verifier / adapter | `0xe78ccdda654d75f27dafc1aca191e80670c1db74` / `0x07f3c21e65c94a789225649fc01300a5b7bb1609` | — |
+| Transfer verifier / adapter | `0xd267db3644a0e1f9f41c1cfddafa2e43666644e8` / `0x9f7f6d66d3bdf91fc2b5f1179ecaf1c041e17f27` | — |
+| Unshield verifier / adapter | `0x6f54607fa96213aaaf292cc4f34715f28389730a` / `0x3ad0613d741bc2e0acdc727d39a9ca612174c595` | — |
+
+The gas-sponsored Mirk relay uses a dedicated funded testnet signer. Its private key is server-only and is not recorded in this repository. This is a testnet deployment using a local single-party proving-key ceremony and has not been externally audited.
+
+## Historical deployment record
+
+The addresses and receipts below describe the **previous Gloam-backed deployment**, not Mirk's independent pool. Keep this record for legacy-fund recovery. New deployment instructions are in [POOL_MIGRATION.md](POOL_MIGRATION.md).
+
 # Deployment
 
 Verified on 2026-10-24.

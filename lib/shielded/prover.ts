@@ -1,4 +1,4 @@
-import type { PoolCircuit, Prover } from "@gloamtrade/sdk";
+import type { PoolCircuit, Prover } from "@/lib/shielded/sdk";
 import type { ProverRequest, ProverResponse } from "./prover-protocol";
 
 /** Main-thread handle on the prover Web Worker. */

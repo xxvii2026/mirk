@@ -299,7 +299,7 @@ function ClaimLinksTile({ seen, reduced }: Live) {
           aria-live="polite"
         >
           <div className="min-w-0">
-            <p className="truncate font-mono text-[13px] font-semibold">mirk…/claim#m1.••••••</p>
+            <p className="truncate font-mono text-[13px] font-semibold">Mirk…/claim#m1.••••••</p>
             <p className="text-ink-2 mt-1 truncate text-[11px]">{front.note}</p>
           </div>
           <p className="tabular shrink-0 font-mono text-[14px] font-semibold">{front.amount}</p>

@@ -9,3 +9,6 @@ playwright-report/
 test-results/
 deployments/local-report.md
 .vercel
+
+# Mirk's local testnet ceremony intermediates and generated public proving files.
+contracts/circuits/build/

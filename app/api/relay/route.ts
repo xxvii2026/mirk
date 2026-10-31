@@ -1,19 +1,13 @@
-import { GLOAM_RELAY_URL } from "@gloamtrade/sdk";
+import { submitRelay, RelaySubmissionUnknownError } from "@/lib/shielded/relay-server";
 import { NextResponse } from "next/server";
 import { relayRequest } from "@/lib/validation/api";
 import { RateLimiter, clientKey, readJsonLimited, sameOrigin } from "@/lib/validation/rate-limit";
 
-/**
- * Pass-through to the Gloam relay, which sends no CORS headers to browsers.
- * Requests are strictly validated to the three public relay actions and carry
- * only data that is published on chain anyway (proofs, roots, nullifiers,
- * commitments, sealed memos). Bodies are never logged or stored.
- */
-
+/** Mirk's own gas sponsor. Accepts only validated public proof data and sealed memos. */
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const RELAY_URL = GLOAM_RELAY_URL.replace("://gloam.trade", "://www.gloam.trade");
+const globalBudget = new RateLimiter(100, 60 * 60_000);
 const perClient = new RateLimiter(60, 60 * 60_000);
 
 export async function POST(req: Request) {
@@ -35,38 +29,25 @@ export async function POST(req: Request) {
   if (!parsed.success)
     return NextResponse.json({ ok: false, error: "Invalid relay request.", code: "invalid" }, { status: 400 });
 
-  try {
-    const upstream = await fetch(RELAY_URL, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(parsed.data),
-      signal: AbortSignal.timeout(45_000),
-      cache: "no-store",
-    });
-    const json = (await upstream.json().catch(() => null)) as {
-      ok?: boolean;
-      hash?: string;
-      error?: string;
-      code?: string;
-    } | null;
-    if (!json)
-      return NextResponse.json(
-        { ok: false, error: "The private relay returned no answer.", code: "upstream" },
-        { status: 502 },
-      );
-    const out =
-      json.ok && typeof json.hash === "string" && /^0x[0-9a-fA-F]{64}$/.test(json.hash)
-        ? { ok: true, hash: json.hash }
-        : {
-            ok: false,
-            error: typeof json.error === "string" ? json.error.slice(0, 300) : "Relay refused the request.",
-            code: json.code ?? "refused",
-          };
-    return NextResponse.json(out, { status: upstream.ok ? 200 : upstream.status });
-  } catch {
+  if (!globalBudget.take("relay"))
     return NextResponse.json(
-      { ok: false, error: "The private relay could not be reached.", code: "unreachable" },
-      { status: 502 },
+      { ok: false, error: "Relay busy. Try again later.", code: "rate-limited" },
+      { status: 429 },
+    );
+  try {
+    const hash = await submitRelay(parsed.data);
+    return NextResponse.json({ ok: true, hash });
+  } catch (error) {
+    const uncertain = error instanceof RelaySubmissionUnknownError;
+    // A transport failure can happen after broadcast. Preserve pending notes;
+    // clients reconcile from chain state before attempting another spend.
+    return NextResponse.json(
+      {
+        ok: false,
+        error: "Mirk's relay could not confirm submission. Check payment status before retrying.",
+        code: uncertain ? "maybe_sent" : "not_submitted",
+      },
+      { status: 503 },
     );
   }
 }

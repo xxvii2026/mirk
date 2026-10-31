@@ -32,7 +32,7 @@ export const UNSHIELD_ABI = [
   },
 ] as const;
 
-/** GloamPayMemo.postMemo (the encrypted payment-message board). */
+/** MirkPayMemo.postMemo (the encrypted payment-message board). */
 export const PAY_MEMO_ABI = [
   {
     type: "function",

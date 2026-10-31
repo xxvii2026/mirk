@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "node:path";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -14,7 +15,7 @@ const rpcOrigins = Array.from(
   new Set(["https://rpc.testnet.chain.robinhood.com", origin(process.env.NEXT_PUBLIC_RH_RPC_URL)].filter(Boolean)),
 );
 
-// Reown AppKit / WalletConnect hosts, the Robinhood RPC, and Gloam's circuit files.
+// Reown AppKit / WalletConnect hosts, the Robinhood RPC, and Mirk's same-origin circuit files.
 const csp = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'${isDev ? " 'unsafe-eval'" : ""}`,
@@ -24,7 +25,6 @@ const csp = [
   [
     "connect-src 'self'",
     ...rpcOrigins,
-    "https://www.gloam.trade",
     "https://*.walletconnect.com",
     "https://*.walletconnect.org",
     "wss://*.walletconnect.com",
@@ -64,6 +64,22 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   productionBrowserSourceMaps: false,
   logging: { fetches: { fullUrl: false } },
+  // Keep the optional wallet dependency aliases available to the webpack fallback too.
+  webpack(config) {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ...Object.fromEntries(
+        [
+          "@x402/core/client",
+          "@x402/evm",
+          "@x402/evm/exact/client",
+          "@x402/evm/upto/client",
+          "@x402/svm/exact/client",
+        ].map((name) => [`${name}$`, path.resolve(process.cwd(), "lib/stubs/unused-optional.mjs")]),
+      ),
+    };
+    return config;
+  },
   turbopack: {
     resolveAlias: Object.fromEntries(
       [

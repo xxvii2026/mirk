@@ -1,5 +1,5 @@
 /**
- * mirk's application services over the Gloam SDK. React components call these;
+ * mirk's application services over the Mirk SDK. React components call these;
  * they never assemble proofs or calldata themselves.
  *
  * Every secret is encrypted into the private store before the transaction that
@@ -20,13 +20,13 @@ import {
   sealToReceiveTag,
   sweepReceivedNote,
   transferCallArgs,
-  type GloamIntent,
+  type MirkIntent,
   type IntentExec,
   type NoteExport,
   type PrivateSendIntent,
   type ReceiveKeyJwk,
   type SweepChain,
-} from "@gloamtrade/sdk";
+} from "@/lib/shielded/sdk";
 import {
   erc20Abi,
   getAddress,
@@ -50,6 +50,8 @@ import type {
 import type { PrivateVault, StoredRecord } from "../crypto-store/vault";
 import {
   CHAIN,
+  assertPoolConfigured,
+  MEMO_DEPLOY_BLOCK,
   CHAIN_ID,
   LOG_CHUNK_BLOCKS,
   NETWORK,
@@ -98,6 +100,7 @@ export class FlowError extends Error {
 const now = () => Date.now();
 
 function requireWallet(ctx: ServiceContext): SignerClient {
+  assertPoolConfigured();
   if (!ctx.wallet) throw new FlowError("Connect your wallet to continue.", "not-ready");
   assertTestnet(ctx.walletChainId);
   return ctx.wallet;
@@ -258,12 +261,13 @@ export async function addMoney(ctx: ServiceContext, asset: Address, amountWei: b
 
 /* --------------------------------------------------------- spend plumbing */
 
-async function submitSpend(ctx: ServiceContext, intent: GloamIntent & { exec: IntentExec }): Promise<Hex> {
+async function submitSpend(ctx: ServiceContext, intent: MirkIntent & { exec: IntentExec }): Promise<Hex> {
   try {
     ctx.onStep?.("submitting");
     return await relaySpend(intent);
   } catch (e) {
     if (!(e instanceof RelayUnavailableError)) throw e;
+    if (["maybe_sent", "network"].includes(e.code)) throw e;
     if (!ctx.allowWalletSubmit || !ctx.wallet) {
       throw new FlowError(
         `${e.message} You can try again, or submit from your own wallet (your wallet address will then appear on this transaction).`,
@@ -337,11 +341,16 @@ async function prepareSpend(ctx: ServiceContext, noteId: string) {
  * After a submission failed or its outcome is unknown, ask the chain what
  * happened instead of guessing.
  */
-async function settleUnknown(ctx: ServiceContext, sourceId: string, created: { id: string; commitment: Hex }[]) {
+async function settleUnknown(
+  ctx: ServiceContext,
+  sourceId: string,
+  created: { id: string; commitment: Hex }[],
+  definitelyFailed = false,
+) {
   const source = ctx.vault.get(sourceId, "note");
   if (!source) return;
   const spent = await isSpent(ctx.client, source.nullifier).catch(() => null);
-  if (spent === false) {
+  if (spent === false && definitelyFailed) {
     await ctx.vault.update(sourceId, "note", (n) => ({ ...n, status: "unspent", spentBy: undefined }));
     for (const c of created) await ctx.vault.update(c.id, "note", (n) => ({ ...n, status: "failed" }));
   } else if (spent === true) {
@@ -354,6 +363,7 @@ async function settleUnknown(ctx: ServiceContext, sourceId: string, created: { i
 }
 
 interface TransferOutcome {
+  memoId?: string;
   hash: Hex;
   intent: PrivateSendIntent;
 }
@@ -365,7 +375,7 @@ interface TransferOutcome {
 async function transferPart(
   ctx: ServiceContext,
   part: SpendPart,
-  opts: { keepPayment: boolean },
+  opts: { keepPayment: boolean; recipientTag?: string; activityId?: string },
 ): Promise<TransferOutcome> {
   const { note, path } = await prepareSpend(ctx, part.noteId);
   ctx.onStep?.("proving");
@@ -380,6 +390,20 @@ async function transferPart(
     prove: workerProver("transfer"),
   });
 
+  // Persist delivery ciphertext before any submission can leave this device.
+  // A lost relay reply must not lose the recipient's only copy of the payment.
+  let memoId: string | undefined;
+  if (opts.recipientTag) {
+    const pkg = encodeNotePackage({ pool: POOL_ADDRESS, ...intent.paymentNote });
+    const memo = ticketToMemoBytes(await sealToReceiveTag(pkg, opts.recipientTag));
+    memoId = await ctx.vault.put({
+      kind: "pending-memo",
+      paymentCommitment: intent.paymentNote.commitment,
+      memo,
+      activityId: opts.activityId,
+      createdAt: now(),
+    });
+  }
   const created: { id: string; commitment: Hex }[] = [];
   if (BigInt(intent.changeNote.amountWei) > 0n) {
     created.push({
@@ -399,7 +423,12 @@ async function transferPart(
   try {
     hash = await submitSpend(ctx, intent);
   } catch (e) {
-    await settleUnknown(ctx, part.noteId, created);
+    await settleUnknown(
+      ctx,
+      part.noteId,
+      created,
+      !(e instanceof RelayUnavailableError && ["maybe_sent", "network"].includes(e.code)),
+    );
     throw e;
   }
   await ctx.vault.update(part.noteId, "note", (n) => ({ ...n, spentBy: hash }));
@@ -415,12 +444,12 @@ async function transferPart(
     );
   }
   if (receipt.status !== "success") {
-    await settleUnknown(ctx, part.noteId, created);
+    await settleUnknown(ctx, part.noteId, created, true);
     throw new FlowError("The private transfer reverted on chain. Your balance is unchanged.", "reverted");
   }
   await ctx.vault.update(part.noteId, "note", (n) => ({ ...n, status: "spent" }));
   for (const c of created) await ctx.vault.update(c.id, "note", (n) => ({ ...n, status: "unspent" }));
-  return { hash, intent };
+  return { hash, intent, memoId };
 }
 
 function planFor(ctx: ServiceContext, asset: Address, amountWei: bigint): SpendPart[] {
@@ -451,7 +480,7 @@ export interface SendResult {
   totalParts: number;
 }
 
-/** Pay a Gloam receive tag privately: real transfer(s) plus an encrypted delivery message each. */
+/** Pay a Mirk receive tag privately: real transfer(s) plus an encrypted delivery message each. */
 async function payTag(
   ctx: ServiceContext,
   tag: string,
@@ -472,7 +501,11 @@ async function payTag(
   try {
     for (let i = 0; i < parts.length; i++) {
       ctx.onStep?.("preparing", { part: i + 1, parts: parts.length });
-      const { hash, intent } = await transferPart(ctx, parts[i]!, { keepPayment: false });
+      const { hash, intent, memoId } = await transferPart(ctx, parts[i]!, {
+        keepPayment: false,
+        recipientTag: tag,
+        activityId,
+      });
       hashes.push(hash);
       await patchActivity(ctx, activityId, {
         txHashes: [...hashes],
@@ -480,27 +513,14 @@ async function payTag(
       });
 
       ctx.onStep?.("delivering", { part: i + 1, parts: parts.length });
-      const pkg = encodeNotePackage({
-        pool: POOL_ADDRESS,
-        asset: intent.paymentNote.asset,
-        amountWei: intent.paymentNote.amountWei,
-        secret: intent.paymentNote.secret,
-        commitment: intent.paymentNote.commitment,
-      });
-      const memo = ticketToMemoBytes(await sealToReceiveTag(pkg, tag));
-      const memoId = await ctx.vault.put({
-        kind: "pending-memo",
-        paymentCommitment: intent.paymentNote.commitment,
-        memo,
-        activityId,
-        createdAt: now(),
-      });
+      const pendingMemo = memoId ? ctx.vault.get(memoId, "pending-memo") : null;
+      if (!pendingMemo || !memoId) throw new Error("Payment delivery record missing.");
       try {
-        await postMemo(ctx, intent.paymentNote.commitment, memo);
+        await postMemo(ctx, intent.paymentNote.commitment, pendingMemo.memo);
         await ctx.vault.remove(memoId);
       } catch {
         // The money moved; only the delivery message is outstanding. Reconcile retries it.
-        await patchActivity(ctx, activityId, { error: "Delivery message pending. mirk will retry it." });
+        await patchActivity(ctx, activityId, { error: "Delivery message pending. Mirk will retry it." });
       }
     }
     await patchActivity(ctx, activityId, { status: "confirmed" });
@@ -528,9 +548,9 @@ export async function sendToAccount(
   if (!REGISTRY_ADDRESS)
     throw new FlowError("The account registry is not available on this deployment.", "no-registry");
   const tag = await resolveAccount(ctx.client, account);
-  if (!tag) throw new FlowError("No mirk account has this number.", "unknown-account");
+  if (!tag) throw new FlowError("No Mirk account has this number.", "unknown-account");
   const own = ctx.vault.list("account")[0]?.value;
-  if (own?.tag === tag) throw new FlowError("This is your own mirk account number.", "unknown-account");
+  if (own?.tag === tag) throw new FlowError("This is your own Mirk account number.", "unknown-account");
   const r = await payTag(ctx, tag, asset, amountWei, "sent", `To •••• ${formatAccountNumber(account).slice(-4)}`);
   return r;
 }
@@ -547,7 +567,7 @@ export async function createClaimLink(
   const { x, y, d } = key.privateJwk;
   if (!x || !y || !d) throw new Error("Could not create a claim key.");
   const hint = await ctx.client.getBlockNumber({ cacheTime: 0 });
-  const payload: ClaimPayload = { n: CHAIN_ID, k: { x, y, d }, b: hint.toString() };
+  const payload: ClaimPayload = { n: CHAIN_ID, p: POOL_ADDRESS, k: { x, y, d }, b: hint.toString() };
   const link = `${origin.replace(/\/+$/, "")}/claim#${await encodeClaimPackage(payload)}`;
   // Keep the link before money moves, so it can never be lost mid-flow.
   const claimId = await ctx.vault.put({
@@ -621,14 +641,19 @@ export async function cashOut(
       try {
         hash = await submitSpend(ctx, intent);
       } catch (e) {
-        await settleUnknown(ctx, noteId, []);
+        await settleUnknown(
+          ctx,
+          noteId,
+          [],
+          !(e instanceof RelayUnavailableError && ["maybe_sent", "network"].includes(e.code)),
+        );
         throw e;
       }
       await ctx.vault.update(noteId, "note", (n) => ({ ...n, spentBy: hash }));
       ctx.onStep?.("confirming", { part: i + 1, parts: parts.length });
       const receipt = await confirm(ctx.client, hash).catch(() => null);
       if (!receipt || receipt.status !== "success") {
-        await settleUnknown(ctx, noteId, []);
+        await settleUnknown(ctx, noteId, [], Boolean(receipt));
         throw new FlowError(
           receipt
             ? "The cash out reverted on chain. Your balance is unchanged."
@@ -737,6 +762,7 @@ async function scanFor(
   const { payments, scannedTo } = await scanIncomingPayments({
     client: ctx.client,
     network: NETWORK,
+    board: { address: PAY_MEMO_ADDRESS, deployBlock: MEMO_DEPLOY_BLOCK, emitsPoster: false },
     receiveKey,
     fromBlock,
     chunkSize: LOG_CHUNK_BLOCKS,
@@ -791,10 +817,12 @@ export async function previewClaim(
   client: PublicClient,
   payload: ClaimPayload,
 ): Promise<{ asset: Address; amountWei: bigint }[]> {
-  if (payload.n !== CHAIN_ID) throw new Error("This claim link is for a different network.");
+  if (payload.n !== CHAIN_ID || payload.p.toLowerCase() !== POOL_ADDRESS.toLowerCase())
+    throw new Error("This claim link is for a different network or pool.");
   const { payments } = await scanIncomingPayments({
     client,
     network: NETWORK,
+    board: { address: PAY_MEMO_ADDRESS, deployBlock: MEMO_DEPLOY_BLOCK, emitsPoster: false },
     receiveKey: claimKeyJwk(payload),
     fromBlock: BigInt(payload.b),
     chunkSize: LOG_CHUNK_BLOCKS,
@@ -807,7 +835,8 @@ export async function previewClaim(
 
 /** Find the payment(s) behind a claim link and sweep them into this store. */
 export async function claimFromLink(ctx: ServiceContext, payload: ClaimPayload): Promise<ClaimOutcome> {
-  if (payload.n !== CHAIN_ID) throw new Error("This claim link is for a different network.");
+  if (payload.n !== CHAIN_ID || payload.p.toLowerCase() !== POOL_ADDRESS.toLowerCase())
+    throw new Error("This claim link is for a different network or pool.");
   const { found } = await scanFor(ctx, claimKeyJwk(payload), "claim", BigInt(payload.b));
   const open = found.filter((r) => r.value.status === "found" || r.value.status === "sweeping");
   if (open.length === 0) return { status: "nothing-found" };
@@ -918,15 +947,13 @@ export async function reconcile(ctx: ServiceContext): Promise<void> {
       } else if (v.txHash) {
         const r = await ctx.client.getTransactionReceipt({ hash: v.txHash }).catch(() => null);
         if (r && r.status !== "success") await ctx.vault.update(n.id, "note", (x) => ({ ...x, status: "failed" }));
-      } else if (now() - v.createdAt > 30 * 60_000) {
-        await ctx.vault.update(n.id, "note", (x) => ({ ...x, status: "failed" }));
       }
     } else if (v.status === "spending" || v.status === "unspent") {
       const spent = await isSpent(ctx.client, v.nullifier);
       if (spent) await ctx.vault.update(n.id, "note", (x) => ({ ...x, status: "spent" }));
-      else if (v.status === "spending" && (!v.spentBy || now() - v.createdAt > 30 * 60_000)) {
+      else if (v.status === "spending" && v.spentBy) {
         const r = v.spentBy ? await ctx.client.getTransactionReceipt({ hash: v.spentBy }).catch(() => null) : null;
-        if (!v.spentBy || (r && r.status !== "success"))
+        if (r && r.status !== "success")
           await ctx.vault.update(n.id, "note", (x) => ({ ...x, status: "unspent", spentBy: undefined }));
       }
     }
@@ -963,9 +990,12 @@ export async function reconcile(ctx: ServiceContext): Promise<void> {
       // Spent, but not into our fresh note: the payer took it back first.
       if (fresh) await ctx.vault.update(fresh.id, "note", (x) => ({ ...x, status: "failed" }));
       await ctx.vault.update(i.id, "incoming", (x) => ({ ...x, status: "lost" }));
-    } else {
-      if (fresh) await ctx.vault.update(fresh.id, "note", (x) => ({ ...x, status: "failed" }));
-      await ctx.vault.update(i.id, "incoming", (x) => ({ ...x, status: "found" }));
+    } else if (fresh?.value.txHash) {
+      const receipt = await ctx.client.getTransactionReceipt({ hash: fresh.value.txHash }).catch(() => null);
+      if (receipt?.status === "reverted") {
+        await ctx.vault.update(fresh.id, "note", (x) => ({ ...x, status: "failed" }));
+        await ctx.vault.update(i.id, "incoming", (x) => ({ ...x, status: "found" }));
+      }
     }
   }
 }

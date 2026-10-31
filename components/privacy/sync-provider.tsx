@@ -11,8 +11,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { userMessage } from "@/lib/gloam/errors";
-import { checkInbox, ensureAccount, reconcile, registerAccount, syncAccountStatus } from "@/lib/gloam/services";
+import { userMessage } from "@/lib/shielded/errors";
+import { checkInbox, ensureAccount, reconcile, registerAccount, syncAccountStatus } from "@/lib/shielded/services";
 import { useServiceContext } from "@/lib/hooks/use-service";
 
 interface SyncState {

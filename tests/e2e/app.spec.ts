@@ -1,11 +1,17 @@
 import { expect, test } from "@playwright/test";
 import { connectAndUnlock, installWallet } from "./wallet";
 
+test.skip(!process.env.NEXT_PUBLIC_MIRK_POOL_ADDRESS, "Requires a configured Mirk pool deployment.");
+
 test.describe("connect, network and unlock", () => {
-  test("shows the connect-wallet screen", async ({ page }) => {
+  test("shows the disconnected dashboard without private data", async ({ page }) => {
     await page.goto("/app");
-    await expect(page.getByRole("heading", { name: "Connect a wallet to open mirk" })).toBeVisible();
-    await expect(page.getByText("Test assets have no value").first()).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Home", exact: true })).toBeVisible();
+    await expect(page.getByLabel("Balance unavailable")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Connect a wallet to open Mirk" })).toHaveCount(0);
+    await expect(
+      page.getByText("Mirk on Robinhood Chain testnet. Test assets have no value. Not externally audited."),
+    ).toHaveCount(0);
   });
 
   test("asks to switch from the wrong network and recovers", async ({ page }) => {
@@ -40,6 +46,20 @@ test.describe("connect, network and unlock", () => {
     await page.getByRole("button", { name: "Show" }).click();
     await expect(page.getByLabel("Hidden")).toHaveCount(0);
   });
+
+  test("returns to an empty dashboard when the wallet disconnects", async ({ page }) => {
+    await installWallet(page);
+    await page.goto("/app");
+    await connectAndUnlock(page);
+    await expect(page.getByText("Only you can see this amount.")).toBeVisible();
+    await page.evaluate(() => {
+      (window as unknown as { __mirkEmit: (event: string, value: unknown) => void }).__mirkEmit("accountsChanged", []);
+    });
+    await expect(page.getByLabel("Balance unavailable")).toBeVisible();
+    await expect(page.getByText("Not connected", { exact: true })).toBeVisible();
+    await expect(page.locator("text=/^\\d{4} \\d{4} \\d{4}$/")).toHaveCount(0);
+    await expect(page.getByText("Only you can see this amount.")).toHaveCount(0);
+  });
 });
 
 test.describe("money forms", () => {
@@ -53,7 +73,7 @@ test.describe("money forms", () => {
   test("send validates account numbers before any lookup", async ({ page }) => {
     // In-app navigation: a full reload would (correctly) lock the store again.
     await page.getByRole("link", { name: "Send" }).first().click();
-    const input = page.getByLabel("mirk account number");
+    const input = page.getByLabel("Mirk account number");
     await input.fill("4829 1630 7715");
     await expect(page.getByText("does not pass the check digit")).toBeVisible();
     await input.fill("12ab");

@@ -2,7 +2,6 @@
 
 import {
   AccountNumberText,
-  AccountQr,
   AccountStatus,
   CopyButton,
   useAccountRecord,
@@ -31,11 +30,11 @@ export default function ReceivePage() {
     <div className="fade-in mx-auto max-w-lg space-y-6">
       <PageHeader
         title="Receive"
-        description="Share your mirk account number. No name, wallet address or balance is revealed."
+        description="Share your Mirk account number. No name, wallet address or balance is revealed."
       />
       <Card className="space-y-5">
         <div className="flex items-center justify-between gap-2">
-          <h2 className="text-muted text-sm">Your mirk account number</h2>
+          <h2 className="text-muted text-sm">Your Mirk account number</h2>
           <AccountStatus />
         </div>
         {account ? (
@@ -44,7 +43,6 @@ export default function ReceivePage() {
               <AccountNumberText number={account.number} />
             </p>
             <div className="flex flex-wrap items-end gap-4">
-              <AccountQr number={account.number} />
               <CopyButton text={account.number} label="Copy number" />
             </div>
           </>
@@ -52,7 +50,7 @@ export default function ReceivePage() {
           <p className="text-muted">Creating your account number…</p>
         )}
         <p className="text-muted text-sm">
-          Payers send privately to this number. The payment note is encrypted so only this device can open it, and mirk
+          Payers send privately to this number. The payment note is encrypted so only this device can open it, and Mirk
           then moves it into a note only you know before counting it in your balance.
         </p>
       </Card>
@@ -66,7 +64,7 @@ export default function ReceivePage() {
         </div>
         <p className="text-muted text-sm" aria-live="polite">
           {lastChecked
-            ? `Last checked ${new Date(lastChecked).toLocaleTimeString()}. mirk checks every minute while open.`
+            ? `Last checked ${new Date(lastChecked).toLocaleTimeString()}. Mirk checks every minute while open.`
             : "Checking for payments…"}
         </p>
         {inboxError ? <Notice tone="danger">{inboxError}</Notice> : null}

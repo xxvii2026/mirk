@@ -1,4 +1,5 @@
 import type { Hex } from "viem";
+import { CHAIN_ID, POOL_ADDRESS } from "../robinhood/network";
 import { z } from "zod";
 import {
   BACKUP_PBKDF2_ITERATIONS,
@@ -186,12 +187,13 @@ export async function deleteStore(address: string) {
 /* ---------------------------------------------------------------- backups */
 
 export const BACKUP_FORMAT = "mirk-backup";
-export const BACKUP_VERSION = 1;
+export const BACKUP_VERSION = 2;
 
 const backupFile = z.object({
   format: z.literal(BACKUP_FORMAT),
   v: z.literal(BACKUP_VERSION),
   chainId: z.number(),
+  pool: z.string(),
   createdAt: z.number(),
   kdf: z.object({ name: z.literal("PBKDF2-SHA256"), iterations: z.number().int().min(100_000), salt: z.string() }),
   iv: z.string(),
@@ -200,6 +202,8 @@ const backupFile = z.object({
 export type BackupFile = z.infer<typeof backupFile>;
 
 const backupPayload = z.object({
+  chainId: z.number(),
+  pool: z.string(),
   records: z.array(z.object({ id: z.string(), value: anyRecord })),
 });
 
@@ -219,11 +223,13 @@ export async function exportBackup(
   }
   const salt = randomBytes(16);
   const key = await deriveBackupKey(passphrase, salt, iterations);
-  const sealed = await encryptJson(key, { records: vault.allRecords() }, BACKUP_AAD);
+  if (chainId !== CHAIN_ID) throw new Error("Wrong chain for this backup.");
+  const sealed = await encryptJson(key, { chainId, pool: POOL_ADDRESS, records: vault.allRecords() }, BACKUP_AAD);
   return {
     format: BACKUP_FORMAT,
     v: BACKUP_VERSION,
     chainId,
+    pool: POOL_ADDRESS,
     createdAt: Date.now(),
     kdf: { name: "PBKDF2-SHA256", iterations, salt: toB64(salt) },
     ...sealed,
@@ -235,10 +241,10 @@ export function parseBackupFile(text: string): BackupFile {
   try {
     json = JSON.parse(text);
   } catch {
-    throw new Error("This file is not a mirk backup.");
+    throw new Error("This file is not a Mirk backup.");
   }
   const parsed = backupFile.safeParse(json);
-  if (!parsed.success) throw new Error("This file is not a mirk backup, or its version is not supported.");
+  if (!parsed.success) throw new Error("This file is not a Mirk backup, or its version is not supported.");
   return parsed.data;
 }
 
@@ -252,7 +258,12 @@ export async function restoreBackup(vault: PrivateVault, file: BackupFile, passp
     if (e instanceof WrongKeyError) throw new WrongKeyError("Wrong passphrase, or the backup is damaged.");
     throw e;
   }
-  const { records } = backupPayload.parse(payload);
+  const { records, chainId, pool } = backupPayload.parse(payload);
+  if (chainId !== CHAIN_ID || pool.toLowerCase() !== POOL_ADDRESS.toLowerCase()) {
+    throw new Error(
+      "This backup belongs to a different pool. Restore it in its original deployment to recover those funds.",
+    );
+  }
   let count = 0;
   for (const r of records) {
     const existing = vault.allRecords().find((x) => x.id === r.id);

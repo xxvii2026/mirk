@@ -12,9 +12,9 @@ type Variant = "primary" | "dark" | "ghost" | "quiet" | "danger";
 
 const base = "min-h-11 px-5 text-[15px]";
 
-// Inside the app, actions stay monochrome, after Gloam: ink pills, quiet secondaries.
+// Primary actions share the website's accent; secondary actions stay quiet.
 const variants: Record<Variant, string> = {
-  primary: "btn btn-dark",
+  primary: "btn btn-accent",
   dark: "btn btn-dark",
   ghost: "btn btn-light",
   quiet: "inline-flex items-center justify-center gap-2 rounded-full px-3 font-medium text-ink-2 hover:text-ink",
@@ -123,7 +123,7 @@ export function Field({
 }
 
 export const inputClass =
-  "w-full min-h-12 rounded-[14px] border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-muted outline-none transition-[border-color,box-shadow] duration-150 focus:border-ink-2 focus:shadow-[0_0_0_3px_var(--surface-3)] aria-[invalid=true]:border-danger";
+  "w-full min-h-12 rounded-[14px] border border-line-strong bg-surface px-4 text-base text-ink placeholder:text-muted outline-none transition-[border-color,box-shadow] duration-150 focus:border-signal focus:shadow-[0_0_0_3px_var(--signal-tint)] aria-[invalid=true]:border-danger";
 
 export function PageHeader({
   title,

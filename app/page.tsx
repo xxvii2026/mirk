@@ -10,8 +10,6 @@ import { IconArrowRight, IconChevronDown } from "@/components/shared/icons";
 import { HiddenDots } from "@/components/shared/ui";
 import { CHAIN_ID, POOL_ADDRESS } from "@/lib/robinhood/network";
 
-const DISCLAIMER = "Testnet only. Test assets have no value. Not externally audited.";
-
 function short(address: string) {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
 }
@@ -62,13 +60,12 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-3">
           <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open mirk <IconArrowRight className="size-4" />
+            Open Mirk <IconArrowRight className="size-4" />
           </Link>
           <Link href="#how" className="btn btn-light min-h-12 px-6 text-[16px]">
             How it works <IconChevronDown className="size-4" />
           </Link>
         </div>
-        <p className="text-ink-2 mt-5 text-[12px]">{DISCLAIMER}</p>
       </div>
 
       <div data-scroll className="mx-auto mt-20 max-w-[1040px] px-4 sm:px-6">
@@ -131,7 +128,7 @@ function Night() {
         <div className={`${WRAP} grid gap-x-8 gap-y-16 pt-28 pb-32 md:grid-cols-2`}>
           <div data-scroll className="flex flex-col" style={rise}>
             <Pair title="Your balance keeps quiet.">
-              On a public chain, every balance is a billboard. mirk keeps your money in Gloam&apos;s shielded pool, so
+              On a public chain, every balance is a billboard. Mirk keeps your money in Mirk&apos;s shielded pool, so
               the record shows that something happened and leaves the rest to you.
             </Pair>
             <div className="relative flex flex-1 flex-col rounded-[26px] border border-white/15 bg-white/[0.04] p-6 shadow-[0_30px_60px_-30px_rgba(0,0,0,0.8)] sm:p-8">
@@ -225,13 +222,12 @@ function Closing() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/app" className="btn btn-accent min-h-12 px-7 text-[16px]">
-            Open mirk
+            Open Mirk
           </Link>
           <Link href="/docs" className="btn btn-light min-h-12 px-6 text-[16px]">
             Read the docs
           </Link>
         </div>
-        <p className="text-ink-2 mt-5 text-[12px]">{DISCLAIMER}</p>
       </div>
     </section>
   );

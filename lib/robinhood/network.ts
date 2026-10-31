@@ -1,20 +1,32 @@
-import { GLOAM_NETWORKS, type GloamAsset } from "@gloamtrade/sdk";
-import { getAddress, type Address, type Chain, type Hex } from "viem";
+import type { MirkAsset, MirkNetwork } from "@/lib/shielded/sdk";
+import { getAddress, zeroAddress, type Address, type Chain, type Hex } from "viem";
 
-/** Robinhood Chain testnet as shipped by the installed Gloam SDK. */
-export const NETWORK = GLOAM_NETWORKS.robinhood;
-
-export const CHAIN_ID = NETWORK.chainId;
-export const POOL_ADDRESS: Address = NETWORK.pool;
-export const POOL_DEPLOY_BLOCK: bigint = NETWORK.deployBlock;
-export const PAY_MEMO_ADDRESS: Address = NETWORK.payMemo;
-export const EXPLORER_URL = NETWORK.explorerUrl.replace(/\/+$/, "");
-
+/** Mirk deployments are explicit. Never fall back to another project's pool. */
+function configuredAddress(raw: string | undefined): Address {
+  if (!raw?.trim()) return zeroAddress;
+  return getAddress(raw.trim());
+}
+export const CHAIN_ID = 46630;
+export const POOL_ADDRESS = configuredAddress(process.env.NEXT_PUBLIC_MIRK_POOL_ADDRESS);
+export const PAY_MEMO_ADDRESS = configuredAddress(process.env.NEXT_PUBLIC_MIRK_MEMO_ADDRESS);
+export const POOL_DEPLOY_BLOCK = BigInt(process.env.NEXT_PUBLIC_MIRK_POOL_DEPLOY_BLOCK || "0");
+export const MEMO_DEPLOY_BLOCK = BigInt(process.env.NEXT_PUBLIC_MIRK_MEMO_DEPLOY_BLOCK || "0");
+export const POOL_CONFIGURED =
+  POOL_ADDRESS !== zeroAddress && PAY_MEMO_ADDRESS !== zeroAddress && POOL_DEPLOY_BLOCK > 0n && MEMO_DEPLOY_BLOCK > 0n;
+export function assertPoolConfigured() {
+  if (!POOL_CONFIGURED) throw new Error("The Mirk shielded pool has not been configured on this deployment.");
+}
+export const EXPLORER_URL = "https://explorer.testnet.chain.robinhood.com";
+const DEFAULT_RPC = "https://rpc.testnet.chain.robinhood.com";
 /** Optional dedicated RPC; falls back to the public endpoint the SDK ships. */
-export const RPC_URL = process.env.NEXT_PUBLIC_RH_RPC_URL?.trim() || NETWORK.rpcUrl;
+export const RPC_URL = process.env.NEXT_PUBLIC_RH_RPC_URL?.trim() || DEFAULT_RPC;
 
 export const CHAIN: Chain = {
-  ...NETWORK.chain,
+  id: CHAIN_ID,
+  name: "Robinhood Chain Testnet",
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  testnet: true,
+  blockExplorers: { default: { name: "Robinhood Testnet Explorer", url: EXPLORER_URL } },
   rpcUrls: { default: { http: [RPC_URL] } },
 };
 
@@ -24,19 +36,32 @@ export const CHAIN: Chain = {
  */
 export const LOG_CHUNK_BLOCKS = 2_000_000n;
 
-/** Assets the testnet pool takes, straight from the SDK. */
-export const ASSETS: readonly GloamAsset[] = NETWORK.assets;
+/** Independent testnet asset configuration. */
+export const ASSETS: readonly MirkAsset[] = [
+  { symbol: "ETH", address: zeroAddress, decimals: 18, depositLimit: null },
+  { symbol: "USDG", address: "0x7E955252E15c84f5768B83c41a71F9eba181802F", decimals: 6, depositLimit: null },
+];
+export const NETWORK: MirkNetwork = {
+  chainId: CHAIN_ID,
+  pool: POOL_ADDRESS,
+  deployBlock: POOL_DEPLOY_BLOCK,
+  payMemo: PAY_MEMO_ADDRESS,
+  explorerUrl: EXPLORER_URL,
+  rpcUrl: RPC_URL,
+  chain: CHAIN,
+  assets: ASSETS,
+};
 
-export function assetByAddress(address: string): GloamAsset | undefined {
+export function assetByAddress(address: string): MirkAsset | undefined {
   const a = address.toLowerCase();
   return ASSETS.find((x) => x.address.toLowerCase() === a);
 }
 
-export function assetBySymbol(symbol: string): GloamAsset | undefined {
+export function assetBySymbol(symbol: string): MirkAsset | undefined {
   return ASSETS.find((x) => x.symbol === symbol);
 }
 
-export function isNativeAsset(asset: GloamAsset | Address): boolean {
+export function isNativeAsset(asset: MirkAsset | Address): boolean {
   const address = typeof asset === "string" ? asset : asset.address;
   return BigInt(address) === 0n;
 }

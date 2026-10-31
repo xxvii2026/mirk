@@ -16,7 +16,7 @@ import { UNLOCK_MESSAGE, WrongKeyError } from "@/lib/crypto-store/crypto";
 import { storageAvailable } from "@/lib/crypto-store/db";
 import type { RecordKind } from "@/lib/crypto-store/records";
 import { unlockStore, type PrivateVault } from "@/lib/crypto-store/vault";
-import { isUserRejection } from "@/lib/gloam/errors";
+import { isUserRejection } from "@/lib/shielded/errors";
 
 type Status = "checking" | "unavailable" | "locked" | "unlocking" | "open";
 

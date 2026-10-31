@@ -1,7 +1,7 @@
 import "server-only";
 import { createPublicClient, createWalletClient, http, keccak256, stringToHex, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { REGISTRY_ABI } from "../gloam/abi";
+import { REGISTRY_ABI } from "../shielded/abi";
 import { CHAIN, REGISTRY_ADDRESS, RPC_URL } from "../robinhood/network";
 
 /** Server-only registrar. The key is read from the environment and never logged or returned. */

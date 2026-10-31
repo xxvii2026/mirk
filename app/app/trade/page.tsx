@@ -7,7 +7,7 @@ export default function TradePage() {
   return (
     <ComingSoon
       title="Trade"
-      sentence="Private swaps between assets are not available in mirk yet; the Gloam SDK does not support them on testnet today."
+      sentence="Private swaps between assets are not available in Mirk yet; Mirk's payments-only pool does not support swaps."
     />
   );
 }

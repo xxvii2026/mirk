@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GLOAM_NETWORKS } from "@gloamtrade/sdk";
+import { zeroAddress } from "viem";
 import {
   CHAIN_ID,
   POOL_ADDRESS,
@@ -13,9 +13,10 @@ import { RateLimiter } from "@/lib/validation/rate-limit";
 import { luhnCheckDigit } from "@/lib/account-number";
 
 describe("network guards", () => {
-  it("uses the SDK's Robinhood testnet pool", () => {
+  it("never defaults to Gloam's pool", () => {
     expect(CHAIN_ID).toBe(46630);
-    expect(POOL_ADDRESS).toBe(GLOAM_NETWORKS.robinhood.pool);
+    expect(POOL_ADDRESS).not.toBe("0x72406D9597807A46f730d8b4fDBC5aC45Dc1d740");
+    if (!process.env.NEXT_PUBLIC_MIRK_POOL_ADDRESS) expect(POOL_ADDRESS).toBe(zeroAddress);
   });
 
   it("refuses other chains", () => {
